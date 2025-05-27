@@ -1,0 +1,86 @@
+﻿using FSK.Sensitivity.Core.Entity;
+using FSK.Sensitivity.Core.HardWare.Peripherals;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace FSK.Sensitivity.Main
+{
+    public class AppData
+    {
+        private static readonly AppData _instance = new AppData();
+        private AppData()
+        {
+        }
+        // 公共静态属性，提供全局访问点
+        public static AppData Instance
+        {
+            get
+            {
+                return _instance;
+            }
+        }
+
+        /// <summary>
+        /// 当前患者
+        /// </summary>
+        public Patient  CurrentPatient { get; set; }
+
+        /// <summary>
+        /// 当前管理员
+        /// </summary>
+        public Manger CurrentManger { get; set; }
+        /// <summary>
+        /// 手柄
+        /// </summary>
+        public IHandle Handler { get; set; }
+
+        /// <summary>
+        /// 灯光
+        /// </summary>
+        public ILight Light { get; set; }
+
+        /// <summary>
+        /// 导轨电机
+        /// </summary>
+        public IMotor Motor { get; set; }
+
+        /// <summary>
+        /// 扫码器
+        /// </summary>
+        public IScanner Scanner { get; set; }
+
+
+        public bool IsHardwareReady()
+        {
+            if(Handler==null || Handler.IsAvailable == false)
+            {
+                MessageBox.Show("手柄未连接，请稍候重试");
+                return false;
+            }
+
+            return true;
+        }
+
+        public void InitHardware()
+        {
+            if (Handler != null)
+            {
+
+            }
+        }
+        /// <summary>
+        /// 是否登录
+        /// </summary>
+        public bool IsLogin { get; set; }
+
+        /// <summary>
+        /// 当前用户信息
+        /// </summary>
+        public Patient Patient { get; set; }
+
+    }
+}

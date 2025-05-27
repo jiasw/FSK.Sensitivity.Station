@@ -1,0 +1,113 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FSK.Sensitivity.Main.ViewModels
+{
+    public class RegisterViewModel : BaseViewModel, IDialogAware
+    {
+
+        public List<string> SexList =>new List<string> { "男", "女" };
+
+        public List<string> GradeList => new List<string> { "一年级", "二年级", "三年级", "四年级", "五年级", "六年级", "七年级", "八年级", "九年级", "高一", "高二", "高三","大一","大二","大三","大四" };
+
+        private string title = "首次登录";
+        public string Title
+        {
+            get { return title; }
+            set { SetProperty(ref title, value); }
+        }
+        private string _loginAccount;
+        public string LoginAccount
+        {
+            get { return _loginAccount; }
+            set { SetProperty(ref _loginAccount, value); }
+        }
+
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { SetProperty(ref _name, value); }
+        }
+
+        private string _phone;
+        public string Phone
+        {
+            get { return _phone; }  
+            set { SetProperty(ref _phone, value); }
+        }
+
+        private string _idCard;
+        public string IdCard
+        {
+            get { return _idCard; }
+            set { SetProperty(ref _idCard, value); }
+        }
+        private string _age;
+        public string Age
+        {
+            get { return _age; }
+            set { SetProperty(ref _age, value); }
+        }
+
+        private string _gender;
+        public string Gender
+        {
+            get { return _gender; }
+            set { SetProperty(ref _gender, value); }
+        }
+
+        private string _school;
+        public string School
+        {
+            get { return _school; }
+            set { SetProperty(ref _school, value); }
+        }
+
+        private string _grade;
+        public string Grade
+        {
+            get { return _grade; }
+            set { SetProperty(ref _grade, value); }
+        }
+
+        private string _className;
+        public string ClassName
+        {
+            get { return _className; }  
+            set { SetProperty(ref _className, value); }
+        }
+
+        public DialogCloseListener RequestClose { get; }
+
+        public bool CanCloseDialog()
+        {
+            return true;
+        }
+
+        public void OnDialogClosed()
+        {
+        }
+
+        public void OnDialogOpened(IDialogParameters parameters)
+        {
+        }
+
+        public DelegateCommand CloseCommand=>new DelegateCommand(Close);
+
+        private void Close()
+        {
+            RequestClose.Invoke(new DialogResult(ButtonResult.OK));
+        }
+
+        public DelegateCommand RegisterCommand => new DelegateCommand(Register);
+
+        private void Register()
+        {
+            //TODO: 注册逻辑
+        }
+    }
+}

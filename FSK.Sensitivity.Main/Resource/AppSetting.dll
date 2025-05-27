@@ -1,0 +1,35 @@
+{
+  "SqlLiteDb": "FSK.db",
+  "AdminPassword": "19450902",
+  "RemoteSupportPath": "C:\\Program Files\\Oray\\SunLogin\\SunloginClient\\SunloginClient.exe",
+  "HandlerConfig": {
+    "SerialPortName": "COM1",
+    "BaudRate": 9600,
+    "DataBits": 8,
+    "StopBits": 1,
+    "Parity": "None"
+  },
+  "MotorConfig": {
+    "SerialPortName": "COM1",
+    "BaudRate": 9600,
+    "DataBits": 8,
+    "StopBits": 1,
+    "Parity": "None"
+  },
+  "LightConfig": {
+    "SerialPortName": "COM1",
+    "BaudRate": 9600,
+    "DataBits": 8,
+    "StopBits": 1,
+    "Parity": "None"
+  },
+  "ScannerConfig": {
+    "SerialPortName": "COM1",
+    "BaudRate": 9600,
+    "DataBits": 8,
+    "StopBits": 1,
+    "Parity": "None"
+  }
+
+
+}

@@ -1,0 +1,161 @@
+﻿<UserControl x:Class="FSK.Sensitivity.Main.Views.MainMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FSK.Sensitivity.Main.Views"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             mc:Ignorable="d" Name="菜单页面"
+             xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ElasticEase x:Key="ElasticEase" 
+                Springiness="3" 
+                Oscillations="1" 
+                EasingMode="EaseInOut"/>
+        <CircleEase x:Key="CircleEase" 
+                    EasingMode="EaseOut"
+                    />
+        <PowerEase x:Key="PulseEase" Power="4" EasingMode="EaseInOut"/>
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            
+            <Setter Property="Margin" Value="30,30"></Setter>
+            <Setter Property="MaxHeight" Value="650"></Setter>
+            <Setter Property="MaxWidth" Value="440"></Setter>
+            <Setter Property="MinHeight" Value="150"></Setter>
+            <Setter Property="MinWidth" Value="100"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border>
+                            <Border.Background>
+                                <ImageBrush Stretch="Fill"  ImageSource="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" RenderOptions.BitmapScalingMode="HighQuality"></ImageBrush>
+                            </Border.Background>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="2*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="1" VerticalAlignment="Top"  HorizontalAlignment="Center" Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" Foreground="White" FontSize="34"></TextBlock>
+                            </Grid>
+
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TranslateTransform x:Name="ButtonTransform" X="0" Y="0"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="White" 
+                                Opacity="0" 
+                                BlurRadius="32"
+                                ShadowDepth="0"
+                                Direction="315"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <!-- 点击动画触发器 -->
+                <EventTrigger RoutedEvent="Button.PreviewMouseDown">
+                    
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <!-- 移动到左下角的动画 -->
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.X"
+                             To="3" Duration="0:0:0.1"
+                             AccelerationRatio="0.3"  EasingFunction="{StaticResource CircleEase}"
+                             DecelerationRatio="0.7"/>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Y" 
+                             To="3" Duration="0:0:0.1"
+                             AccelerationRatio="0.3" EasingFunction="{StaticResource CircleEase}"
+                             DecelerationRatio="0.7"/>
+
+                            <!-- 阴影脉冲动画 -->
+                            <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity"
+                                       To="0.8"
+                                       Duration="0:0:0.08"
+                                       EasingFunction="{StaticResource PulseEase}"/>
+
+                            <DoubleAnimation Storyboard.TargetProperty="Effect.BlurRadius"
+                                       To="18"
+                                       Duration="0:0:0.08"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+                <!-- 恢复动画触发器 -->
+                <EventTrigger RoutedEvent="Button.PreviewMouseUp">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <!-- 使用弹簧效果返回到初始位置 -->
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.X"
+                             To="0" Duration="0:0:0.3"
+                             EasingFunction="{StaticResource CircleEase}"/>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Y"
+                             To="0" Duration="0:0:0.3" 
+                             EasingFunction="{StaticResource CircleEase}"/>
+
+
+                            <!-- 阴影淡出动画 -->
+                            <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity"
+                                       To="0"
+                                       Duration="0:0:0.4"
+                                       EasingFunction="{StaticResource ElasticEase}"/>
+
+                            <DoubleAnimation Storyboard.TargetProperty="Effect.BlurRadius"
+                                       To="12"
+                                       Duration="0:0:0.3"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="AnimatedButtonStyle" TargetType="Button">
+            
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="100"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button Margin="20,0" Height="70"  hc:IconElement.Geometry="{StaticResource ScanCodeGeometry}" hc:IconElement.Width="35"  Style="{DynamicResource NavButton}" Command="{Binding ScanCommand}" Content="扫码登录"   Width="180"  ></Button>
+            <Button Margin="20,0" Height="70" Style="{DynamicResource NavButton}" Command="{Binding LoginCommand}" Content="登录"  Width="150"  ></Button>
+            <Button Margin="20,0" Height="70" Style="{DynamicResource NavButton}" Command="{Binding RegisterCommand}" Content="注册"  Width="150"  ></Button>
+        </StackPanel>
+       
+
+
+        <Grid Grid.Row="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="6*"></ColumnDefinition>
+                <ColumnDefinition Width="6*"></ColumnDefinition>
+                <ColumnDefinition Width="6*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Command="{Binding CSFCommand}" Style="{StaticResource MenuButtonStyle}" Content="对比敏感度检查" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_csf.png" >
+                
+            </Button>
+            <Button Grid.Column="2"  Command="{Binding DEACommand}" Style="{StaticResource MenuButtonStyle}" Content="暗环境适应检查" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_dea.png" >
+
+            </Button>
+            <Button Grid.Column="3"  Command="{Binding ConfigCommand}" Style="{StaticResource MenuButtonStyle}" Content="系统设置" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_setting.png" >
+
+            </Button>
+        </Grid>
+            <Grid Grid.Row="2" >
+
+            <Button Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/btn_exit.png" Style="{DynamicResource ImageButton}"  Margin="20,0" Height="45" Width="45" HorizontalAlignment="Left" >
+
+            </Button>
+        </Grid>
+            
+    </Grid>
+</UserControl>

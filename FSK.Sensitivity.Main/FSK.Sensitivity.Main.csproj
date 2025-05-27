@@ -1,0 +1,96 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Views\Dialogs\Scan.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resource\Images\bg.png" />
+    <None Remove="Resource\Images\btn_exit.png" />
+    <None Remove="Resource\Images\file.png" />
+    <None Remove="Resource\Images\hardware.png" />
+    <None Remove="Resource\Images\left22.png" />
+    <None Remove="Resource\Images\logo.ico" />
+    <None Remove="Resource\Images\logo.png" />
+    <None Remove="Resource\Images\menu_csf.png" />
+    <None Remove="Resource\Images\menu_dea.png" />
+    <None Remove="Resource\Images\menu_setting.png" />
+    <None Remove="Resource\Images\remote.png" />
+    <None Remove="Resource\Images\right22.jpg" />
+    <None Remove="Resource\Images\Scan.gif" />
+    <None Remove="Resource\Images\sign.jpg" />
+    <None Remove="Resource\Images\startbg.png" />
+    <None Remove="Resource\Images\store.png" />
+    <None Remove="Resource\Images\user.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resource\AppSetting.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Resource\Images\file.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\hardware.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\logo.ico" />
+    <Resource Include="Resource\Images\logo.png" />
+    <Resource Include="Resource\Images\remote.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\Scan.gif" />
+    <Resource Include="Resource\Images\store.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\bg.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\btn_exit.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\left22.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\menu_csf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\menu_dea.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\menu_setting.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\right22.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\sign.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\startbg.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\user.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HandyControls" Version="3.5.3" />
+    <PackageReference Include="HandyControls.Lang.zh-CN" Version="3.5.3" />
+    <PackageReference Include="Prism.DryIoc" Version="9.0.537" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FSK.Sensitivity.Core\FSK.Sensitivity.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,524 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:hc="https://handyorg.github.io/handycontrol"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:lclcv="clr-namespace:FSK.Sensitivity.Main.Converters"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                    xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
+
+    <lclcv:EnumConverter x:Key="EnumConverter" />
+    <lclcv:LightStatusToBoolConverter x:Key="LightStatusToBoolConverter" />
+    <SolidColorBrush x:Key="MenuSelectedBrush" Color="#1B929D" />
+    <SolidColorBrush x:Key="MainBrush" Color="#01C2C0 " />
+    <SolidColorBrush x:Key="MainBackGroundBrush" Color="#070912"></SolidColorBrush>
+    <SolidColorBrush x:Key="SecondBackGroundBrush" Color="#2c4553"></SolidColorBrush>
+    <SolidColorBrush x:Key="ConfigParamButtonBackGroundBrush" Color="#2b4a52" Opacity=".95"></SolidColorBrush>
+    <SolidColorBrush x:Key="ThirdBackGroundBrush" Color="#517078"></SolidColorBrush>
+<!--扫码图标-->
+    <Geometry o:Freeze="True" x:Key="ScanCodeGeometry">M213.333333 629.333333V810.666667h202.666667v64H149.333333V629.333333h64z m661.333334 0V874.666667H608v-64H810.666667v-181.333334h64z m0.042666-146.538666v64H149.056v-64h725.653333zM416 149.333333v64H213.333333v181.333334H149.333333V149.333333h266.666667zM874.666667 149.333333v245.333334h-64V213.333333h-202.666667V149.333333H874.666667z</Geometry>
+    <!--返回图标-->
+    <Geometry o:Freeze="True" x:Key="BackGeometry">M475 276V141.4c-12.1-56.3-58.2-22-58.2-22L96.6 395.9c-70.4 48.9-4.8 85.7-4.8 85.7l315.4 274.1c63.1 46.5 67.9-24.5 67.9-24.5V606.4C795.3 506 926.3 907.5 926.3 907.5c12.1 22 19.4 0 19.4 0C1069.4 305.4 475 276 475 276z</Geometry>
+    <!--主页图标-->
+    <CombinedGeometry x:Key="HomeGeometry">
+        <CombinedGeometry.Geometry1>
+            <PathGeometry Figures="M762.77551 929.959184H261.22449c-40.75102 0-74.187755-33.436735-74.187755-74.710204v-288.914286c0-6.791837-5.22449-12.016327-11.493878-12.016327h-27.689796c-21.942857 0-40.75102-12.538776-49.110204-32.914285-8.359184-19.853061-3.657143-42.840816 11.493878-58.514286l341.159183-343.771429c15.673469-16.195918 37.616327-25.077551 60.604082-25.077551s44.930612 8.881633 61.126531 25.6L914.285714 463.412245c15.15102 15.673469 19.853061 38.661224 11.493878 58.514286-8.359184 20.37551-27.167347 32.914286-49.110204 32.914285h-27.689796c-6.269388 0-11.493878 5.22449-11.493878 12.016327v288.914286c-0.522449 40.75102-33.959184 74.187755-74.710204 74.187755zM512 135.836735c-12.016327 0-22.987755 4.702041-31.346939 13.061224L139.493878 492.669388c-5.22449 5.22449-3.657143 10.971429-2.612245 13.061224 1.044898 2.089796 3.657143 7.314286 10.971428 7.314286h27.689796c29.257143 0 53.289796 24.032653 53.289796 53.812245v288.914286c0 17.763265 14.628571 32.914286 32.391837 32.914285h501.55102c17.763265 0 32.391837-14.628571 32.391837-32.914285v-288.914286c0-29.779592 24.032653-53.812245 53.289796-53.812245h27.689796c6.791837 0 9.926531-5.22449 10.971428-7.314286 1.044898-2.089796 2.612245-7.836735-2.612245-13.061224L543.346939 148.897959c-8.359184-8.359184-19.330612-13.061224-31.346939-13.061224z"/>
+        </CombinedGeometry.Geometry1>
+        <CombinedGeometry.Geometry2>
+            <PathGeometry Figures="M663.510204 929.959184H360.489796v-219.428572c0-45.97551 37.616327-83.591837 83.591837-83.591836h135.836734c45.97551 0 83.591837 37.616327 83.591837 83.591836v219.428572z m-261.22449-41.795919h219.428572v-177.632653c0-22.987755-18.808163-41.795918-41.795919-41.795918H444.081633c-22.987755 0-41.795918 18.808163-41.795919 41.795918v177.632653z"/>
+        </CombinedGeometry.Geometry2>
+
+    </CombinedGeometry>
+    <!--方向图标-->
+    <Geometry o:Freeze="True" x:Key="ArrowGeometry">M1678.905352 27.749938c34.644756 34.730088 36.863386 89.683839 6.485225 126.888551l-6.485225 7.253213-758.60069 758.515358a94.803753 94.803753 0 0 1-126.80322 6.485225l-7.253213-6.485225-758.515358-758.60069A94.803753 94.803753 0 0 1 154.621423 21.350044l7.253212 6.485225L853.319111 719.365077 1544.763587 27.749938A94.803753 94.803753 0 0 1 1671.652139 21.350044l7.253213 6.485225z</Geometry>
+    <!--三角形图标-->
+    <Geometry o:Freeze="True" x:Key="TriangleGeometry">M548.949333 128l406.442667 704a42.666667 42.666667 0 0 1-36.949333 64H105.557333a42.666667 42.666667 0 0 1-36.949333-64L475.050667 128a42.666667 42.666667 0 0 1 73.898666 0z</Geometry>
+
+    <!--圆环图标-->
+    <Geometry o:Freeze="True" x:Key="RingGeometry">M514.27871605 3.13837035C235.43517235 3.13837035 9.40879013 229.16475258 9.40879013 508.00829628 9.40879013 786.85183999 235.43517235 1012.87822222 514.27871605 1012.87822222c278.8435437 0 504.86992592-226.02638222 504.86992592-504.86992594C1019.14864197 229.16475258 793.12225975 3.13837035 514.27871605 3.13837035zM514.27871605 935.20592592C278.1549353 935.20592592 87.08108642 744.13207702 87.08108642 508.00829628 87.08108642 271.88451555 278.1549353 80.81066665 514.27871605 80.81066665 750.4024968 80.81066665 941.47634568 271.88451555 941.47634568 508.00829628 941.47634568 744.13207702 750.4024968 935.20592592 514.27871605 935.20592592z</Geometry>
+    <CombinedGeometry x:Key="UserGeometry">
+        <CombinedGeometry.Geometry1>
+            <PathGeometry Figures="M451.4 394.1c-16.6 36.4-46.2 72.3-89.2 79.8 8.5 2 17.3 3.2 26.4 3.2 62.7 0 113.8-51 113.8-113.8 0-39.4-20.2-74.2-50.7-94.7 31.1 34.6 18.7 83.7-0.3 125.5zM786.2 379.6c-8.1 17.8-21 35.4-38.6 45.5h0.2c37.6 0 68.1-30.6 68.1-68.1 0-19.9-8.7-37.9-22.4-50.3 11.2 21.8 3.6 49.1-7.3 72.9z"/>
+        </CombinedGeometry.Geometry1>
+        <CombinedGeometry.Geometry2>
+            <PathGeometry Figures="M747.9 475.6c65.4 0 118.6-53.2 118.6-118.6s-53.2-118.6-118.6-118.6S629.2 291.6 629.2 357s53.3 118.6 118.7 118.6z m0-186.7c17.6 0 33.6 6.8 45.7 17.8C807.3 319.1 816 337 816 357c0 37.6-30.6 68.1-68.1 68.1h-0.2c-37.4-0.1-67.9-30.6-67.9-68.1 0-37.6 30.5-68.1 68.1-68.1zM388.6 541.8c-29.5 0-58.7 3.8-86.9 11.4-13.5 3.6-21.4 17.5-17.8 31 3.6 13.5 17.5 21.4 31 17.8 23.9-6.4 48.7-9.7 73.7-9.7 132.5 0 245.7 90 275.4 218.9 2.7 11.7 13.1 19.6 24.6 19.6 1.9 0 3.8-0.2 5.7-0.7 13.6-3.1 22.1-16.7 19-30.3-35.1-151.9-168.6-258-324.7-258zM218.6 588.4c-2.9 1.7-5.8 3.5-8.6 5.3-11.8 7.5-15.2 23.1-7.7 34.9 4.8 7.6 13 11.7 21.3 11.7 4.6 0 9.3-1.3 13.6-4 2.4-1.5 4.9-3 7.3-4.5 12-7.1 15.9-22.6 8.8-34.6-7.2-12-22.7-15.9-34.7-8.8zM140.5 652.7c-37.5 41.8-64 92.7-76.5 147.2-3.1 13.6 5.4 27.2 19 30.3 1.9 0.4 3.8 0.7 5.7 0.7 11.5 0 21.9-7.9 24.6-19.6 10.6-46.2 33.1-89.4 64.9-124.9 9.3-10.4 8.4-26.4-1.9-35.7-10.5-9.3-26.5-8.4-35.8 2zM959.7 674.3C936 571.5 845.8 499.7 740.2 499.7c-38.7 0-76.9 10-110.4 28.9-12.2 6.8-16.5 22.3-9.6 34.4 6.9 12.2 22.3 16.5 34.4 9.6 26-14.6 55.6-22.4 85.6-22.4 81.9 0 152 55.7 170.3 135.4 2.7 11.7 13.1 19.6 24.6 19.6 1.9 0 3.8-0.2 5.7-0.7 13.5-3 22-16.6 18.9-30.2zM552.9 363.3c0-90.6-73.7-164.3-164.3-164.3s-164.3 73.7-164.3 164.3S298 527.6 388.6 527.6s164.3-73.7 164.3-164.3z m-278.1 0c0-62.8 51.1-113.8 113.8-113.8 23.3 0 45 7.1 63.1 19.1 30.6 20.4 50.7 55.2 50.7 94.7 0 62.8-51.1 113.8-113.8 113.8-9.1 0-17.9-1.2-26.4-3.2-50.1-12-87.4-56.9-87.4-110.6z"/>
+        </CombinedGeometry.Geometry2>
+
+    </CombinedGeometry>
+
+    <Style x:Key="ImageButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource MenuSelectedBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Image Name="buttonImage" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" Stretch="Fill" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value=".9"></Setter>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Opacity" Value=".7"></Setter>
+            </Trigger>
+        </Style.Triggers>
+        
+        
+    </Style>
+    
+    
+    <Style x:Key="NormalButton" TargetType="Button" BasedOn="{StaticResource ButtonBaseStyle}">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource MainBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        
+    </Style>
+    <!--透明按钮-->
+    <Style x:Key="TransparentButton" TargetType="Button" BasedOn="{StaticResource ButtonBaseBaseStyle}">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="{DynamicResource RegionBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MainBrush}"/>
+        <Setter Property="hc:BorderElement.CornerRadius" Value="{StaticResource DefaultCornerRadius}"/>
+        <Setter Property="Padding" Value="2,0"></Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <hc:SimplePanel>
+                        <Border Background="Transparent" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}"/>
+                        <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}">
+                                <Path x:Name="PathMain" Width="{TemplateBinding hc:IconElement.Width}" Height="{TemplateBinding hc:IconElement.Height}" Fill="{TemplateBinding Foreground}" SnapsToDevicePixels="True" Stretch="Uniform" Data="{TemplateBinding hc:IconElement.Geometry}"/>
+                                <ContentPresenter x:Name="ContentPresenterMain" RecognizesAccessKey="True" VerticalAlignment="Center" Margin="6,0,0,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </StackPanel>
+                        </Border>
+                    </hc:SimplePanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Content" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="ContentPresenterMain"/>
+                        </Trigger>
+                        <Trigger Property="hc:IconElement.Geometry" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="PathMain"/>
+                            <Setter Property="Margin" Value="0" TargetName="ContentPresenterMain"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value=".9"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Opacity" Value=".6"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.4"/>
+            </Trigger>
+        </Style.Triggers>
+
+    </Style>
+
+
+
+    <Style x:Key="ArrowButton" TargetType="Button" BasedOn="{StaticResource NormalButton}">
+        <Setter Property="Width" Value="70" />
+        <Setter Property="Height" Value="70" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="hc:BorderElement.CornerRadius" Value="5"/>
+        <Setter Property="hc:IconElement.Width" Value="50" />
+        <Setter Property="hc:IconElement.Height" Value="50" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="Opacity" Value="1" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsButtonActive}" Value="True">
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                        Storyboard.TargetProperty="Opacity"
+                        To=".6" Duration="0:0:0.1" AutoReverse="True" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    
+    <Style x:Key="NavButton" TargetType="Button" BasedOn="{StaticResource NormalButton}">
+        <Setter Property="Height" Value="55" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="30"></Setter>
+        <Setter Property="hc:BorderElement.CornerRadius" Value="6"/>
+    </Style>
+
+    <Style x:Key="btnOprateStyle" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}" >
+                    <Border x:Name="border" CornerRadius="30" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="Foreground" Value="White"></Setter>
+        <Setter Property="FontSize" Value="34"></Setter>
+        <Setter Property="Width" Value="220"></Setter>
+        <Setter Property="Height" Value="65"></Setter>
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="Button.PreviewMouseDown">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0.8" Duration="0:0:0.1"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="Button.PreviewMouseUp">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="SaveButton" TargetType="Button" BasedOn="{StaticResource btnOprateStyle}">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource MainBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        
+
+    </Style>
+
+    <Style x:Key="CancleButton" TargetType="Button" BasedOn="{StaticResource btnOprateStyle}">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource SecondBackGroundBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+
+    </Style>
+
+    <Style x:Key="ConfigParamBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource ConfigParamButtonBackGroundBrush}" />
+        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="CornerRadius" Value="15" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Margin" Value="10" />
+        
+    </Style>
+
+    <Style x:Key="TrainSignBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="15" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Margin" Value="10" />
+
+    </Style>
+
+    <Style x:Key="ConfigParamTitleStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Opacity" Value="0.7" />
+    </Style>
+
+    <Style x:Key="MyToggleButtonSwitchBaseStyle" BasedOn="{StaticResource BaseStyle}" TargetType="ToggleButton">
+        <Setter Property="FocusVisualStyle">
+            <Setter.Value>
+                <Style>
+                    <Setter Property="Control.Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Rectangle Style="{StaticResource RectangleFocusVisualCircular}"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="hc:VisualElement.HighlightBrush" Value="{DynamicResource PrimaryBrush}" />
+        <Setter Property="hc:VisualElement.HighlightForeground" Value="{DynamicResource SecondaryBorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ThirdlyTextBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="6,0,0,0" />
+        <Setter Property="Height" Value="24"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="StoryboardChecked">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.X)" Storyboard.TargetName="thumb">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="51">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="lightBorder">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="innerBorder">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                        <Storyboard x:Key="StoryboardUnChecked">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.X)" Storyboard.TargetName="thumb">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut" />
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="lightBorder">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="innerBorder">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1" />
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <Grid x:Name="templateRoot" Background="Transparent" SnapsToDevicePixels="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Viewbox>
+                            <hc:SimplePanel Width="100" Height="48">
+                                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="24" Name="innerBorder">
+                                    <hc:ToggleBlock HorizontalAlignment="Right" Margin="0 0 12 0" IsChecked="{Binding Path=(hc:ToggleButtonAttach.ShowLabel),RelativeSource={RelativeSource TemplatedParent}}">
+                                        <hc:ToggleBlock.CheckedContent>
+                                            <Ellipse Width="16" Height="16" StrokeThickness="2" Stroke="{Binding Path=(hc:VisualElement.HighlightForeground),RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </hc:ToggleBlock.CheckedContent>
+                                    </hc:ToggleBlock>
+                                </Border>
+                                <Border BorderBrush="{TemplateBinding BorderBrush}"  BorderThickness="{TemplateBinding BorderThickness}" Opacity="0" x:Name="lightBorder" Background="{Binding Path=(hc:VisualElement.HighlightBrush),RelativeSource={RelativeSource TemplatedParent}}" CornerRadius="24">
+                                    <hc:ToggleBlock HorizontalAlignment="Left" Margin="18 0 0 0" IsChecked="{Binding Path=(hc:ToggleButtonAttach.ShowLabel),RelativeSource={RelativeSource TemplatedParent}}">
+                                        <hc:ToggleBlock.CheckedContent>
+                                            <Rectangle Width="3" Height="16" RadiusX="1.5" RadiusY="1.5" Fill="{DynamicResource TextIconBrush}" />
+                                        </hc:ToggleBlock.CheckedContent>
+                                    </hc:ToggleBlock>
+                                </Border>
+                                <Border Margin="2" HorizontalAlignment="Left" CornerRadius="22" Name="thumb" Effect="{StaticResource EffectShadow2}" Background="White" Width="44" Height="44" RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform>
+                                        <TransformGroup>
+                                            <TranslateTransform />
+                                        </TransformGroup>
+                                    </Border.RenderTransform>
+                                </Border>
+                            </hc:SimplePanel>
+                        </Viewbox>
+                        <ContentPresenter x:Name="contentPresenter" Visibility="Collapsed" Grid.Column="1" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasContent" Value="true">
+                            <Setter Property="Visibility" TargetName="contentPresenter" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource StoryboardChecked}"/>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard Storyboard="{StaticResource StoryboardUnChecked}"/>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Grid x:Name="Grid">
+                        <Rectangle
+                Width="20"
+                Height="Auto"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Fill="Transparent" />
+                        <Border
+                x:Name="ScrollBarRectangle"
+                Width="20"
+                Height="Auto"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="{TemplateBinding Background}"
+                CornerRadius="10" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Tag" Value="Horizontal">
+                            <Setter TargetName="ScrollBarRectangle" Property="Width" Value="30" />
+                            <Setter TargetName="ScrollBarRectangle" Property="Height" Value="7" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type ScrollBar}">
+        <Setter Property="Margin" Value="-5,0,0,0" />
+        <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+        <Setter Property="Foreground" Value="{StaticResource MainBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Width" Value="20" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                    <Grid
+            x:Name="GridRoot"
+            Width="20"
+                        
+            Background="{TemplateBinding Background}">
+                        <Track
+                x:Name="PART_Track"
+                Focusable="false"
+                IsDirectionReversed="true">
+                            <Track.Thumb>
+                                <Thumb
+                        x:Name="ScrollBarThumb"
+                        Background="{TemplateBinding Foreground}"
+                        Style="{StaticResource ScrollThumbs}" />
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton
+                        x:Name="PageUp"
+                        Command="ScrollBar.PageDownCommand"
+                        Focusable="false"
+                        Opacity="0" />
+                            </Track.IncreaseRepeatButton>
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton
+                        x:Name="PageDown"
+                        Command="ScrollBar.PageUpCommand"
+                        Focusable="false"
+                        Opacity="0" />
+                            </Track.DecreaseRepeatButton>
+                        </Track>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="ScrollBarThumb" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="Orientation" Value="Horizontal">
+                            <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="-90" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="-90" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Width" Value="Auto" />
+                            <Setter Property="Height" Value="8" />
+                            <Setter TargetName="ScrollBarThumb" Property="Tag" Value="Horizontal" />
+                            <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand" />
+                            <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="MyProgressBarBaseStyle" TargetType="ProgressBar">
+        <Setter Property="hc:VisualElement.Text">
+            <Setter.Value>
+                <MultiBinding Converter="{StaticResource Number2PercentageConverter}" StringFormat="{}{0:F0} %">
+                    <Binding Path="Value" RelativeSource="{RelativeSource Self}"/>
+                    <Binding Path="Maximum" RelativeSource="{RelativeSource Self}"/>
+                </MultiBinding>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="hc:BorderElement.CornerRadius" Value="{StaticResource DefaultCornerRadius}"/>
+        <Setter Property="Background" Value="{DynamicResource SecondaryRegionBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ProgressBar">
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="IsIndeterminate" RepeatBehavior="Forever">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="Animation">
+                                <EasingDoubleKeyFrame KeyTime="0" Value="0.25"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.25"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="0.25"/>
+                            </DoubleAnimationUsingKeyFrames>
+                            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="Animation">
+                                <EasingPointKeyFrame KeyTime="0" Value="-0.5,0.5"/>
+                                <EasingPointKeyFrame KeyTime="0:0:1" Value="0.5,0.5"/>
+                                <EasingPointKeyFrame KeyTime="0:0:2" Value="1.5,0.5"/>
+                            </PointAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <Border x:Name="TemplateRoot" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                        <hc:SimplePanel>
+                            <Rectangle x:Name="PART_Track"/>
+                            <TextBlock Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" Text="{Binding Path=(hc:VisualElement.Text),RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <Border Style="{StaticResource BorderClip}" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}" x:Name="PART_Indicator" HorizontalAlignment="Left">
+                                <hc:SimplePanel>
+                                    <Border  x:Name="Indicator" Background="{TemplateBinding Foreground}">
+                                        <Border Width="{Binding ActualWidth,ElementName=TemplateRoot}" Visibility="Collapsed">
+                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextIconBrush}" Text="{Binding Path=(hc:VisualElement.Text),RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </Border>
+                                    </Border>
+                                    <Rectangle x:Name="PART_GlowRect" Visibility="Collapsed" Fill="{StaticResource ProgressBarIndicatorAnimatedFill}" HorizontalAlignment="Left" Margin="-100,0,0,0" Width="100"/>
+                                    <Rectangle x:Name="Animation" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" RenderTransformOrigin="0.5,0.5">
+                                        <Rectangle.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform/>
+                                            </TransformGroup>
+                                        </Rectangle.RenderTransform>
+                                    </Rectangle>
+                                </hc:SimplePanel>
+                            </Border>
+                        </hc:SimplePanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Orientation" Value="Vertical">
+                            <Setter Property="Height" Value="{x:Static system:Double.NaN}"/>
+                            <Setter Property="LayoutTransform" TargetName="TemplateRoot">
+                                <Setter.Value>
+                                    <RotateTransform Angle="-90"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsIndeterminate" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource IsIndeterminate}"/>
+                            </Trigger.EnterActions>
+                            <Setter Property="Visibility" TargetName="Indicator" Value="Collapsed"/>
+                            <Setter Property="Visibility" TargetName="PART_GlowRect" Value="Collapsed"/>
+                            <Setter Property="Visibility" TargetName="Animation" Value="Visible"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="MyProgressBarStyle" TargetType="ProgressBar">
+        <Setter Property="Foreground" Value="{DynamicResource MainBrush}"/>
+    </Style>
+
+   
+</ResourceDictionary>
