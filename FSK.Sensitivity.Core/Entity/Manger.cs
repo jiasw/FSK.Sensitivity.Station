@@ -14,11 +14,43 @@ namespace FSK.Sensitivity.Core.Entity
         public string name { get; set; }
 
         public string gender { get; set; }
+        [SqlSugar.SugarColumn(IsIgnore = true)]
+        public string gender_desc
+        {
+            get
+            {
 
-        public int age { get; set; }
+                if (string.IsNullOrWhiteSpace(gender))
+                {
+                    return "";
+                }
+                else
+                {
+                    return EnumExtensions.Genders.Where(g => g.Key == gender).FirstOrDefault().Value;
+                }
+            }
+        }
+
+        public string age { get; set; }
 
         public string phone { get; set; }
 
         public string type { get; set; }
+        [SqlSugar.SugarColumn(IsIgnore = true)]
+        public string type_desc
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(type))
+                {
+                    return "";
+                }
+                else
+                {
+                    return EnumExtensions.UserTypes.Where(t => t.Key == type).FirstOrDefault().Value;
+                }
+            }
+        }
+
     }
 }

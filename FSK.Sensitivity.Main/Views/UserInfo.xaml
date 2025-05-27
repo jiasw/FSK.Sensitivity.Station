@@ -21,34 +21,10 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Button Content="新增" Style="{StaticResource NavButton}" HorizontalAlignment="Right" Margin="0,0,50,5"></Button>
-        <ListView Grid.Row="1" ItemsSource="{Binding Mangers}">
-            <ListView.Resources>
-                <!-- 全局设置所有 GridViewColumnHeader 居中 -->
-                <Style TargetType="GridViewColumnHeader">
-                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                    <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
-                    <Setter Property="Padding" Value="15,0" />
-                    <Setter Property="FontSize" Value="20"/>
-                    <Setter Property="MinHeight" Value="{Binding Path=(hc:GridViewAttach.ColumnHeaderHeight),RelativeSource={RelativeSource AncestorType=ListView}}"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="GridViewColumnHeader">
-                                <hc:SimplePanel SnapsToDevicePixels="true">
-                                    <Border x:Name="HeaderBorder" BorderBrush="{TemplateBinding BorderBrush}" Background="Transparent">
-                                        <ContentPresenter x:Name="HeaderContent" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                    </Border>
-                                    <Canvas>
-                                        <Thumb x:Name="PART_HeaderGripper" Style="{StaticResource GridViewColumnHeaderGripper}"/>
-                                    </Canvas>
-                                </hc:SimplePanel>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-                
-            </ListView.Resources>
+        <Button Content="新增" Style="{StaticResource NavButton}" HorizontalAlignment="Right" Margin="0,0,50,5" Command="{Binding AddMangerCommand}"></Button>
+        <ListView Grid.Row="1" Style="{StaticResource MyCommonListViewStyle}" ItemsSource="{Binding Mangers}" >
+            
+
             <ListView.View>
                 <GridView>
 
@@ -64,14 +40,15 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
+
                     <GridViewColumn Width="100" >
-                        <GridViewColumn.Header>
+                        <GridViewColumn.Header >
                             <TextBlock Text="姓名"   />
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                    <TextBlock  FontSize="20"  Text="{Binding gender}"   />
+                                <TextBlock  FontSize="20"  Text="{Binding gender_desc}"   />
                                 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -79,7 +56,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                     <GridViewColumn Width="100" Header="年龄"  >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding age}"   />
+                                <TextBlock  FontSize="20"  Text="{Binding age}"    />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -95,17 +72,17 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                     <GridViewColumn Width="150" Header="人员类别" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding type}"   />
+                                <TextBlock  FontSize="20"  Text="{Binding type_desc}"   />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="操作"  >
+                    <GridViewColumn Header="操作" Width="190" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel  Orientation="Horizontal">
-                                    <Button Content="编辑" Margin="5,0,5,0" Style="{StaticResource ButtonInfo}" Command="{Binding DataContext.EditMangerCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"  CommandParameter="{Binding}"   />
-                                    <Button Content="删除" Margin="5,0,5,0" Style="{StaticResource ButtonDanger}" Command="{Binding DataContext.DeleteMangerCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
+                                    <Button Content="编辑" Padding="5,0,5,0" Margin="5,0,15,0" FontSize="20" Height="35" Style="{StaticResource ButtonInfo}" Command="{Binding DataContext.EditMangerCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"  CommandParameter="{Binding}"   />
+                                    <Button Content="删除" Padding="5,0,5,0" Margin="15,0,5,0" FontSize="20" Height="35" Style="{StaticResource ButtonDanger}" Command="{Binding DataContext.DeleteMangerCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

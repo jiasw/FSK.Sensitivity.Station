@@ -1,6 +1,8 @@
-﻿using FSK.Sensitivity.Core.Entity;
+﻿using FSK.Sensitivity.Core.Const;
+using FSK.Sensitivity.Core.Entity;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Repositories;
+using Prism.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,6 +15,7 @@ namespace FSK.Sensitivity.Main.ViewModels
     public class UserInfoViewModel : BaseViewModel
     {
         private readonly MangerRepository mangerRepository;
+        private readonly IDialogService dialogService;
         private ObservableCollection<Manger> mangers = new ObservableCollection<Manger>();
         private int pageIndex = 1;
         private int pageSize = 10;
@@ -39,9 +42,10 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
 
-        public UserInfoViewModel(MangerRepository mangerRepository)
+        public UserInfoViewModel(MangerRepository mangerRepository, IDialogService dialogService)
         {
             this.mangerRepository = mangerRepository;
+            this.dialogService = dialogService;
         }
 
         public DelegateCommand LoadCommand=>new DelegateCommand(async () =>
@@ -61,13 +65,38 @@ namespace FSK.Sensitivity.Main.ViewModels
             Mangers = new ObservableCollection<Manger>(pageModel.data);
             return pageModel;
         }
-        public DelegateCommand<Manger> DeleteCommand => new DelegateCommand<Manger>(async (n) =>
+        public DelegateCommand<Manger> DeleteMangerCommand => new DelegateCommand<Manger>(async (n) =>
         {
             await mangerRepository.DeleteById(n.Id);
             await LoadData(PageIndex);
         });
 
+        public DelegateCommand<Manger> EditMangerCommand => new DelegateCommand<Manger>(async (n) =>
+        {
+            dialogService.ShowDialog(AppConst.Main_Dialog_Setting_UserInfo_Add, new DialogParameters()
+            {
+                { "id", n.Id }
+            }, async result =>
+            {
+                if (result.Result == ButtonResult.OK)
+                {
+                    await LoadData(PageIndex);
+                }
+                
+            });
+        });
 
+        public DelegateCommand AddMangerCommand => new DelegateCommand(async () =>
+        {
+            dialogService.ShowDialog(AppConst.Main_Dialog_Setting_UserInfo_Add, new DialogParameters(), async result =>
+            {
+                if (result.Result == ButtonResult.OK)
+                {
+                    await LoadData(PageIndex);
+                }
+
+            });
+        });
 
         
         

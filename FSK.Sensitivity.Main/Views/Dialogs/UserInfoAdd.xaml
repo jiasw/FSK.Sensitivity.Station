@@ -71,14 +71,14 @@
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="姓名" Style="{StaticResource textblockTitleStyle}"></TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Name, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
                 <TextBlock Grid.Column="0" Grid.Row="3" Text="性别" Style="{StaticResource textblockTitleStyle}"></TextBlock>
-                <ComboBox Grid.Column="1" Grid.Row="3" ItemsSource="{Binding SexList}" SelectedValue="{Binding Gender, Mode=TwoWay}" Style="{StaticResource comboboxStyle}"></ComboBox>
+                <ComboBox Grid.Column="1" Grid.Row="3" ItemsSource="{Binding Genders}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Gender, Mode=TwoWay}" Style="{StaticResource comboboxStyle}"></ComboBox>
                 <TextBlock Grid.Column="0" Grid.Row="4" Text="联系电话" Style="{StaticResource textblockTitleStyle}"></TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Phone, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
                 <TextBlock Grid.Column="0" Grid.Row="5" Text="年龄" Style="{StaticResource textblockTitleStyle}"></TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Age, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
                 <TextBlock Grid.Column="0" Grid.Row="6" Text="类型" Style="{StaticResource textblockTitleStyle}"></TextBlock>
-                <ComboBox Grid.Column="1" Grid.Row="6" ItemsSource="{Binding GradeList}" SelectedValue="{Binding Gender, Mode=TwoWay}" Style="{StaticResource comboboxStyle}"></ComboBox>
-                <Button Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" Content="保存" FontSize="26" Width="250" Margin="0,10" Style="{StaticResource NavButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RegisterCommand}" />
+                <ComboBox Grid.Column="1" Grid.Row="6" ItemsSource="{Binding UserTypes}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding UserType, Mode=TwoWay}" Style="{StaticResource comboboxStyle}"></ComboBox>
+                <Button Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" Content="保存" FontSize="26" Width="250" Margin="0,10" Style="{StaticResource NavButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding SaveCommand}" />
             </Grid>
         </StackPanel>
     </Border>
