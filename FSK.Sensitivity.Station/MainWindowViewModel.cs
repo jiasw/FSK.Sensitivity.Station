@@ -31,8 +31,10 @@ namespace FSK.Sensitivity.Station
         {
             /*
              修改bug002
-             
+               修改bug003 
              */
+
+
             var secondaryWindow = containerProvider.Resolve<SecondaryWindow>();
             secondaryWindow.Show();
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
