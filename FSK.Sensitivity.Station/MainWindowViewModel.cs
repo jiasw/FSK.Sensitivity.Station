@@ -30,6 +30,10 @@ namespace FSK.Sensitivity.Station
         private void Load()
         {
             /*
+             修改bug001
+             
+             */
+            /*
              修改bug002
                修改bug003 
              */
