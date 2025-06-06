@@ -3,6 +3,7 @@ using FSK.Sensitivity.Core.Entity;
 using FSK.Sensitivity.Core.HardWare;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Repositories;
+using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
 using SqlSugar;
 using System;
@@ -167,7 +168,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     Description = "扫描仪串口"
                 });
             }
-            MessageBox.Show("保存成功");
+            AlertMessageBox.Show("保存成功");
         }
         
         

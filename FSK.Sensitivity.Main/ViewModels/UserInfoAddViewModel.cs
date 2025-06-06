@@ -1,6 +1,7 @@
 ﻿using FSK.Sensitivity.Core;
 using FSK.Sensitivity.Core.Entity;
 using FSK.Sensitivity.Core.Repositories;
+using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
 using System;
 using System.Collections.Generic;
@@ -88,7 +89,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     manger.Id = id;
                     await mangerRepository.Update(manger);
                 }
-                MessageBox.Show("保存成功！");
+                AlertMessageBox.Show("保存成功！");
                 RequestClose.Invoke(new DialogResult(ButtonResult.OK));
             }
             
@@ -98,7 +99,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (string.IsNullOrEmpty(Name))
             {
-                MessageBox.Show("姓名不能为空！");
+                AlertMessageBox.Show("姓名不能为空！");
                 return false;
             }
            

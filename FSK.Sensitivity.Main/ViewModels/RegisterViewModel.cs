@@ -1,5 +1,6 @@
 ﻿using FSK.Sensitivity.Core.Entity;
 using FSK.Sensitivity.Core.Repositories;
+using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
 using System;
 using System.Collections.Generic;
@@ -111,7 +112,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void Close()
         {
-            RequestClose.Invoke(new DialogResult(ButtonResult.OK));
+            RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
         }
 
         public DelegateCommand RegisterCommand => new DelegateCommand(async () => await Register());
@@ -120,12 +121,12 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (string.IsNullOrEmpty(LoginAccount))
             {
-                MessageBox.Show("请输入登录账号！");
+                AlertMessageBox.Show("请输入登录账号！");
                 return;
             }
             if (string.IsNullOrEmpty(Name))
             {
-                MessageBox.Show("请输入姓名！");
+                AlertMessageBox.Show("请输入姓名！");
                 return;
             }
 
@@ -144,14 +145,14 @@ namespace FSK.Sensitivity.Main.ViewModels
             long id= await patientRepository.Add(addPatient);
             if (id > 0)
             {
-                MessageBox.Show("注册成功！");
+                AlertMessageBox.Show("注册成功！");
                 addPatient.Id = id;
                 AppData.Instance.CurrentPatient = addPatient;
                 Close();
             }
             else
             {
-                MessageBox.Show("注册失败！");
+                AlertMessageBox.Show("注册失败！");
             }
 
         }

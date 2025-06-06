@@ -1,5 +1,6 @@
 ﻿using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Utility;
+using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
 using Prism.Dialogs;
 using Prism.Navigation.Regions;
@@ -23,6 +24,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             this.regionManager = regionManager;
             this.dialogService = dialogService;
+            AppData.Instance.DialogService = dialogService;
         }
 
         private string _title = "主菜单";
@@ -92,7 +94,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (!IsLogin)
             {
-                HandyControl.Controls.MessageBox.Show("请先登录！");
+                AlertMessageBox.Show("请先登录！");
                 return;
             }
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", "CSF" } });
@@ -102,7 +104,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (!IsLogin)
             {
-                HandyControl.Controls.MessageBox.Show("请先登录！");
+                AlertMessageBox.Show("请先登录！");
                 return;
             }
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", "DEA" } });

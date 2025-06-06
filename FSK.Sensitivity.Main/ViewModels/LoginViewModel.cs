@@ -1,6 +1,7 @@
 ﻿using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Entity;
 using FSK.Sensitivity.Core.Repositories;
+using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
 using Prism.Dialogs;
 using System;
@@ -127,7 +128,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (Patients==null || Patients.Count==0||string.IsNullOrEmpty(Username))
             {
-                MessageBox.Show("请选择用户");
+                AlertMessageBox.Show("请选择用户");
                 return;
             }
             AppData.Instance.CurrentPatient= _patientList.First(p => p.Id == _seleedPatientId);

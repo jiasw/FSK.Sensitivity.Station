@@ -1,5 +1,6 @@
 ﻿using FSK.Sensitivity.Core.Entity;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
+using FSK.Sensitivity.Main.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace FSK.Sensitivity.Main
         {
             if(Handler==null || Handler.IsAvailable == false)
             {
-                MessageBox.Show("手柄未连接，请稍候重试");
+                AlertMessageBox.Show("手柄未连接，请稍候重试");
                 return false;
             }
 
@@ -81,6 +82,11 @@ namespace FSK.Sensitivity.Main
         /// 当前用户信息
         /// </summary>
         public Patient Patient { get; set; }
+
+        /// <summary>
+        /// 弹窗服务
+        /// </summary>
+        public IDialogService DialogService { get; set; }
 
     }
 }

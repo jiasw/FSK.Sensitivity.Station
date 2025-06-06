@@ -1,5 +1,6 @@
 ﻿using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Repositories;
+using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
 using System;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 });
                     
             }
-            MessageBox.Show("保存成功");
+            AlertMessageBox.Show("保存成功");
                 
         }
     }

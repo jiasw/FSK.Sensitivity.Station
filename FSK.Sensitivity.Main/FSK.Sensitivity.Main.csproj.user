@@ -11,6 +11,9 @@
     <Compile Update="Views\ContrastTraining.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Dialogs\AlertMsg.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Dialogs\Login.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

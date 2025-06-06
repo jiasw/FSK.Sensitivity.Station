@@ -103,6 +103,7 @@ namespace FSK.Sensitivity.Main
             containerRegistry.RegisterDialog<ShowItemsDialog, ShowItemsDialogViewModel>();
             containerRegistry.RegisterDialog<Scan, ScanViewModel>();
             containerRegistry.RegisterDialog<UserInfoAdd, UserInfoAddViewModel>();
+            containerRegistry.RegisterDialog<AlertMsg, AlertMsgViewModel>();
             #endregion
             #region 注册界面
 
