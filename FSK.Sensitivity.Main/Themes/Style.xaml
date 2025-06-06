@@ -2,12 +2,14 @@
                     xmlns:hc="https://handyorg.github.io/handycontrol"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:lclcv="clr-namespace:FSK.Sensitivity.Main.Converters"
+                    xmlns:lcext="clr-namespace:FSK.Sensitivity.Main.Controls.Extend"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
                     xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
 
     <lclcv:EnumConverter x:Key="EnumConverter" />
     <lclcv:LightStatusToBoolConverter x:Key="LightStatusToBoolConverter" />
     <lclcv:ListViewItemBackgroundColorConverter x:Key="ListViewItemBackgroundColorConverter" />
+    
     <SolidColorBrush x:Key="MenuSelectedBrush" Color="#1B929D" />
     <SolidColorBrush x:Key="MainBrush" Color="#01C2C0 " />
     <SolidColorBrush x:Key="MainBackGroundBrush" Color="#070912"></SolidColorBrush>
@@ -131,22 +133,35 @@
         <Setter Property="hc:IconElement.Height" Value="50" />
         <Setter Property="Padding" Value="3" />
         <Setter Property="Opacity" Value="1" />
+       
+    </Style>
+
+    <Style x:Key="ArrowButtontwinkle" TargetType="Button" BasedOn="{StaticResource NormalButton}">
+        <Setter Property="Width" Value="70" />
+        <Setter Property="Height" Value="70" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="hc:BorderElement.CornerRadius" Value="5"/>
+        <Setter Property="hc:IconElement.Width" Value="50" />
+        <Setter Property="hc:IconElement.Height" Value="50" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="Opacity" Value="1" />
         <Style.Triggers>
-            <DataTrigger Binding="{Binding IsButtonActive}" Value="True">
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, 
+                         Path=(lcext:ButtonActiveAttach.IsButtonActive)}"  Value="True">
                 <DataTrigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
                             <DoubleAnimation
-                        Storyboard.TargetProperty="Opacity"
-                        To=".6" Duration="0:0:0.1" AutoReverse="True" />
+                    Storyboard.TargetProperty="Opacity" From="1"
+                    To=".6" Duration="0:0:0.1" AutoReverse="True" />
                         </Storyboard>
                     </BeginStoryboard>
                 </DataTrigger.EnterActions>
             </DataTrigger>
+            
         </Style.Triggers>
     </Style>
 
-    
     <Style x:Key="NavButton" TargetType="Button" BasedOn="{StaticResource NormalButton}">
         <Setter Property="Height" Value="55" />
         <Setter Property="Foreground" Value="White" />

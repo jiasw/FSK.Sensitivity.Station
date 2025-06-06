@@ -49,7 +49,8 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void Save()
         {
-            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_SensitivityTraining);
+            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_SensitivityTraining
+                , new NavigationParameters() { { "sensitivityConfigParam", SensitivityConfigParam } });
         }
 
         public DelegateCommand BackCommand => new DelegateCommand(Back);

@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.Const;
+using FSK.Sensitivity.Core.Utility;
 using HandyControl.Controls;
 using Prism.Dialogs;
 using Prism.Navigation.Regions;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Navigation;
 
 namespace FSK.Sensitivity.Main.ViewModels
@@ -38,18 +40,71 @@ namespace FSK.Sensitivity.Main.ViewModels
         public bool IsLogin
         {
             get { return _isLogin; }
-            set { SetProperty(ref _isLogin, value); }
+            set
+            {
+                if (value)
+                {
+                    LoginVisibility = Visibility.Collapsed;
+                    UserVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    LoginVisibility = Visibility.Visible;
+                    UserVisibility = Visibility.Collapsed;
+                }
+
+                SetProperty(ref _isLogin, value);
+            }
+        }
+
+
+        private Visibility _loginVisibility = Visibility.Visible;
+        public Visibility LoginVisibility
+        {   
+            get { return _loginVisibility; }
+            set { SetProperty(ref _loginVisibility, value); }
+        }
+
+        private Visibility _userVisibility = Visibility.Collapsed;
+        public Visibility UserVisibility
+        {
+            get { return _userVisibility; }
+            set { SetProperty(ref _userVisibility, value); }
+        }
+
+        private string _userName;
+        public string UserName
+        {
+            get { return _userName; }
+            set { SetProperty(ref _userName, value); }
+        }
+
+        public DelegateCommand ExitCommand=> new DelegateCommand(ExitLogin);
+
+        private void ExitLogin()
+        {
+            AppData.Instance.CurrentPatient = null;
+            IsLogin = false;
         }
 
         public DelegateCommand CSFCommand => new DelegateCommand(CSF);
         private void CSF()
         {
+            if (!IsLogin)
+            {
+                HandyControl.Controls.MessageBox.Show("请先登录！");
+                return;
+            }
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", "CSF" } });
-            regionManager.RequestNavigate(AppConst.SignRegion, AppConst.Sign_Page_Init);
         }
         public DelegateCommand DEACommand => new DelegateCommand(DEA);
         private void DEA()
         {
+            if (!IsLogin)
+            {
+                HandyControl.Controls.MessageBox.Show("请先登录！");
+                return;
+            }
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", "DEA" } });
         }
 
@@ -67,11 +122,8 @@ namespace FSK.Sensitivity.Main.ViewModels
             {
                 if (result.Result == ButtonResult.OK)
                 {
-                    
-                }
-                else
-                {
-                    
+                    IsLogin = true;
+                    UserName = AppData.Instance.CurrentPatient.PatientName;
                 }
             });
         }
@@ -83,23 +135,18 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void Login()
         {
-            if (IsLogin)
+
+            //登录
+            dialogService.ShowDialog(AppConst.Main_Page_Login, new DialogParameters(), result =>
             {
-                //退出登录
-                IsLogin = false;
-
-            }
-            else {
-                //登录
-                dialogService.ShowDialog(AppConst.Main_Page_Login, new DialogParameters(), result =>
+                if (result.Result == ButtonResult.OK)
                 {
-                    if (result.Result == ButtonResult.OK)
-                    {
-                        IsLogin = true;
-                    }
+                    IsLogin = true;
+                    UserName = AppData.Instance.CurrentPatient.PatientName;
+                }
 
-                });
-            }
+            });
+
         }
 
         public DelegateCommand RegisterCommand=> new DelegateCommand(Register);
@@ -110,9 +157,22 @@ namespace FSK.Sensitivity.Main.ViewModels
             {
                 if (result.Result == ButtonResult.OK)
                 {
-                    MessageBox.Show("注册成功");
+                   IsLogin = true;
+                    UserName = AppData.Instance.CurrentPatient.PatientName;
                 }
             });
+        }
+
+
+        public DelegateCommand ShutDownCommand => new DelegateCommand(ShutDown);
+
+        private void ShutDown()
+        {
+            //关机
+            if(System.Windows.MessageBox.Show("确定要关闭系统吗？", "关闭系统", MessageBoxButton.OKCancel, MessageBoxImage.Question)== MessageBoxResult.OK)
+            {
+                Utils.ShutDown();
+            }
         }
 
 

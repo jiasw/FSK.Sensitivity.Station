@@ -26,7 +26,43 @@
                 <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
             <Border BorderThickness="3" BorderBrush="White" CornerRadius="10" Margin="10">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Patients}">
+                        <!-- 性能优化：虚拟化支持 -->
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!-- 使用样式触发器避免转换器 -->
+                                <TextBlock Text="{Binding Name}" Padding="10">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="FontSize" Value="24"/>
+                                            <Setter Property="Foreground" Value="Black"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter Property="Background" Value="LightSkyBlue"/>
+                                                    <Setter Property="Foreground" Value="White"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                
+                <!-- 命令绑定（无需后台代码）-->
+                                    <TextBlock.InputBindings>
+                                        <MouseBinding Gesture="LeftClick"  CommandParameter="{Binding}"
+                                  Command="{Binding Path=DataContext.SelectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                    </TextBlock.InputBindings>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
 
             </Border>
 

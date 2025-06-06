@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FSK.Sensitivity.Main.Views"
              xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:lcext="clr-namespace:FSK.Sensitivity.Main.Controls.Extend"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
@@ -97,7 +98,7 @@
             <Border Grid.Column="1" Style="{DynamicResource TrainSignBorderStyle}">
                 <Image Source="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/sign.jpg" Stretch="Fill" />
             </Border>
-            <Grid Grid.Column="2" Margin="0,5">
+            <Grid Grid.Column="2" Margin="0,5" DataContext="{Binding ArrowButtonStauts}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -108,7 +109,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Button  DataContext="{Binding SaveButton}" Command="{Binding TriggerCommand}"  hc:IconElement.Geometry="{StaticResource RingGeometry}"   Style="{DynamicResource ArrowButton}" RenderTransformOrigin="0.5,0.5">
+                <Button   lcext:ButtonActiveAttach.IsButtonActive="{Binding SaveButtonStatus}"  hc:IconElement.Geometry="{StaticResource RingGeometry}"   Style="{DynamicResource ArrowButtontwinkle}" RenderTransformOrigin="0.5,0.5">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -119,10 +120,10 @@
                     </Button.RenderTransform>
 
                 </Button>
-                <Button Grid.Column="2" Padding="3" hc:IconElement.Geometry="{StaticResource TriangleGeometry}"  Style="{DynamicResource ArrowButton}"  RenderTransformOrigin="0.5,0.5">
+                <Button Grid.Column="2" Padding="3" lcext:ButtonActiveAttach.IsButtonActive="{Binding TriggerButtonStatus}" hc:IconElement.Geometry="{StaticResource TriangleGeometry}"  Style="{DynamicResource ArrowButtontwinkle}"  RenderTransformOrigin="0.5,0.5">
                     
                 </Button>
-                <Button  Grid.Column="1" hc:IconElement.Geometry="{StaticResource ArrowGeometry}"  Style="{DynamicResource ArrowButton}" RenderTransformOrigin="0.5,0.5">
+                <Button  Grid.Column="1"  lcext:ButtonActiveAttach.IsButtonActive="{Binding UpButtonStatus}" hc:IconElement.Geometry="{StaticResource ArrowGeometry}"  Style="{DynamicResource ArrowButtontwinkle}" RenderTransformOrigin="0.5,0.5">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -133,7 +134,7 @@
                     </Button.RenderTransform>
 
                 </Button>
-                <Button  Grid.Row="1"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"    Style="{DynamicResource ArrowButton}" RenderTransformOrigin="0.5,0.5">
+                <Button  Grid.Row="1" lcext:ButtonActiveAttach.IsButtonActive="{Binding LeftButtonStatus}"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"    Style="{DynamicResource ArrowButtontwinkle}" RenderTransformOrigin="0.5,0.5">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -144,7 +145,7 @@
                     </Button.RenderTransform>
 
                 </Button>
-                <Button  Grid.Row="1" Grid.Column="2"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"    Style="{DynamicResource ArrowButton}" RenderTransformOrigin="0.5,0.5">
+                <Button  Grid.Row="1" Grid.Column="2" lcext:ButtonActiveAttach.IsButtonActive="{Binding RightButtonStatus}"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"    Style="{DynamicResource ArrowButtontwinkle}" RenderTransformOrigin="0.5,0.5" >
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -155,9 +156,11 @@
                     </Button.RenderTransform>
 
                 </Button>
-                <Button  Grid.Row="2" Grid.Column="1"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"  Style="{DynamicResource ArrowButton}"  RenderTransformOrigin="0.5,0.5">
+                <Button  Grid.Row="2" Grid.Column="1" lcext:ButtonActiveAttach.IsButtonActive="{Binding DownButtonStatus}"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"  Style="{DynamicResource ArrowButtontwinkle}"  RenderTransformOrigin="0.5,0.5">
 
                 </Button>
+                
+
             </Grid>
         </Grid>
         <UniformGrid Grid.Row="1" Columns="2">
@@ -168,7 +171,10 @@
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
                     <Border BorderThickness="0,0,0,3" BorderBrush="#FF999999">
-                        <TextBlock FontSize="28" Foreground="White" Opacity=".9" VerticalAlignment="Center" Text="正在执行：左眼检查项目"></TextBlock>
+                        <TextBlock FontSize="28" Foreground="White" Opacity=".9" VerticalAlignment="Center" >
+                            <Run Text="正在执行："></Run>
+                            <Run Text="左眼检查项目"></Run>
+                        </TextBlock>
                     </Border>
                     <Grid Grid.Row="1" Margin="0,15,0,0">
                         <Grid.ColumnDefinitions>
@@ -208,7 +214,7 @@
                                 </TextBlock>
                                 <TextBlock Grid.Row="2"  Style="{StaticResource txtParam}">
                                     <Run Text="RT:"></Run>
-                                    <Run Text="60"></Run>
+                                    <Run Text="{Binding LeftCount}"></Run>
                                     <Run Text="S"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="3"  Style="{StaticResource txtParam}">
@@ -235,7 +241,10 @@
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
                     <Border BorderThickness="0,0,0,3" BorderBrush="#FF999999">
-                        <TextBlock FontSize="28" Foreground="White" Opacity=".9" VerticalAlignment="Center" Text="正在执行：右眼检查项目"></TextBlock>
+                        <TextBlock FontSize="28" Foreground="White" Opacity=".9" VerticalAlignment="Center" >
+                            <Run Text="正在执行："></Run>
+                            <Run Text="右眼检查项目"></Run>
+                        </TextBlock>
                     </Border>
                     <Grid Grid.Row="1" Margin="0,15,0,0">
                         <Grid.ColumnDefinitions>
@@ -275,7 +284,7 @@
                                 </TextBlock>
                                 <TextBlock Grid.Row="2"  Style="{StaticResource txtParam}">
                                     <Run Text="RT:"></Run>
-                                    <Run Text="60"></Run>
+                                    <Run Text="{Binding RightCount}"></Run>
                                     <Run Text="S"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="3"  Style="{StaticResource txtParam}">

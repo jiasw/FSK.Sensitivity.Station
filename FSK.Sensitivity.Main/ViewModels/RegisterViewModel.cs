@@ -1,4 +1,7 @@
-﻿using System;
+﻿using FSK.Sensitivity.Core.Entity;
+using FSK.Sensitivity.Core.Repositories;
+using HandyControl.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +11,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 {
     public class RegisterViewModel : BaseViewModel, IDialogAware
     {
+
 
         public List<string> SexList =>new List<string> { "男", "女" };
 
@@ -75,6 +79,13 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
         private string _className;
+        private readonly PatientRepository patientRepository;
+
+        public RegisterViewModel(PatientRepository patientRepository)
+        {
+            this.patientRepository = patientRepository;
+        }
+
         public string ClassName
         {
             get { return _className; }  
@@ -103,11 +114,48 @@ namespace FSK.Sensitivity.Main.ViewModels
             RequestClose.Invoke(new DialogResult(ButtonResult.OK));
         }
 
-        public DelegateCommand RegisterCommand => new DelegateCommand(Register);
+        public DelegateCommand RegisterCommand => new DelegateCommand(async () => await Register());
 
-        private void Register()
+        private async Task Register()
         {
-            //TODO: 注册逻辑
+            if (string.IsNullOrEmpty(LoginAccount))
+            {
+                MessageBox.Show("请输入登录账号！");
+                return;
+            }
+            if (string.IsNullOrEmpty(Name))
+            {
+                MessageBox.Show("请输入姓名！");
+                return;
+            }
+
+            Patient addPatient = new Patient
+            {
+                LoginName = LoginAccount,
+                PatientName = Name,
+                Phone = Phone,
+                IdCard = IdCard,
+                Age = int.Parse(Age),
+                Sex = Gender == "男"? 1 : 0,
+                School = School,
+                Grade = Grade,
+                Clas=ClassName
+            };
+            long id= await patientRepository.Add(addPatient);
+            if (id > 0)
+            {
+                MessageBox.Show("注册成功！");
+                addPatient.Id = id;
+                AppData.Instance.CurrentPatient = addPatient;
+                Close();
+            }
+            else
+            {
+                MessageBox.Show("注册失败！");
+            }
+
         }
+
+
     }
 }

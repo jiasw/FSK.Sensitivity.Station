@@ -72,7 +72,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.ColumnSpan="2" Text="首次登录" Foreground="{StaticResource MainBrush}" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                 <TextBlock Grid.Column="0" Grid.Row="1" Text="登录账号"  hc:InfoElement.Placeholder="请输入账号"  Style="{StaticResource textblockTitleStyle}"></TextBlock>
-                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Name, Mode=TwoWay}"   Style="{StaticResource textboxStyle}"></TextBox>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding LoginAccount, Mode=TwoWay}"   Style="{StaticResource textboxStyle}" MaxLength="20"></TextBox>
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="姓名" Style="{StaticResource textblockTitleStyle}"></TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Name, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
                 <TextBlock Grid.Column="0" Grid.Row="3" Text="联系电话" Style="{StaticResource textblockTitleStyle}"></TextBlock>
@@ -86,7 +86,7 @@
                 <TextBlock Grid.Column="0" Grid.Row="7" Text="学校" Style="{StaticResource textblockTitleStyle}"></TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding School, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
                 <TextBlock Grid.Column="0" Grid.Row="8" Text="年级" Style="{StaticResource textblockTitleStyle}"></TextBlock>
-                <ComboBox Grid.Column="1" Grid.Row="8" ItemsSource="{Binding GradeList}" SelectedValue="{Binding Gender, Mode=TwoWay}" Style="{StaticResource comboboxStyle}"></ComboBox>
+                <ComboBox Grid.Column="1" Grid.Row="8" ItemsSource="{Binding GradeList}" SelectedValue="{Binding Grade, Mode=TwoWay}" Style="{StaticResource comboboxStyle}"></ComboBox>
                 <TextBlock Grid.Column="0" Grid.Row="9" Text="班级" Style="{StaticResource textblockTitleStyle}"></TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="9" Text="{Binding ClassName, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
                 <Button Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2" Content="确认登录" FontSize="26" Width="250" Margin="0,10" Style="{StaticResource NavButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RegisterCommand}" />

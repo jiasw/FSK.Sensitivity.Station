@@ -19,5 +19,7 @@ namespace FSK.Sensitivity.Main.Controls.Extend
                 typeof(ImageSource),
                 typeof(ButtonAttach),
                 new FrameworkPropertyMetadata(null));
+
+        
     }
 }

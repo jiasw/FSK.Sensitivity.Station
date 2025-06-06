@@ -61,5 +61,18 @@ namespace FSK.Sensitivity.Core.Utility
 
         }
 
+        /// <summary>
+        /// 关机
+        /// </summary>
+        public static void ShutDown()
+        {
+            using var process = new System.Diagnostics.Process();
+            process.StartInfo.FileName = "shutdown";
+            process.StartInfo.Arguments = "/s /t 0"; // /s关机, /t 0延迟0秒
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.CreateNoWindow = true;
+            process.Start();
+        }
+
     }
 }

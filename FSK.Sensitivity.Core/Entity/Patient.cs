@@ -24,6 +24,11 @@ namespace FSK.Sensitivity.Core.Entity
         /// 患者编号
         /// </summary>
         public string PatientIdNumber { get; set; }
+
+        /// <summary>
+        /// 登录名
+        /// </summary>
+        public string LoginName { get; set; }
         /// <summary>
         /// 患者姓名
         /// </summary>
@@ -114,5 +119,11 @@ namespace FSK.Sensitivity.Core.Entity
         /// </summary>
         public bool AsyncState { get; set; }
         public bool Checked { get; set; }
+
+        [SqlSugar.SugarColumn(IsIgnore = true)]
+        public string Gender => Sex == 1 ? "男" : "女";
+
+        [SqlSugar.SugarColumn(IsIgnore = true)]
+        public bool IsSelected { get; set; } = false;
     }
 }

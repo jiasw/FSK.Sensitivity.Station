@@ -16,6 +16,8 @@ namespace FSK.Sensitivity.Core.EventBus
         Sensitivity,
         //按适应检测
         Contrast,
+        //结束
+        Finish,
     }
 
     public enum SignBackGround
