@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.EventBus;
+using HandyControl.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,8 @@ namespace FSK.Sensitivity.Main.ViewModels
     {
         public SecondarySensitivityViewModel(IEventAggregator eventAggregator)
         {
-            eventAggregator.GetEvent<SensitivitySignChangeEvent>().Subscribe(OnScreenChange);
+            this.eventAggregator = eventAggregator;
+             eventAggregator.GetEvent<SensitivitySignChangeEvent>().Subscribe(OnScreenChange);
 
         }
         private SolidColorBrush selectedColor = new SolidColorBrush(Colors.White);
@@ -44,6 +46,13 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref signPath, value); }
         }
 
+        private int selectedIndex = -1;
+        public int SelectedIndex
+        {
+            get { return selectedIndex; }
+            set { SetProperty(ref selectedIndex, value); }
+        }
+
 
         private void OnScreenChange(SensitivityChangeSignOptions options)
         {
@@ -64,10 +73,21 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
         private BitmapImage _signImage;
+        private readonly IEventAggregator eventAggregator;
+
         public BitmapImage SignImage
         {
             get { return _signImage; }
             set { SetProperty(ref _signImage, value); }
+        }
+
+        public DelegateCommand SelectCommand => new DelegateCommand(Select);
+
+        private void Select()
+        {
+            eventAggregator.GetEvent<SecondarySelectedEvent>().Publish(SelectedIndex);
+            selectedIndex = -1;
+            Growl.Info("选择成功");
         }
     }
 }

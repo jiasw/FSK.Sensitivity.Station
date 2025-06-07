@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using Prism.Navigation.Regions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,6 +77,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IRegionNavigationJournal journal;
         private readonly SecondaryChangeEvent secondaryChangeEvent;
         private readonly SensitivitySignChangeEvent sensitivitySignChangeEvent;
+        private readonly SecondarySelectedEvent sensitivitySignSelectedEvent;
 
         public SensitivityTrainingViewModel(IRegionManager regionManager,IEventAggregator eventAggregator)
         {
@@ -84,7 +86,12 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.journal = regionManager.Regions[AppConst.MainRegion].NavigationService.Journal;
             secondaryChangeEvent = eventAggregator.GetEvent<SecondaryChangeEvent>();
             sensitivitySignChangeEvent= eventAggregator.GetEvent<SensitivitySignChangeEvent>();
+            sensitivitySignSelectedEvent = eventAggregator.GetEvent<SecondarySelectedEvent>();
+            sensitivitySignSelectedEvent.Subscribe(VaValueChanged);
         }
+
+        
+
         private int imageIndex = 1;
 
         private ArrowButtonStauts _arrowButtonStauts = new ArrowButtonStauts();
@@ -216,9 +223,24 @@ namespace FSK.Sensitivity.Main.ViewModels
         private VAValue _vaValue = VAValue.VA06;
 
 
-        private void VaValueChanged(VAValue value)
+        /// <summary>
+        /// 用户选择视标事件
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void VaValueChanged(int obj)
         {
-            if (value == VAValue.None || value == VAValue.VA80)
+            Trace.WriteLine($"VA Value Changed:{obj}, vaValue:{_vaValue}");
+            if(_vaValue == VAValue.VA80)
+            {
+                secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Idle });
+            }
+            NextVA();
+        }
+
+        private void NextVA()
+        {
+            if (_vaValue == VAValue.None || _vaValue == VAValue.VA80)
             {
                 return;
             }
@@ -230,9 +252,9 @@ namespace FSK.Sensitivity.Main.ViewModels
                 {VAValue.VA40, VAValue.VA60 },
                 {VAValue.VA60, VAValue.VA80 },
             };
-            VAValue nextva = dicVA[value];
+            VAValue nextva = dicVA[_vaValue];
 
-            _vaValue = value;
+            _vaValue = nextva;
             RefreshSignImage();
         
         }

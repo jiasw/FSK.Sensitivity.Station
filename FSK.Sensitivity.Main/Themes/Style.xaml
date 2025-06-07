@@ -9,7 +9,7 @@
     <lclcv:EnumConverter x:Key="EnumConverter" />
     <lclcv:LightStatusToBoolConverter x:Key="LightStatusToBoolConverter" />
     <lclcv:ListViewItemBackgroundColorConverter x:Key="ListViewItemBackgroundColorConverter" />
-    
+    <lclcv:RadioButonCheckedConverter x:Key="RadioButonCheckedConverter" />
     <SolidColorBrush x:Key="MenuSelectedBrush" Color="#1B929D" />
     <SolidColorBrush x:Key="MainBrush" Color="#01C2C0 " />
     <SolidColorBrush x:Key="MainBackGroundBrush" Color="#070912"></SolidColorBrush>

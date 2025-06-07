@@ -28,4 +28,6 @@ namespace FSK.Sensitivity.Core.Enums
         VA60,
         VA80
     }
+
+    
 }
