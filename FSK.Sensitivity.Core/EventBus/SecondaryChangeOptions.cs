@@ -2,6 +2,7 @@
 using FSK.Sensitivity.Core.Model;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,8 +17,6 @@ namespace FSK.Sensitivity.Core.EventBus
         Sensitivity,
         //按适应检测
         Contrast,
-        //结束
-        Finish,
     }
 
     public enum SignBackGround
@@ -27,7 +26,9 @@ namespace FSK.Sensitivity.Core.EventBus
         //黑色背景
         Black,
     }
-
+    /// <summary>
+    /// 副屏切换内容事件
+    /// </summary>
     public class SecondaryChangeOptions
     {
         /// <summary>
@@ -36,13 +37,40 @@ namespace FSK.Sensitivity.Core.EventBus
         public ChangeAction Action { get; set; }
 
         /// <summary>
-        /// 图片背景色
+        /// 背景色
         /// </summary>
-        public SignBackGround Background { get; set; }=SignBackGround.White;
+        public SignBackGround Brush { get; set; }
+    }
+
+    /// <summary>
+    /// 敏感度视标切换信号
+    /// </summary>
+    public class SensitivityChangeSignOptions
+    {
+        /// <summary>
+        /// 视标图片路径
+        /// </summary>
+        public string PicturePath { get; set; }
 
         /// <summary>
-        /// 图片路径
+        /// 背景色
         /// </summary>
-        public string PicUrl { get; set; }
+        public SignBackGround BackgroundBrush { get; set; }
+    }
+
+    /// <summary>
+    /// 适应度检测信号
+    /// </summary>
+    public class ContrastChangeSignOptions
+    {
+        /// <summary>
+        /// 适应度图片路径
+        /// </summary>
+        public string PicturePath { get; set; }
+
+        /// <summary>
+        /// 适应度背景色
+        /// </summary>
+        public SignBackGround Brush { get; set; }
     }
 }

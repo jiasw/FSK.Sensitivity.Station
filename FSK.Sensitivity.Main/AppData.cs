@@ -78,10 +78,6 @@ namespace FSK.Sensitivity.Main
         /// </summary>
         public bool IsLogin { get; set; }
 
-        /// <summary>
-        /// 当前用户信息
-        /// </summary>
-        public Patient Patient { get; set; }
 
         /// <summary>
         /// 弹窗服务

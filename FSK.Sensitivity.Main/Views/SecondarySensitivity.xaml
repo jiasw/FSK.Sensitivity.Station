@@ -61,14 +61,22 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Grid>
+    <Grid Background="{Binding BackColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="0.8*"/>
             <RowDefinition Height="5*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
         <TextBlock FontSize="44" Foreground="{Binding TitleColor}" Text="请选择您能看清的编号最大的视标，并选择下方的按钮。"  VerticalAlignment="Bottom" TextWrapping="Wrap" HorizontalAlignment="Center"/>
-        <Image Grid.Row="1" Source="/FSK.Sensitivity.Main;component/Resource/Images/sign.jpg" Stretch="Uniform"></Image>
+
+        <Border Grid.Row="1">
+            <Border.Background>
+                <ImageBrush RenderOptions.BitmapScalingMode="HighQuality"  Stretch="Uniform" ImageSource="{Binding SignImage}">
+                    
+                </ImageBrush>
+            </Border.Background>
+        </Border>
+        
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" >
             <RadioButton GroupName="Demo1" IsChecked="True" Content="1"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
             <RadioButton GroupName="Demo1" IsChecked="False"  Content="2"   Style="{StaticResource SignToggleButtonBaseStyle}"/>

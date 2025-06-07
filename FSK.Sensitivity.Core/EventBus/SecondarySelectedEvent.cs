@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace FSK.Sensitivity.Core.EventBus
 {
+    /// <summary>
+    /// 用户在副屏选择事件
+    /// </summary>
     public class SecondarySelectedEvent : PubSubEvent<int>
     {
     }

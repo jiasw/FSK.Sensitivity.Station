@@ -38,7 +38,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <!-- 使用样式触发器避免转换器 -->
-                                <TextBlock Text="{Binding Name}" Padding="10">
+                                <TextBlock Text="{Binding LoginName}" Padding="10">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Background" Value="Transparent"/>

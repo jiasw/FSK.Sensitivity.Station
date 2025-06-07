@@ -7,7 +7,7 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:lcext="clr-namespace:FSK.Sensitivity.Main.Controls.Extend"
              xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
+             prism:ViewModelLocator.AutoWireViewModel="True" 
              mc:Ignorable="d" 
              d:DesignHeight="768" d:DesignWidth="1280">
     <UserControl.Resources>
@@ -44,8 +44,8 @@
                 <ColumnDefinition Width="240"/>
             </Grid.ColumnDefinitions>
             <Border Style="{DynamicResource ConfigParamBorderStyle}">
-                
-                <Grid Margin="10">
+
+                <Grid Margin="10" DataContext="{Binding CheckUserModel}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1.2*"/>
                         <ColumnDefinition Width="*" MinWidth="100"/>
@@ -63,40 +63,42 @@
                             <Run Text="ID"/>
                             <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Column="1" Text="122"  Style="{StaticResource txtValue}"/>
-                    <TextBlock  Grid.Column="2" Style="{StaticResource txtTitle}">
+                    <TextBlock  Grid.Column="1" Text="{Binding Id}" Grid.ColumnSpan="4" Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Row="2"  Style="{StaticResource txtTitle}">
         <Run Text="年龄"/>
         <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Column="3"  Text="15"  Style="{StaticResource txtValue}"/>
-                    <TextBlock Grid.Column="4"  Style="{StaticResource txtTitle}">
+                    <TextBlock  Grid.Row="2"  Grid.Column="1"  Text="{Binding Age}"  Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Row="2" Grid.Column="2"  Style="{StaticResource txtTitle}">
 <Run Text="性别"/>
 <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Column="5" Text="男"  Style="{StaticResource txtValue}"/>
+                    <TextBlock   Grid.Row="2" Grid.Column="3" Text="{Binding Gender}"  Style="{StaticResource txtValue}"/>
                     
                     
                     <TextBlock Grid.Column="0" Grid.Row="1"   Style="{StaticResource txtTitle}">
 <Run Text="姓名"/>
 <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Column="1" Grid.Row="1" Text="张三"  TextWrapping="WrapWithOverflow" Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Column="1" Grid.Row="1" Text="{Binding Name}"  TextWrapping="WrapWithOverflow" Style="{StaticResource txtValue}"/>
 
                     <TextBlock Grid.Column="2"  Grid.Row="1" Style="{StaticResource txtTitle}">
         <Run Text="瞳距"/>
         <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Column="3"  Grid.Row="1" Text="55"  Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Column="3"  Grid.Row="1" Text="{Binding PD}"  Style="{StaticResource txtValue}"/>
                     <TextBlock Grid.Column="4"  Grid.Row="1" Style="{StaticResource txtTitle}">
 <Run Text="灯光"/>
 <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Column="5"  Grid.Row="1" Text="开"  Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Column="5"  Grid.Row="1" Text="{Binding Light}"  Style="{StaticResource txtValue}"/>
                 </Grid>
                 
             </Border>
             <Border Grid.Column="1" Style="{DynamicResource TrainSignBorderStyle}">
-                <Image Source="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/sign.jpg" Stretch="Fill" />
+                <Border.Background>
+                    <ImageBrush RenderOptions.BitmapScalingMode="HighQuality"  Stretch="Fill" ImageSource="{Binding SignImage}"></ImageBrush>
+                </Border.Background>
             </Border>
             <Grid Grid.Column="2" Margin="0,5" DataContext="{Binding ArrowButtonStauts}">
                 <Grid.ColumnDefinitions>
@@ -159,7 +161,9 @@
                 <Button  Grid.Row="2" Grid.Column="1" lcext:ButtonActiveAttach.IsButtonActive="{Binding DownButtonStatus}"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"  Style="{DynamicResource ArrowButtontwinkle}"  RenderTransformOrigin="0.5,0.5">
 
                 </Button>
-                
+                <Button  Grid.Row="2"    hc:IconElement.Geometry="{StaticResource RotateLeftGeometry}"  Style="{DynamicResource ArrowButton}" Command="{Binding Path=DataContext.RefreshCommand,RelativeSource={RelativeSource AncestorType=UserControl}}" RenderTransformOrigin="0.5,0.5">
+
+                </Button>
 
             </Grid>
         </Grid>

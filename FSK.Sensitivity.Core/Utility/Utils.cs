@@ -74,5 +74,18 @@ namespace FSK.Sensitivity.Core.Utility
             process.Start();
         }
 
+
+        /// 生成一个区间的随机数，并排除指定的数字
+        public static int GenerateRandomNumber(int start, int end, params int[] excludeNumbers)
+        {
+            Random random = new Random();
+            int result = random.Next(start, end);
+            while (excludeNumbers.Contains(result))
+            {
+                result = random.Next(start, end);
+            }
+            return result;
+        }
+
     }
 }

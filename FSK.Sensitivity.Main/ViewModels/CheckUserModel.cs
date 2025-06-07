@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FSK.Sensitivity.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,5 +21,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         public string PD { get; set; }
 
         public string Light { get; set; }
+
+        public DayOrNight dayNight { get; set; }
     }
 }

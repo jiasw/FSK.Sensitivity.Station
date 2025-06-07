@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
@@ -12,7 +13,8 @@ namespace FSK.Sensitivity.Main.ViewModels
     {
         public SecondarySensitivityViewModel(IEventAggregator eventAggregator)
         {
-            eventAggregator.GetEvent<SecondaryChangeEvent>().Subscribe(OnScreenChange);
+            eventAggregator.GetEvent<SensitivitySignChangeEvent>().Subscribe(OnScreenChange);
+
         }
         private SolidColorBrush selectedColor = new SolidColorBrush(Colors.White);
         public SolidColorBrush SelectedColor
@@ -27,7 +29,12 @@ namespace FSK.Sensitivity.Main.ViewModels
             get { return titileColor; }
             set { SetProperty(ref titileColor, value); }    
         }
-        
+        private SolidColorBrush backColor = new SolidColorBrush(Colors.White);
+        public SolidColorBrush BackColor
+        {
+            get { return backColor; }
+            set { SetProperty(ref backColor, value); }
+        }
 
 
         private string signPath = "";
@@ -38,19 +45,29 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
 
-        private void OnScreenChange(SecondaryChangeOptions options)
+        private void OnScreenChange(SensitivityChangeSignOptions options)
         {
-            if (options.Background == SignBackGround.White)
+            SignPath = "pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/Sign/" + options.PicturePath;
+            if (options.BackgroundBrush == SignBackGround.White)
             {
-                SelectedColor = new SolidColorBrush(Colors.White);
+                BackColor = new SolidColorBrush(Colors.White);
                 TitleColor= new SolidColorBrush(Colors.Black);
             }
             else
             {
+                BackColor = new SolidColorBrush(Color.FromRgb(153, 153, 153));
                 TitleColor = new SolidColorBrush(Colors.White);
-                SelectedColor = new SolidColorBrush(Colors.Black);
             }
-            SignPath = options.PicUrl;
+                BitmapImage bitmapImage = new BitmapImage(new Uri(SignPath));
+            bitmapImage.Freeze();
+            SignImage = bitmapImage;
+        }
+
+        private BitmapImage _signImage;
+        public BitmapImage SignImage
+        {
+            get { return _signImage; }
+            set { SetProperty(ref _signImage, value); }
         }
     }
 }

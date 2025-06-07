@@ -23,14 +23,8 @@
             <Setter Property="Background" Value="Transparent"></Setter>
         </Style>
     </prism:Dialog.WindowStyle>
-    <Border CornerRadius="10"   BorderBrush="{StaticResource DarkDefaultBrush}" BorderThickness="1">
-        <Border.Background>
-            <RadialGradientBrush>
-                <GradientStop Color="#5e5e5e" Offset="0.0" />
-                <GradientStop Color="#4b4b4b" Offset="0.5" />
-                <GradientStop Color="#393939" Offset="1.0" />
-            </RadialGradientBrush>
-        </Border.Background>
+    <Border CornerRadius="10" Background="{StaticResource SecondBackGroundBrush}"  BorderBrush="{StaticResource DarkDefaultBrush}" BorderThickness="1">
+        
         <Grid  >
 
             

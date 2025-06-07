@@ -33,16 +33,19 @@ namespace FSK.Sensitivity.Station
 
         private void OnScreenChange(SecondaryChangeOptions options)
         {
-            if (options.Action == ChangeAction.Idle)
-            {
-                regionManager.RequestNavigate(AppConst.SignRegion, AppConst.Sign_Page_Init);
-            }
-            else
+            if (options.Action == ChangeAction.Sensitivity)
             {
                 regionManager.RequestNavigate(AppConst.SignRegion, AppConst.Sign_Page_Sensitivity);
             }
+            else if (options.Action == ChangeAction.Contrast)
+            {
+                regionManager.RequestNavigate(AppConst.SignRegion, AppConst.Sign_Page_Contrast);
+            }
+            else
+            {
+                regionManager.RequestNavigate(AppConst.SignRegion, AppConst.Sign_Page_Init);
+            }
 
-            
         }
     }
 }
