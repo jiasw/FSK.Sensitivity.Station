@@ -22,6 +22,22 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public string Light { get; set; }
 
-        public DayOrNight dayNight { get; set; }
+        public DayOrNight DayNight { get; set; }
+
+        public string DayNigthDesc {
+            get
+            {
+                if (DayNight == DayOrNight.Day)
+                {
+                    return "日";
+                }
+                else
+                {
+                    return "夜";
+                }
+
+            }
+        
+        }
     }
 }

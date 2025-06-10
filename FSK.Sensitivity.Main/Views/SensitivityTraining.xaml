@@ -11,6 +11,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="768" d:DesignWidth="1280">
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <SolidColorBrush Color="#66FFFFFF" x:Key="BordelBackGround"></SolidColorBrush>
         <Style x:Key="txtTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="22"/>
@@ -74,8 +75,12 @@
 <Run Text="："/>
                     </TextBlock>
                     <TextBlock   Grid.Row="2" Grid.Column="3" Text="{Binding Gender}"  Style="{StaticResource txtValue}"/>
-                    
-                    
+                    <TextBlock  Grid.Row="2" Grid.Column="4"  Style="{StaticResource txtTitle}">
+<Run Text="日夜"/>
+<Run Text="："/>
+                    </TextBlock>
+                    <TextBlock   Grid.Row="2" Grid.Column="5" Text="{Binding DayNigthDesc}"  Style="{StaticResource txtValue}"/>
+
                     <TextBlock Grid.Column="0" Grid.Row="1"   Style="{StaticResource txtTitle}">
 <Run Text="姓名"/>
 <Run Text="："/>
@@ -168,7 +173,7 @@
             </Grid>
         </Grid>
         <UniformGrid Grid.Row="1" Columns="2">
-            <Border Style="{DynamicResource ConfigParamBorderStyle}" >
+            <Border Style="{DynamicResource ConfigParamBorderStyle}"  DataContext="{Binding LeftCSFTrainModel}">
                 <Grid Margin="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -176,7 +181,8 @@
                     </Grid.RowDefinitions>
                     <Border BorderThickness="0,0,0,3" BorderBrush="#FF999999">
                         <TextBlock FontSize="28" Foreground="White" Opacity=".9" VerticalAlignment="Center" >
-                            <Run Text="正在执行："></Run>
+                            <Run Text="{Binding TrainStatusText}"></Run>
+                            <Run Text="："></Run>
                             <Run Text="左眼检查项目"></Run>
                         </TextBlock>
                     </Border>
@@ -195,7 +201,7 @@
                             </Border.Background>
                         </Border>
                         <Border CornerRadius="5" Grid.Row="1"  Margin="0,20,10,0" Background="{StaticResource BordelBackGround}" >
-                            <UniformGrid Rows="2">
+                            <UniformGrid Rows="2" Visibility="{Binding IsTraining, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <TextBlock Margin="10,0" VerticalAlignment="Bottom" Foreground="White" FontSize="16">项目执行中...</TextBlock>
                                 <ProgressBar Margin="10,0"  Style="{StaticResource ProgressBarSuccess}"  Foreground="{StaticResource MainBrush}" IsIndeterminate="True" Value="0" Maximum="100" />
                             </UniformGrid>
@@ -213,21 +219,21 @@
                                 <TextBlock Text="OS" FontSize="18" FontWeight="Bold" Foreground="White"></TextBlock>
                                 <TextBlock Grid.Row="1" Style="{StaticResource txtParam}"  >
                                     <Run Text="AT:"></Run>
-                                    <Run Text="60"></Run>
+                                    <Run Text="{Binding AT}"></Run>
                                     <Run Text="S"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="2"  Style="{StaticResource txtParam}">
                                     <Run Text="RT:"></Run>
-                                    <Run Text="{Binding LeftCount}"></Run>
+                                    <Run Text="{Binding RT}"></Run>
                                     <Run Text="S"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="3"  Style="{StaticResource txtParam}">
     <Run Text="VA:"></Run>
-    <Run Text="0.06"></Run>
+    <Run Text="{Binding VAValueText}"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="4"  Style="{StaticResource txtParam}">
 <Run Text="距离:"></Run>
-<Run Text="5"></Run>
+<Run Text="{Binding DistanceText}"></Run>
 <Run Text="米"></Run>
                                 </TextBlock>
                             </Grid>
@@ -238,7 +244,7 @@
                 </Grid>
                 
             </Border>
-            <Border Style="{DynamicResource ConfigParamBorderStyle}">
+            <Border Style="{DynamicResource ConfigParamBorderStyle}"  DataContext="{Binding RightCSFTrainModel}">
                 <Grid Margin="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -246,7 +252,8 @@
                     </Grid.RowDefinitions>
                     <Border BorderThickness="0,0,0,3" BorderBrush="#FF999999">
                         <TextBlock FontSize="28" Foreground="White" Opacity=".9" VerticalAlignment="Center" >
-                            <Run Text="正在执行："></Run>
+                            <Run Text="{Binding TrainStatusText}"></Run>
+                            <Run Text="："></Run>
                             <Run Text="右眼检查项目"></Run>
                         </TextBlock>
                     </Border>
@@ -265,7 +272,7 @@
                             </Border.Background>
                         </Border>
                         <Border CornerRadius="5" Grid.Row="1"  Margin="0,20,10,0" Background="{StaticResource BordelBackGround}" >
-                            <UniformGrid Rows="2">
+                            <UniformGrid Rows="2" Visibility="{Binding IsTraining, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <TextBlock Margin="10,0" VerticalAlignment="Bottom" Foreground="White" FontSize="16">项目执行中...</TextBlock>
                                 <ProgressBar Margin="10,0" Style="{StaticResource ProgressBarSuccess}"  Foreground="{StaticResource MainBrush}" Value="0" Maximum="100" IsIndeterminate="True"/>
                             </UniformGrid>
@@ -283,21 +290,21 @@
                                 <TextBlock Text="OD" FontSize="18" FontWeight="Bold" Foreground="White"></TextBlock>
                                 <TextBlock Grid.Row="1" Style="{StaticResource txtParam}">
                                     <Run Text="AT:"></Run>
-                                    <Run Text="60"></Run>
+                                    <Run Text="{Binding AT}"></Run>
                                     <Run Text="S"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="2"  Style="{StaticResource txtParam}">
                                     <Run Text="RT:"></Run>
-                                    <Run Text="{Binding RightCount}"></Run>
+                                    <Run Text="{Binding RT}"></Run>
                                     <Run Text="S"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="3"  Style="{StaticResource txtParam}">
     <Run Text="VA:"></Run>
-    <Run Text="0.06"></Run>
+    <Run Text="{Binding VaValueText}"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="4"  Style="{StaticResource txtParam}">
 <Run Text="距离:"></Run>
-<Run Text="5"></Run>
+<Run Text="{Binding DistanceText}"></Run>
 <Run Text="米"></Run>
                                 </TextBlock>
                             </Grid>

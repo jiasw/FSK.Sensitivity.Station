@@ -63,6 +63,14 @@ namespace FSK.Sensitivity.Core.Const
 
         public const string Sign_Page_Sensitivity = "SecondarySensitivity";
         
+        /// <summary>
+        /// csf训练左眼时长,单位：秒
+        /// </summary>
+        public const int LeftEyeDruation = 30;
+        /// <summary>
+        /// csf训练右眼时长,单位：秒
+        /// </summary>
+        public const int RightEyeDruation = 30;
 
         
 

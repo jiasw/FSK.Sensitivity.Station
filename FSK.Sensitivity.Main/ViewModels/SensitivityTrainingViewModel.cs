@@ -1,4 +1,5 @@
-﻿using FSK.Sensitivity.Core.Const;
+﻿using FSK.Sensitivity.Core;
+using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.EventBus;
 using FSK.Sensitivity.Core.Model;
@@ -70,6 +71,63 @@ namespace FSK.Sensitivity.Main.ViewModels
         
     }
 
+
+    public class CSFTrainModel : BaseViewModel
+    {
+        private string title = "";
+        public string Title
+        {   
+            get { return title; }
+            set { SetProperty(ref title, value); }
+        }
+
+        public TrainStatus TrainStatus { get; set; } = TrainStatus.Pending;
+
+        public string TrainStatusText
+        {
+
+            get
+            {
+                switch (TrainStatus)
+                {
+                    case TrainStatus.Pending:
+                        return "等待训练";
+                    case TrainStatus.Training:
+                        return "正在训练";
+                    case TrainStatus.Trained:
+                        return "训练完成";
+                    case TrainStatus.NotTrain:
+                        return "无需训练";
+                    default:
+                        return "";
+                }
+            }
+        }
+
+        public string VAValueText { get; set; } = "";
+
+        public string DistanceText { get; set; } = "";
+
+
+        public bool IsTraining
+        {
+            get
+            {
+                return TrainStatus == TrainStatus.Training;
+            }
+        }
+
+        public string AT { get; set; } = "0";
+
+        private int rt = 0;
+        public int RT
+        {
+            get { return rt; }
+            set { SetProperty(ref rt, value); }
+        }
+
+    }
+
     public class SensitivityTrainingViewModel:BaseViewModel,INavigationAware
     {
         private readonly IRegionManager regionManager;
@@ -78,6 +136,15 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly SecondaryChangeEvent secondaryChangeEvent;
         private readonly SensitivitySignChangeEvent sensitivitySignChangeEvent;
         private readonly SecondarySelectedEvent sensitivitySignSelectedEvent;
+        private VAValue _vaValue = VAValue.VA06;
+        private Eye CurrentCheckEye = Eye.OS;
+        private Eye CheckPlan = Eye.OS;//检查双眼时，先检查左眼，再检查右眼
+        private int CheckDruationTime = 30;//每只眼睛检查时间
+        private CSFTrainModel leftCSFTrainModel = new CSFTrainModel();
+        private CSFTrainModel rightCSFTrainModel = new CSFTrainModel();
+        
+
+
 
         public SensitivityTrainingViewModel(IRegionManager regionManager,IEventAggregator eventAggregator)
         {
@@ -88,9 +155,23 @@ namespace FSK.Sensitivity.Main.ViewModels
             sensitivitySignChangeEvent= eventAggregator.GetEvent<SensitivitySignChangeEvent>();
             sensitivitySignSelectedEvent = eventAggregator.GetEvent<SecondarySelectedEvent>();
             sensitivitySignSelectedEvent.Subscribe(VaValueChanged);
+            
+            
         }
 
         
+
+        public CSFTrainModel LeftCSFTrainModel
+        {
+            get { return leftCSFTrainModel; }
+            set { SetProperty(ref leftCSFTrainModel, value); }
+        }
+
+        public CSFTrainModel RightCSFTrainModel
+        {
+            get { return rightCSFTrainModel; }
+            set { SetProperty(ref rightCSFTrainModel, value); }
+        }
 
         private int imageIndex = 1;
 
@@ -109,47 +190,6 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
 
-        private int _leftCount=30;
-        /// <summary>
-        /// 左边倒计时
-        /// </summary>
-        public int LeftCount
-        {
-            get { return _leftCount; }
-            set { SetProperty(ref _leftCount, value); }
-        }
-
-        private int _rightCount = 30;
-        /// <summary>
-        /// 右边倒计时
-        /// </summary>
-        public int RightCount
-        {
-            get { return _rightCount; }
-            set { SetProperty(ref _rightCount, value); }
-        }
-
-        private bool _isTrainLeft;
-        /// <summary>
-        /// 训练左眼
-        /// </summary>
-        public bool IsTrainLeft
-        {
-            get { return _isTrainLeft; }
-            set { SetProperty(ref _isTrainLeft, value); }
-        }
-
-        private bool _isTrainRight;
-        /// <summary>
-        /// 训练右眼
-        /// </summary>
-        public bool IsTrainRight
-        {
-            get { return _isTrainRight; }
-            set { SetProperty(ref _isTrainRight, value); }
-        }
-
-
         private BitmapImage _signImage;
         public BitmapImage SignImage
         {
@@ -157,6 +197,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref _signImage, value); }
         }
 
+        
 
         public DelegateCommand ShockCommand => new DelegateCommand(Shock);
 
@@ -194,7 +235,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             BitmapImage bitmapImage = new BitmapImage(new Uri(imagePath));
             bitmapImage.Freeze();
             string signName = "t" + imageName.Substring(1);
-            SignBackGround signBackGround = CheckUserModel.dayNight==Core.Enums.DayOrNight.Day? SignBackGround.White : SignBackGround.Black;
+            SignBackGround signBackGround = CheckUserModel.DayNight==Core.Enums.DayOrNight.Day? SignBackGround.White : SignBackGround.Black;
             sensitivitySignChangeEvent.Publish(new SensitivityChangeSignOptions() { PicturePath = signName,BackgroundBrush= signBackGround });
             SignImage = bitmapImage;
         }
@@ -202,7 +243,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             
             string strdaycode = "d";
-            if (CheckUserModel.dayNight == Core.Enums.DayOrNight.Night)
+            if (CheckUserModel.DayNight == Core.Enums.DayOrNight.Night)
             {
                 strdaycode = "k";
             }
@@ -220,7 +261,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             return $"d-{strdaycode}-{dicVA[_vaValue]}-{randomIndex}.jpg";
         }
 
-        private VAValue _vaValue = VAValue.VA06;
+        
 
 
         /// <summary>
@@ -259,10 +300,37 @@ namespace FSK.Sensitivity.Main.ViewModels
         
         }
 
+        private async Task StartTrain()
+        {
+
+            while (LeftCSFTrainModel.RT > 0)
+            {
+                LeftCSFTrainModel.TrainStatus= TrainStatus.Training;
+                await Task.Delay(1000);
+                LeftCSFTrainModel.RT--;
+            }
+            LeftCSFTrainModel.TrainStatus = TrainStatus.Trained;
+            while (RightCSFTrainModel.RT > 0)
+            {
+                RightCSFTrainModel.TrainStatus = TrainStatus.Training;
+                await Task.Delay(1000);
+                RightCSFTrainModel.RT--;
+            }
+            RightCSFTrainModel.TrainStatus = TrainStatus.Trained;
+            
+
+        }
+
+
+
 
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            _vaValue = VAValue.VA06;
+            CurrentCheckEye = Eye.OS;
+            CheckPlan = Eye.OS;//检查双眼时，先检查左眼，再检查右眼
+            CheckDruationTime = 30;//每只眼睛检查时间
             CheckUserModel model = new CheckUserModel()
             {
                 Id = AppData.Instance.CurrentPatient.Id,
@@ -271,15 +339,76 @@ namespace FSK.Sensitivity.Main.ViewModels
                 Age = AppData.Instance.CurrentPatient.Age.ToString(),
             };
             SensitivityConfigParam? sensitivityConfigParam = navigationContext.Parameters["sensitivityConfigParam"] as SensitivityConfigParam;
-           if (sensitivityConfigParam != null)
+            if (sensitivityConfigParam != null)
             {
                 model.PD = sensitivityConfigParam.PD.ToString();
-                model.Light= sensitivityConfigParam.IsLightOnDisplay? "开" : "关";
-                model.dayNight = sensitivityConfigParam.DayNight;
+                model.Light = sensitivityConfigParam.IsLightOnDisplay ? "开" : "关";
+                model.DayNight = sensitivityConfigParam.DayNight;
+
+                if(sensitivityConfigParam.Eyes== Eye.OS)
+                {
+                    LeftCSFTrainModel = new CSFTrainModel()
+                    {
+                        AT = AppConst.LeftEyeDruation.ToString(),
+                        DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
+                        VAValueText = _vaValue.GetDescription(),
+                        RT = AppConst.LeftEyeDruation,
+                        TrainStatus = TrainStatus.Pending
+                    };
+                    rightCSFTrainModel = new CSFTrainModel()
+                    {
+                        DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
+                        VAValueText = _vaValue.GetDescription(),
+                        TrainStatus = TrainStatus.NotTrain
+                    };
+                } 
+                else if(sensitivityConfigParam.Eyes == Eye.OD)
+                {
+                    rightCSFTrainModel = new CSFTrainModel()
+                    {
+                        AT = AppConst.LeftEyeDruation.ToString(),
+                        DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
+                        VAValueText = _vaValue.GetDescription(),
+                        RT = AppConst.LeftEyeDruation,
+                        TrainStatus = TrainStatus.Pending
+                    };
+                    LeftCSFTrainModel = new CSFTrainModel()
+                    {
+                        DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
+                        VAValueText = _vaValue.GetDescription(),
+                        TrainStatus = TrainStatus.NotTrain
+                    };
+                }
+                else
+                {
+                    LeftCSFTrainModel = new CSFTrainModel()
+                    {
+                        AT = AppConst.LeftEyeDruation.ToString(),
+                        DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
+                        VAValueText = _vaValue.GetDescription(),
+                        RT = AppConst.LeftEyeDruation,
+                        TrainStatus = TrainStatus.Pending
+                    };
+                    rightCSFTrainModel = new CSFTrainModel()
+                    {
+                        AT = AppConst.LeftEyeDruation.ToString(),
+                        DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
+                        VAValueText = _vaValue.GetDescription(),
+                        RT = AppConst.LeftEyeDruation,
+                        TrainStatus = TrainStatus.Pending
+                    };
+                }
+                
             }
-            CheckUserModel = model;
-            secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Sensitivity, Brush= CheckUserModel.dayNight == Core.Enums.DayOrNight.Day ? SignBackGround.White : SignBackGround.Black });
+           
+
+       CheckUserModel = model;
+            secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Sensitivity, Brush = CheckUserModel.DayNight == Core.Enums.DayOrNight.Day ? SignBackGround.White : SignBackGround.Black });
             RefreshSignImage();
+            Task.Run(async () =>
+            {
+                await StartTrain();
+            });
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

@@ -20,12 +20,19 @@ namespace FSK.Sensitivity.Core.Enums
     /// </summary>
     public enum VAValue
     {
+        [Description("空")]
         None,
+        [Description("0.06")]
         VA06,
+        [Description("0.1")]
         VA10,
+        [Description("0.2")]
         VA20,
+        [Description("0.4")]
         VA40,
+        [Description("0.6")]
         VA60,
+        [Description("0.8")]
         VA80
     }
 
