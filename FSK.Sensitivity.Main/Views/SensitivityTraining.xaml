@@ -300,7 +300,7 @@
                                 </TextBlock>
                                 <TextBlock Grid.Row="3"  Style="{StaticResource txtParam}">
     <Run Text="VA:"></Run>
-    <Run Text="{Binding VaValueText}"></Run>
+    <Run Text="{Binding VAValueText}"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="4"  Style="{StaticResource txtParam}">
 <Run Text="距离:"></Run>
