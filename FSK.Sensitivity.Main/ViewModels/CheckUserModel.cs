@@ -39,5 +39,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
         
         }
+
+        public Eye CheckEyeMode { get; set; }
     }
 }
