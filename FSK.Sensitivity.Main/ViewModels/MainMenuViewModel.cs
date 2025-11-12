@@ -25,6 +25,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.regionManager = regionManager;
             this.dialogService = dialogService;
             AppData.Instance.DialogService = dialogService;
+            _=  CheckHardware();
         }
 
         private string _title = "主菜单";
@@ -35,28 +36,6 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             get { return _title; }
             set { SetProperty(ref _title, value); }
-        }
-
-
-        private bool _isLogin;
-        public bool IsLogin
-        {
-            get { return _isLogin; }
-            set
-            {
-                if (value)
-                {
-                    LoginVisibility = Visibility.Collapsed;
-                    UserVisibility = Visibility.Visible;
-                }
-                else
-                {
-                    LoginVisibility = Visibility.Visible;
-                    UserVisibility = Visibility.Collapsed;
-                }
-
-                SetProperty(ref _isLogin, value);
-            }
         }
 
 
@@ -86,25 +65,56 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void ExitLogin()
         {
             AppData.Instance.CurrentPatient = null;
-            IsLogin = false;
+            AppData.Instance.IsLogin = false;
         }
+
+        private bool HardwareAvailable()
+        {
+            return true;
+        }
+
+        private async Task CheckHardware()
+        {
+            IsLoading = true;
+            LoadingMessageText="正在检测电机设备，请稍候...";
+            await Task.Delay(1000);
+
+            LoadingMessageText = "正在检测灯光设备，请稍候...";
+            await Task.Delay(1000);
+
+
+            IsLoading = false;
+
+        }
+
 
         public DelegateCommand CSFCommand => new DelegateCommand(CSF);
         private void CSF()
         {
-            if (!IsLogin)
+            if (!AppData.Instance.IsLogin)
             {
                 AlertMessageBox.Show("请先登录！");
                 return;
             }
+            if (!HardwareAvailable())
+            {
+                AlertMessageBox.Show("硬件设备未连接，请连接后重试！");
+                return;
+            }
+
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", "CSF" } });
         }
         public DelegateCommand DEACommand => new DelegateCommand(DEA);
         private void DEA()
         {
-            if (!IsLogin)
+            if (!AppData.Instance.IsLogin)
             {
                 AlertMessageBox.Show("请先登录！");
+                return;
+            }
+            if (!HardwareAvailable())
+            {
+                AlertMessageBox.Show("硬件设备未连接，请连接后重试！");
                 return;
             }
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", "DEA" } });
@@ -124,7 +134,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             {
                 if (result.Result == ButtonResult.OK)
                 {
-                    IsLogin = true;
+                    AppData.Instance.IsLogin = true;
                     UserName = AppData.Instance.CurrentPatient.PatientName;
                 }
             });
@@ -143,7 +153,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             {
                 if (result.Result == ButtonResult.OK)
                 {
-                    IsLogin = true;
+                    AppData.Instance.IsLogin = true;
                     UserName = AppData.Instance.CurrentPatient.PatientName;
                 }
 
@@ -159,7 +169,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             {
                 if (result.Result == ButtonResult.OK)
                 {
-                   IsLogin = true;
+                    AppData.Instance.IsLogin = true;
                     UserName = AppData.Instance.CurrentPatient.PatientName;
                 }
             });

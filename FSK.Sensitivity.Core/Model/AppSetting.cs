@@ -14,6 +14,9 @@ namespace FSK.Sensitivity.Core.Model
         public string SqlLiteDb { get; set; }
 
         public string RemoteSupportPath { get; set; }
+
+        public StoreInfo StoreInfo { get; set; }
+
         /// <summary>
         /// 手柄串口配置
         /// </summary>

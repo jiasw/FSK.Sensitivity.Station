@@ -5,9 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FSK.Sensitivity.Main.Views"
              xmlns:hc="https://handyorg.github.io/handycontrol"
-             mc:Ignorable="d" Name="菜单页面"
+                xmlns:controls="clr-namespace:FSK.Sensitivity.Main.Controls"
+                 xmlns:cvt="clr-namespace:FSK.Sensitivity.Main.Converters"
+             mc:Ignorable="d" 
              xmlns:prism="http://prismlibrary.com/"
-        prism:ViewModelLocator.AutoWireViewModel="True"
+        prism:ViewModelLocator.AutoWireViewModel="True" Name="MainMenuView"
+             Loaded="MainMenuView_Loaded"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ElasticEase x:Key="ElasticEase" 
@@ -117,51 +120,58 @@
         <Style x:Key="AnimatedButtonStyle" TargetType="Button">
             
         </Style>
+        <cvt:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="120"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="100"></RowDefinition>
-        </Grid.RowDefinitions>
-        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding LoginVisibility}">
-            <Button Margin="20,0" Height="70"  hc:IconElement.Geometry="{StaticResource ScanCodeGeometry}" hc:IconElement.Width="35"  Style="{DynamicResource NavButton}" Command="{Binding ScanCommand}" Content="扫码登录"   Width="180"  ></Button>
-            <Button Margin="20,0" Height="70" Style="{DynamicResource NavButton}" Command="{Binding LoginCommand}" Content="登录"  Width="150"  ></Button>
-            <Button Margin="20,0" Height="70" Style="{DynamicResource NavButton}" Command="{Binding RegisterCommand}" Content="注册"  Width="150"  ></Button>
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding UserVisibility}">
-            <TextBlock  Foreground="White" FontSize="34" VerticalAlignment="Center">
-                <Run Text="欢迎，"></Run>
-                <Run Text="{Binding UserName, Mode=OneWay}"></Run>
-            </TextBlock>
-            <Button Margin="20,0" Height="70" Style="{DynamicResource NavButton}" Command="{Binding ExitCommand}" Content="退出"  Width="150"  ></Button>
-        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="120"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="100"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding LoginVisibility}">
+
+                <Button Margin="20,0" Height="70"  hc:IconElement.Geometry="{StaticResource ScanCodeGeometry}" hc:IconElement.Width="35"  Style="{DynamicResource NavButton}" Command="{Binding ScanCommand}" Content="扫码登录"   Width="180"  ></Button>
+                <Button Margin="20,0" Height="70" Style="{DynamicResource NavButton}" Command="{Binding LoginCommand}" Content="登录"  Width="150"  ></Button>
+                <Button Margin="20,0" Height="70" Style="{DynamicResource NavButton}" Command="{Binding RegisterCommand}" Content="注册"  Width="150"  ></Button>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding UserVisibility}">
+                <TextBlock  Foreground="White" FontSize="34" VerticalAlignment="Center">
+             <Run Text="欢迎，"></Run>
+             <Run Text="{Binding UserName, Mode=OneWay}"></Run>
+                </TextBlock>
+                <Button Margin="20,0" Height="70" Style="{DynamicResource NavButton}" Command="{Binding ExitCommand}" Content="退出"  Width="150"  ></Button>
+            </StackPanel>
 
 
-        <Grid Grid.Row="1" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="6*"></ColumnDefinition>
-                <ColumnDefinition Width="6*"></ColumnDefinition>
-                <ColumnDefinition Width="6*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Command="{Binding CSFCommand}" Style="{StaticResource MenuButtonStyle}" Content="对比敏感度检查" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_csf.png" >
-                
-            </Button>
-            <Button Grid.Column="2"  Command="{Binding DEACommand}" Style="{StaticResource MenuButtonStyle}" Content="暗环境适应检查" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_dea.png" >
+            <Grid Grid.Row="1" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="6*"></ColumnDefinition>
+                    <ColumnDefinition Width="6*"></ColumnDefinition>
+                    <ColumnDefinition Width="6*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Command="{Binding CSFCommand}" Style="{StaticResource MenuButtonStyle}" Content="对比敏感度检查" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_csf.png" >
 
-            </Button>
-            <Button Grid.Column="3"  Command="{Binding ConfigCommand}" Style="{StaticResource MenuButtonStyle}" Content="系统设置" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_setting.png" >
+                </Button>
+                <Button Grid.Column="2"  Command="{Binding DEACommand}" Style="{StaticResource MenuButtonStyle}" Content="暗环境适应检查" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_dea.png" >
 
-            </Button>
-        </Grid>
+                </Button>
+                <Button Grid.Column="3"  Command="{Binding ConfigCommand}" Style="{StaticResource MenuButtonStyle}" Content="系统设置" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_setting.png" >
+
+                </Button>
+            </Grid>
             <Grid Grid.Row="2" >
 
-            <Button Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/btn_exit.png" Style="{DynamicResource ImageButton}"  Margin="20,0" Height="45" Width="45" HorizontalAlignment="Left" Command="{Binding ShutDownCommand}" >
+                <Button Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/btn_exit.png" Style="{DynamicResource ImageButton}"  Margin="20,0" Height="45" Width="45" HorizontalAlignment="Left" Command="{Binding ShutDownCommand}" >
 
-            </Button>
+                </Button>
+            </Grid>
+
         </Grid>
-            
+        <!-- 加载层 -->
+        <controls:LoadingOverlay Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" LoadingText="{Binding LoadingMessageText}" />
     </Grid>
+   
 </UserControl>

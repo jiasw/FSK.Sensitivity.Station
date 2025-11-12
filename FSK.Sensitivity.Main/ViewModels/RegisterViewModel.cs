@@ -140,7 +140,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 Sex = Gender == "男"? 1 : 0,
                 School = School,
                 Grade = Grade,
-                Clas=ClassName
+                Class=ClassName
             };
             long id= await patientRepository.Add(addPatient);
             if (id > 0)

@@ -33,5 +33,10 @@ namespace FSK.Sensitivity.Main.Views
         {
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_SensitivitySetting);
         }
+
+        private void MainMenuView_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
