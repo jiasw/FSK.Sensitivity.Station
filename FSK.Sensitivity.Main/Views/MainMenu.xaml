@@ -131,8 +131,8 @@
             </Grid.RowDefinitions>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding LoginVisibility}">
 
-                <Button Margin="20,0" Height="70"  hc:IconElement.Geometry="{StaticResource ScanCodeGeometry}" hc:IconElement.Width="35"  Style="{DynamicResource NavButton}" Command="{Binding ScanCommand}" Content="扫码登录"   Width="180"  ></Button>
-                <Button Margin="20,0" Height="70" Style="{DynamicResource NavButton}" Command="{Binding LoginCommand}" Content="登录"  Width="150"  ></Button>
+                <Button Margin="20,0" Height="70" Visibility="{Binding LoginVisibility}"  hc:IconElement.Geometry="{StaticResource ScanCodeGeometry}" hc:IconElement.Width="35"  Style="{DynamicResource NavButton}" Command="{Binding ScanCommand}" Content="扫码登录"   Width="180"  ></Button>
+                <Button Margin="20,0" Height="70"  Visibility="{Binding LoginVisibility}" Style="{DynamicResource NavButton}" Command="{Binding LoginCommand}" Content="登录"  Width="150"  ></Button>
                 <Button Margin="20,0" Height="70" Style="{DynamicResource NavButton}" Command="{Binding RegisterCommand}" Content="注册"  Width="150"  ></Button>
             </StackPanel>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding UserVisibility}">

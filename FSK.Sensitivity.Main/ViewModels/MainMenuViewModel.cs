@@ -50,7 +50,16 @@ namespace FSK.Sensitivity.Main.ViewModels
         public Visibility UserVisibility
         {
             get { return _userVisibility; }
-            set { SetProperty(ref _userVisibility, value); }
+            set { SetProperty(ref _userVisibility, value);
+                if (value == Visibility.Visible) { 
+                LoginVisibility = Visibility.Collapsed;
+                    }
+                else
+                {
+                    LoginVisibility = Visibility.Visible;
+                }
+            
+            }
         }
 
         private string _userName;
@@ -66,6 +75,8 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             AppData.Instance.CurrentPatient = null;
             AppData.Instance.IsLogin = false;
+            UserVisibility = Visibility.Collapsed;
+            LoginVisibility = Visibility.Visible;
         }
 
         private bool HardwareAvailable()
@@ -155,6 +166,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 {
                     AppData.Instance.IsLogin = true;
                     UserName = AppData.Instance.CurrentPatient.PatientName;
+                    UserVisibility= Visibility.Visible;
                 }
 
             });

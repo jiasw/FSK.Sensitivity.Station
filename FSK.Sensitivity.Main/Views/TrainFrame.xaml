@@ -16,11 +16,11 @@ prism:ViewModelLocator.AutoWireViewModel="True"
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="180"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="210"/>
+                <ColumnDefinition Width="290"/>
             </Grid.ColumnDefinitions>
-            <Button  Command="{Binding BackCommand}"  hc:IconElement.Geometry="{StaticResource BackGeometry}" hc:IconElement.Width="55"  Style="{DynamicResource NavButton}" VerticalAlignment="Bottom" Width="80" Height="70"></Button>
+            <Button  Command="{Binding BackCommand}" VerticalAlignment="Center" hc:IconElement.Geometry="{StaticResource BackGeometry}" hc:IconElement.Width="55"  Style="{DynamicResource NavButton}"  Width="80" Height="70"></Button>
             <Button Command="{Binding ListResultCommand}" Visibility="{Binding ShowLogButton}" Height="70" Grid.Column="3"  Content="检查记录" hc:IconElement.Geometry="{StaticResource PageModeGeometry}" hc:IconElement.Width="35" hc:IconElement.Height="35"  Style="{DynamicResource NavButton}"></Button>
 
         </Grid>
