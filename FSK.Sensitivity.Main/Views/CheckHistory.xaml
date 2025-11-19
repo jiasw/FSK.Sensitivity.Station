@@ -10,11 +10,20 @@ xmlns:hc="https://handyorg.github.io/handycontrol"
 prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d">
     <UserControl.Resources>
+        <Style TargetType="DataGrid" x:Key="datagridstyle">
+            
+        </Style>
+        <Style TargetType="DataGridRow" x:Key="datagridrowstyle">
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Height" Value="60"></Setter>
+        </Style>
         <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="ColumnHeaderStyle">
             <Setter Property="FontSize" Value="25"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="{StaticResource MainBrush}"/>
-            <Setter Property="Padding" Value="5,15"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="BorderThickness" Value="0,0,1,1"></Setter>
@@ -30,11 +39,16 @@ prism:ViewModelLocator.AutoWireViewModel="True"
         <Style TargetType="{x:Type DataGridCell}" x:Key="DataGridCellStyle">
             <Setter Property="Background" Value="Transparent"></Setter>
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Padding" Value="5"/>
+            
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="BorderThickness" Value="0,0,1,1"></Setter>
             <Setter Property="BorderBrush" Value="White"></Setter>
+        </Style>
+        <Style TargetType="Button" x:Key="viewBtn" BasedOn="{StaticResource NormalButton}">
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="Width" Value="100"></Setter>
+            <Setter Property="Height" Value="45"></Setter>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -84,8 +98,20 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                         <ItemsControl ItemsSource="{Binding CheckDateItems}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Height="70"   BorderBrush="White" CornerRadius="4">
-                                        <TextBlock Foreground="White" FontSize="25"  HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Date}"  />
+                                    <Border Height="70" BorderThickness="1,0,1,1"   BorderBrush="White" >
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Style.Triggers>
+                                                    <!-- 鼠标划过时的样式 -->
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="{StaticResource MainBrush}"/>
+                                                        <Setter Property="Opacity" Value="0.9"/> 
+                                                    </Trigger>
+                                                </Style.Triggers>
+
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock  Foreground="White" FontSize="25"  HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Date}"  />
                                     </Border>
 
                                 </DataTemplate>
@@ -93,18 +119,8 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                         </ItemsControl>
                     </StackPanel>
                 </Border>
-                <DataGrid  Grid.Column="2" SelectionMode="Single" HeadersVisibility="Column" CanUserAddRows="False" Background="Transparent"  CanUserSortColumns="False"   GridLinesVisibility="All" ItemsSource="{Binding CheckInfos}"  AutoGenerateColumns="False" >
-                    <DataGrid.RowStyle>
-                        <Style TargetType="{x:Type DataGridRow}">
-
-                            <Setter Property="Background" Value="Transparent"></Setter>
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                            <Setter Property="Height" Value="80"></Setter>
-
-                        </Style>
-                    </DataGrid.RowStyle>
+                <DataGrid  Grid.Column="2" SelectionMode="Single" Style="{StaticResource datagridstyle}" RowStyle="{StaticResource datagridrowstyle}"  HeadersVisibility="Column" CanUserAddRows="False" Background="Transparent"  CanUserSortColumns="False"   GridLinesVisibility="All" ItemsSource="{Binding CheckInfos}"  AutoGenerateColumns="False" >
+                    
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="检查项目" Binding="{Binding Item}" Width="*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}" ElementStyle="{StaticResource DataTextStyle}" HeaderStyle="{StaticResource ColumnHeaderStyle}">
 
@@ -112,7 +128,13 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                         <DataGridTextColumn Header="检查结果" Binding="{Binding Result}" Width="4*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}" ElementStyle="{StaticResource DataTextStyle}" HeaderStyle="{StaticResource ColumnHeaderStyle}">
 
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="状态" Binding="{Binding Status}" Width="*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}" ElementStyle="{StaticResource DataTextStyle}" HeaderStyle="{StaticResource ColumnHeaderStyle}"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="状态"  Width="*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}"  HeaderStyle="{StaticResource ColumnHeaderStyle}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="查看" Style="{StaticResource viewBtn}"></Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
                     </DataGrid.Columns>
                 </DataGrid>

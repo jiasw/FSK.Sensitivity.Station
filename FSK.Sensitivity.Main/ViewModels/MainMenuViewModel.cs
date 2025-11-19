@@ -91,6 +91,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private async Task CheckHardware()
         {
+            
             if (!AppData.Instance.HardWareConfigIsChanged)
             {
                 return;
