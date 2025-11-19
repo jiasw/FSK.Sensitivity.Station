@@ -18,10 +18,10 @@ namespace FSK.Sensitivity.Core.Enums
     /// <summary>
     /// 环境模拟CSF检查
     /// </summary>
-    public enum VAValue
+    public enum CSFVA
     {
         [Description("空")]
-        None,
+        None=0,
         [Description("0.06")]
         VA06,
         [Description("0.1")]
@@ -36,5 +36,69 @@ namespace FSK.Sensitivity.Core.Enums
         VA80
     }
 
-    
+    public enum CSFValue
+    {
+        [Description("无")]
+        None,
+        [Description("1")]
+        CS001,
+        [Description("6")]
+        CS006,
+        [Description("9")]
+        CS009,
+        [Description("12")]
+        CS012,
+        [Description("20")]
+        CS020,
+        [Description("30")]
+        CS030,
+        [Description("45")]
+        CS045,
+        [Description("66")]
+        CS066,
+        [Description("100")]
+        CS100,
+    }
+
+    public enum DCKTime
+    {
+        [Description("5")]
+        T05 = 1,
+        [Description("10")]
+        T10,
+        [Description("15")]
+        T15,
+        [Description("20")]
+        T20,
+        [Description("30")]
+        T30,
+        [Description("50")]
+        T50
+    }
+
+    public enum DCKValue
+    {
+        [Description("0")]
+        None,
+        [Description("0.1")]
+        VA010,
+        [Description("0.15")]
+        VA015,
+        [Description("0.2")]
+        VA020,
+        [Description("0.25")]
+        VA025,
+        [Description("0.3")]
+        VA030,
+        [Description("0.4")]
+        VA040,
+        [Description("0.5")]
+        VA050,
+        [Description("0.6")]
+        VA060,
+        [Description("0.8")]
+        VA080,
+        [Description("1.0")]
+        VA100
+    }
 }

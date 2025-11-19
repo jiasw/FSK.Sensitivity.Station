@@ -17,7 +17,7 @@ namespace FSK.Sensitivity.Main.Converters
         {
             if (value is LightStatus status)
             {
-                return status == LightStatus.On;
+                return status == LightStatus.Strong;
             }
             return DependencyProperty.UnsetValue;
         }
@@ -27,7 +27,7 @@ namespace FSK.Sensitivity.Main.Converters
         {
             if (value is bool isChecked)
             {
-                return isChecked ? LightStatus.On : LightStatus.Off;
+                return isChecked ? LightStatus.Strong : LightStatus.Off;
             }
             return DependencyProperty.UnsetValue;
         }

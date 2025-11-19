@@ -161,8 +161,8 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
         }
 
-        private VAValue va = VAValue.VA06;
-        public VAValue VA
+        private CSFVA va = CSFVA.VA06;
+        public CSFVA VA
         {
             get { return va; }
             set { SetProperty(ref va, value);
@@ -329,14 +329,14 @@ namespace FSK.Sensitivity.Main.ViewModels
             {
                 strdaycode = "k";
             }
-            Dictionary<VAValue, string> dicVA = new Dictionary<VAValue, string>()
+            Dictionary<CSFVA, string> dicVA = new Dictionary<CSFVA, string>()
             {
-                {VAValue.VA06, "06" },
-                {VAValue.VA10, "1" },
-                {VAValue.VA20, "2" },
-                {VAValue.VA40, "4" },
-                {VAValue.VA60, "6" },
-                {VAValue.VA80, "8" },
+                {CSFVA.VA06, "06" },
+                {CSFVA.VA10, "1" },
+                {CSFVA.VA20, "2" },
+                {CSFVA.VA40, "4" },
+                {CSFVA.VA60, "6" },
+                {CSFVA.VA80, "8" },
             };
             int randomIndex = Utils.GenerateRandomNumber(1, 5, imageIndex);
             imageIndex = randomIndex;
@@ -357,7 +357,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             Trace.WriteLine($"VA Value Changed:{obj}, vaValue:{currentCSFTrainModel.VA}");
 
 
-            if(currentCSFTrainModel.VA == VAValue.VA80)
+            if(currentCSFTrainModel.VA == CSFVA.VA80)
             {
                 currentCSFTrainModel.StopTimer();
                 currentCSFTrainModel.TrainStatus = TrainStatus.Trained;
@@ -391,15 +391,15 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void NextVA()
         {
             
-            Dictionary<VAValue, VAValue> dicVA = new Dictionary<VAValue, VAValue>()
+            Dictionary<CSFVA, CSFVA> dicVA = new Dictionary<CSFVA, CSFVA>()
             {
-                {VAValue.VA06, VAValue.VA10 },
-                {VAValue.VA10, VAValue.VA20 },
-                {VAValue.VA20, VAValue.VA40 },
-                {VAValue.VA40, VAValue.VA60 },
-                {VAValue.VA60, VAValue.VA80 },
+                {CSFVA.VA06, CSFVA.VA10 },
+                {CSFVA.VA10, CSFVA.VA20 },
+                {CSFVA.VA20, CSFVA.VA40 },
+                {CSFVA.VA40, CSFVA.VA60 },
+                {CSFVA.VA60, CSFVA.VA80 },
             };
-            VAValue nextva = dicVA[currentCSFTrainModel.VA];
+            CSFVA nextva = dicVA[currentCSFTrainModel.VA];
             currentCSFTrainModel.VA = nextva;
             RefreshSignImage();
         }
@@ -433,7 +433,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     {
                         AT = AppConst.LeftEyeDruation.ToString(),
                         DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
-                        VA=VAValue.VA06,
+                        VA=CSFVA.VA06,
                         RT = AppConst.LeftEyeDruation,
                         TrainStatus = TrainStatus.Pending
                     };
@@ -441,7 +441,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     RightCSFTrainModel = new CSFTrainModel()
                     {
                         DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
-                        VA = VAValue.VA06,
+                        VA = CSFVA.VA06,
                         TrainStatus = TrainStatus.NotTrain
                     };
                     currentCSFTrainModel= LeftCSFTrainModel;
@@ -456,14 +456,14 @@ namespace FSK.Sensitivity.Main.ViewModels
                     {
                         AT = AppConst.LeftEyeDruation.ToString(),
                         DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
-                        VA = VAValue.VA06,
+                        VA = CSFVA.VA06,
                         RT = AppConst.LeftEyeDruation,
                         TrainStatus = TrainStatus.Pending
                     };
                     LeftCSFTrainModel = new CSFTrainModel()
                     {
                         DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
-                        VA = VAValue.VA06,
+                        VA = CSFVA.VA06,
                         TrainStatus = TrainStatus.NotTrain
                     };
                     currentCSFTrainModel = RightCSFTrainModel;
@@ -479,7 +479,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     {
                         AT = AppConst.LeftEyeDruation.ToString(),
                         DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
-                        VA = VAValue.VA06,
+                        VA = CSFVA.VA06,
                         RT = AppConst.LeftEyeDruation,
                         TrainStatus = TrainStatus.Pending
                     };
@@ -487,7 +487,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     {
                         AT = AppConst.LeftEyeDruation.ToString(),
                         DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
-                        VA = VAValue.VA06,
+                        VA = CSFVA.VA06,
                         RT = AppConst.LeftEyeDruation,
                         TrainStatus = TrainStatus.Pending,
                         NextTrain = RightCSFTrainModel

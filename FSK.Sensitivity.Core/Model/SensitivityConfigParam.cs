@@ -37,7 +37,7 @@ namespace FSK.Sensitivity.Core.Model
                 }
             }
         }
-        public string CheckDistanceDisplay => CheckDistance.GetDescription();
+        public string CheckDistanceDisplay => EnumExtensions.GetDescription(CheckDistance);
 
         // 灯光开关
         private LightStatus _isLightOn;
@@ -52,7 +52,7 @@ namespace FSK.Sensitivity.Core.Model
                 }
             }
         }
-        public bool IsLightOnDisplay => IsLightOn == LightStatus.On;
+        public bool IsLightOnDisplay => IsLightOn == LightStatus.Strong;
 
         private Eye _eyes;
         public Eye Eyes

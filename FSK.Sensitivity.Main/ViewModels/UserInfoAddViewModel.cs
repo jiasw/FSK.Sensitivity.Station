@@ -15,9 +15,9 @@ namespace FSK.Sensitivity.Main.ViewModels
     {
 
 
-        public List<KeyValuePair<string, string>> UserTypes { get; } = EnumExtensions.UserTypes;
+        public List<EnumModel> UserTypes { get; } = EnumExtensions.ToEnumModelList<FSK.Sensitivity.Core.Enums.UserType>();
 
-        public List<KeyValuePair<string, string>> Genders { get; } = EnumExtensions.Genders;
+        public List<EnumModel> Genders { get; } = EnumExtensions.ToEnumModelList<FSK.Sensitivity.Core.Enums.Gender>();
 
 
         private string name;

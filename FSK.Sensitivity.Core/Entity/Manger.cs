@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FSK.Sensitivity.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,7 +50,9 @@ namespace FSK.Sensitivity.Core.Entity
                 }
                 else
                 {
-                    return EnumExtensions.UserTypes.Where(t => t.Key == type).FirstOrDefault().Value;
+                    int typecode = int.Parse(type);
+                    var enumModel = EnumExtensions.ToEnumModelList<UserType>().FirstOrDefault(t => t.Value == typecode);
+                    return enumModel?.Name ?? "";
                 }
             }
         }
