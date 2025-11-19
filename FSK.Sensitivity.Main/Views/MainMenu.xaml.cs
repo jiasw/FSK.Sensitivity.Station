@@ -36,7 +36,7 @@ namespace FSK.Sensitivity.Main.Views
 
         private void MainMenuView_Loaded(object sender, RoutedEventArgs e)
         {
-
+            
         }
     }
 }

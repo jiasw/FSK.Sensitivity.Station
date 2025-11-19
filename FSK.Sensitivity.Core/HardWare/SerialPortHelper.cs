@@ -17,7 +17,11 @@ namespace FSK.Sensitivity.Core.HardWare
         {
             return System.IO.Ports.SerialPort.GetPortNames().Contains(portName);
         }
+
+
         System.IO.Ports.SerialPort serialPort;
+
+       
         public bool OpenSerialPort(string portName, int baudRate, int dataBits, System.IO.Ports.Parity parity, System.IO.Ports.StopBits stopBits)
         {
             try

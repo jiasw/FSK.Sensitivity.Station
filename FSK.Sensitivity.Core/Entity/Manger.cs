@@ -35,6 +35,8 @@ namespace FSK.Sensitivity.Core.Entity
 
         public string phone { get; set; }
 
+        public string password { get; set; }
+
         public string type { get; set; }
         [SqlSugar.SugarColumn(IsIgnore = true)]
         public string type_desc

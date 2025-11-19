@@ -37,7 +37,7 @@ namespace FSK.Sensitivity.Main
         /// <summary>
         /// 手柄
         /// </summary>
-        public IHandle Handler { get; set; }
+        public IJoystick Handler { get; set; }
 
         /// <summary>
         /// 灯光
@@ -77,6 +77,12 @@ namespace FSK.Sensitivity.Main
         /// 是否登录
         /// </summary>
         public bool IsLogin { get; set; }
+
+        /// <summary>
+        /// 硬件信息是否更改
+        /// </summary>
+        public bool HardWareConfigIsChanged { get; set; }=true;
+
 
 
         /// <summary>

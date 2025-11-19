@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FSK.Sensitivity.Core.Entity
+namespace FSK.Sensitivity.Core.HardWare.Drivers
 {
-    public class CheckResult: RootEntity
+    public class JoystickController
     {
     }
 }

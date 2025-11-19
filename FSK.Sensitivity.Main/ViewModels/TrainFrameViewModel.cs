@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.Const;
+using FSK.Sensitivity.Core.Utility;
 using Prism.Navigation.Regions;
 using System;
 using System.Collections.Generic;
@@ -46,11 +47,17 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void ListResult()
         {
-            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_CheckHistory);
+            RegionManagerExtensions.SafeRequestNavigate(regionManager, AppConst.TrainRegion, AppConst.Main_Page_CheckHistory);
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            //判断当前页面跟上一页面是否一致，如果一致，则不显示返回按钮
+            //if (regionManager.Regions[AppConst.TrainRegion].NavigationService.Journal.NavigationTarget. == navigationContext.Uri.ToString())
+            //{
+            //    ShowLogButton = Visibility.Collapsed;
+            //}
+
             var s = regionManager.Regions[AppConst.TrainRegion].NavigationService.Journal;
             s.Clear();
             ShowLogButton = Visibility.Visible;

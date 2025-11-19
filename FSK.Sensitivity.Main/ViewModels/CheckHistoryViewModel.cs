@@ -19,6 +19,15 @@ namespace FSK.Sensitivity.Main.ViewModels
             get { return _checkInfos; }
             set { SetProperty(ref _checkInfos, value); }
         }
+
+        private List<CheckDateItem> _checkDateItems;
+
+        public List<CheckDateItem> CheckDateItems
+        {
+            get { return _checkDateItems; }
+            set { SetProperty(ref _checkDateItems, value); }
+        }
+
         public CheckHistoryViewModel(IRegionManager regionManager)
         {
             this.regionManager = regionManager;
@@ -28,6 +37,11 @@ namespace FSK.Sensitivity.Main.ViewModels
             lists.Add(new CheckInfo() { Item = "对比敏感度检测", Result = "不合格", Status = "已检查" });
             lists.Add(new CheckInfo() { Item = "暗适应检测", Result = "不合格", Status = "已检查" });
             CheckInfos = lists;
+List<CheckDateItem> dateItems = new List<CheckDateItem>();
+            dateItems.Add(new CheckDateItem() { Date = "2021-01-01" });
+            dateItems.Add(new CheckDateItem() { Date = "2021-01-02" });
+            dateItems.Add(new CheckDateItem() { Date = "2021-01-03" });
+            CheckDateItems = dateItems;
         }
 
         public DelegateCommand BackCommand => new DelegateCommand(Back);

@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.Enums;
+using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Utility;
 using System;
@@ -58,6 +59,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
+            LogHelper.Instance.LogInformation("ShowItemsDialogViewModel opened");
             Title = "选择";
             itemsType = parameters.GetValue<string>("itemsType");
             if (new List<string>() { "1", "2" , "3" }.Contains(itemsType))
@@ -85,7 +87,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 Title = "瞳距";
                 ItemWidth = 130;
                 ItenHeight = 60;
-                Items = Enumerable.Range(50, 21).Select(i => new ShowItemsModel() { Name = i.ToString(), Value = i.ToString() }).ToList();
+                Items = Enumerable.Range(50, 31).Select(i => new ShowItemsModel() { Name = i.ToString(), Value = i.ToString() }).ToList();
             }
         }
 

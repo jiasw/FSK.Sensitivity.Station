@@ -25,7 +25,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.regionManager = regionManager;
             this.dialogService = dialogService;
             AppData.Instance.DialogService = dialogService;
-            _=  CheckHardware();
+            
         }
 
         private string _title = "主菜单";
@@ -68,7 +68,12 @@ namespace FSK.Sensitivity.Main.ViewModels
             get { return _userName; }
             set { SetProperty(ref _userName, value); }
         }
+        public DelegateCommand LoadedCommand => new DelegateCommand(Loaded);
 
+        private void Loaded()
+        {
+            _ = CheckHardware();
+        }
         public DelegateCommand ExitCommand=> new DelegateCommand(ExitLogin);
 
         private void ExitLogin()
@@ -86,27 +91,31 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private async Task CheckHardware()
         {
+            if (!AppData.Instance.HardWareConfigIsChanged)
+            {
+                return;
+            }
             IsLoading = true;
             LoadingMessageText="正在检测电机设备，请稍候...";
-            await Task.Delay(1000);
+            await Task.Delay(100);
 
             LoadingMessageText = "正在检测灯光设备，请稍候...";
-            await Task.Delay(1000);
+            //await Task.Delay(1000);
 
 
             IsLoading = false;
-
+            AppData.Instance.HardWareConfigIsChanged = false;
         }
 
 
         public DelegateCommand CSFCommand => new DelegateCommand(CSF);
         private void CSF()
         {
-            if (!AppData.Instance.IsLogin)
-            {
-                AlertMessageBox.Show("请先登录！");
-                return;
-            }
+            //if (!AppData.Instance.IsLogin)
+            //{
+            //    AlertMessageBox.Show("请先登录！");
+            //    return;
+            //}
             if (!HardwareAvailable())
             {
                 AlertMessageBox.Show("硬件设备未连接，请连接后重试！");
@@ -118,11 +127,11 @@ namespace FSK.Sensitivity.Main.ViewModels
         public DelegateCommand DEACommand => new DelegateCommand(DEA);
         private void DEA()
         {
-            if (!AppData.Instance.IsLogin)
-            {
-                AlertMessageBox.Show("请先登录！");
-                return;
-            }
+            //if (!AppData.Instance.IsLogin)
+            //{
+            //    AlertMessageBox.Show("请先登录！");
+            //    return;
+            //}
             if (!HardwareAvailable())
             {
                 AlertMessageBox.Show("硬件设备未连接，请连接后重试！");

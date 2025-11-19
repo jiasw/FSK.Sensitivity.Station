@@ -19,6 +19,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="BorderThickness" Value="0,0,1,1"></Setter>
             <Setter Property="BorderBrush" Value="White"></Setter>
+            <Setter Property="Height" Value="60"></Setter>
         </Style>
         <Style TargetType="{x:Type TextBlock}" x:Key="DataTextStyle">
             <Setter Property="FontSize" Value="25"/>
@@ -67,33 +68,57 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <Border Grid.Column="0" BorderThickness="1"  CornerRadius="4,4,0,0" >
+                    <StackPanel Orientation="Vertical">
+                        <Border Height="65"  Background="{StaticResource MainBrush}" CornerRadius="4,4,0,0">
+                            <TextBlock Foreground="White"  FontSize="25"  HorizontalAlignment="Center" VerticalAlignment="Center" Text="检查日期"  />
+                        </Border>
 
+                        <ItemsControl ItemsSource="{Binding CheckDateItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Height="70"   BorderBrush="White" CornerRadius="4">
+                                        <TextBlock Foreground="White" FontSize="25"  HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Date}"  />
+                                    </Border>
 
-            <DataGrid  SelectionMode="Single" HeadersVisibility="Column" CanUserAddRows="False" Background="Transparent" Style="{DynamicResource DataGridStyle}" CanUserSortColumns="False"  Grid.Row="1" GridLinesVisibility="All" ItemsSource="{Binding CheckInfos}"  AutoGenerateColumns="False" >
-                <DataGrid.RowStyle>
-                    <Style TargetType="{x:Type DataGridRow}">
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+                <DataGrid  Grid.Column="2" SelectionMode="Single" HeadersVisibility="Column" CanUserAddRows="False" Background="Transparent"  CanUserSortColumns="False"   GridLinesVisibility="All" ItemsSource="{Binding CheckInfos}"  AutoGenerateColumns="False" >
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
 
-                        <Setter Property="Background" Value="Transparent"></Setter>
-                        <Setter Property="Foreground" Value="White"/>
-                        <Setter Property="Padding" Value="5"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                        <Setter Property="VerticalContentAlignment" Value="Center"/>
-                        <Setter Property="Height" Value="80"></Setter>
-                       
-                    </Style>
-                </DataGrid.RowStyle>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="检查项目" Binding="{Binding Item}" Width="*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}" ElementStyle="{StaticResource DataTextStyle}" HeaderStyle="{StaticResource ColumnHeaderStyle}">
+                            <Setter Property="Background" Value="Transparent"></Setter>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            <Setter Property="Height" Value="80"></Setter>
 
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="检查结果" Binding="{Binding Result}" Width="4*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}" ElementStyle="{StaticResource DataTextStyle}" HeaderStyle="{StaticResource ColumnHeaderStyle}">
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="检查项目" Binding="{Binding Item}" Width="*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}" ElementStyle="{StaticResource DataTextStyle}" HeaderStyle="{StaticResource ColumnHeaderStyle}">
 
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="状态" Binding="{Binding Status}" Width="*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}" ElementStyle="{StaticResource DataTextStyle}" HeaderStyle="{StaticResource ColumnHeaderStyle}"></DataGridTextColumn>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="检查结果" Binding="{Binding Result}" Width="4*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}" ElementStyle="{StaticResource DataTextStyle}" HeaderStyle="{StaticResource ColumnHeaderStyle}">
 
-                </DataGrid.Columns>
-            </DataGrid>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="状态" Binding="{Binding Status}" Width="*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}" ElementStyle="{StaticResource DataTextStyle}" HeaderStyle="{StaticResource ColumnHeaderStyle}"></DataGridTextColumn>
 
+                    </DataGrid.Columns>
+                </DataGrid>
+
+            </Grid>
+            
         </Grid>
     </Grid>
 </UserControl>

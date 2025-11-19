@@ -104,6 +104,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         public DelegateCommand SaveCommand => new DelegateCommand(async () => await Save());
         private async Task Save()
         {
+            AppData.Instance.HardWareConfigIsChanged = true;
             if (list.Exists(n => n.Code == AppConst.Dict_Key_HandlePort))
             {
                 var model=list.Where(n => n.Code == AppConst.Dict_Key_HandlePort).First();
@@ -112,13 +113,17 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
             else
             {
-                await dictRepository.Add(new Dict()
+                if (!string.IsNullOrWhiteSpace(HandlerSerialPortName))
                 {
-                    TypeCode = AppConst.Dict_TypeCode_SerialPort,
-                    Code = AppConst.Dict_Key_HandlePort,
-                    Name = HandlerSerialPortName,
-                    Description = "手柄串口"
-                });
+                    await dictRepository.Add(new Dict()
+                    {
+                        TypeCode = AppConst.Dict_TypeCode_SerialPort,
+                        Code = AppConst.Dict_Key_HandlePort,
+                        Name = HandlerSerialPortName,
+                        Description = "手柄串口"
+                    });
+                }
+                
             }
             if (list.Exists(n => n.Code == AppConst.Dict_Key_MotorPort))
             {
@@ -128,13 +133,17 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
             else
             {
-                await dictRepository.Add(new Dict()
+                if (!string.IsNullOrWhiteSpace(MotorSerialPortName))
                 {
-                    TypeCode = AppConst.Dict_TypeCode_SerialPort,
-                    Code = AppConst.Dict_Key_MotorPort,
-                    Name = MotorSerialPortName,
-                    Description = "电机串口"
-                });
+                    await dictRepository.Add(new Dict()
+                    {
+                        TypeCode = AppConst.Dict_TypeCode_SerialPort,
+                        Code = AppConst.Dict_Key_MotorPort,
+                        Name = MotorSerialPortName,
+                        Description = "电机串口"
+                    });
+                }
+                
             }
             if (list.Exists(n => n.Code == AppConst.Dict_Key_LightPort))
             {
@@ -144,13 +153,17 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
             else
             {
-                await dictRepository.Add(new Dict()
+                if (!string.IsNullOrWhiteSpace( LightSerialPortName) )
                 {
-                    TypeCode = AppConst.Dict_TypeCode_SerialPort,
-                    Code = AppConst.Dict_Key_LightPort,
-                    Name = LightSerialPortName,
-                    Description = "光敏串口"
-                });
+                    await dictRepository.Add(new Dict()
+                    {
+                        TypeCode = AppConst.Dict_TypeCode_SerialPort,
+                        Code = AppConst.Dict_Key_LightPort,
+                        Name = LightSerialPortName,
+                        Description = "光敏串口"
+                    });
+                }
+                
             }
             if (list.Exists(n => n.Code == AppConst.Dict_Key_ScannerPort))
             {
@@ -160,13 +173,17 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
             else
             {
-                await dictRepository.Add(new Dict()
+                if (!string.IsNullOrWhiteSpace(ScannerSerialPortName))
                 {
-                    TypeCode = AppConst.Dict_TypeCode_SerialPort,
-                    Code = AppConst.Dict_Key_ScannerPort,
-                    Name = ScannerSerialPortName,
-                    Description = "扫描仪串口"
-                });
+                    await dictRepository.Add(new Dict()
+                    {
+                        TypeCode = AppConst.Dict_TypeCode_SerialPort,
+                        Code = AppConst.Dict_Key_ScannerPort,
+                        Name = ScannerSerialPortName,
+                        Description = "扫描仪串口"
+                    });
+                }
+                
             }
             AlertMessageBox.Show("保存成功");
         }

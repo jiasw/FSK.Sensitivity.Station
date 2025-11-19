@@ -56,6 +56,9 @@ namespace FSK.Sensitivity.Main
             var appConfig = configurationHelper.GetAppConfiguration();
             containerRegistry.RegisterInstance(appConfig);
             containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
+           
+            //注册网络服务
+
 
             #region 注册数据操作层
             var DB = new SqlSugarScope(new ConnectionConfig
@@ -68,7 +71,7 @@ namespace FSK.Sensitivity.Main
           {
               db.QueryFilter.AddTableFilter<FSK.Sensitivity.Core.Entity.Patient>(it => it.IsDeleted == false);
               db.QueryFilter.AddTableFilter<FSK.Sensitivity.Core.Entity.Manger>(it => it.IsDeleted == false);
-              db.QueryFilter.AddTableFilter<FSK.Sensitivity.Core.Entity.CheckResult>(it => it.IsDeleted == false);
+              db.QueryFilter.AddTableFilter<FSK.Sensitivity.Core.Entity.FitLog>(it => it.IsDeleted == false);
               db.Aop.OnLogExecuting = (sql, pars) =>
               {
                   //获取原生SQL推荐 5.1.4.63  性能OK
@@ -93,7 +96,7 @@ namespace FSK.Sensitivity.Main
             DB.DbMaintenance.CreateDatabase();
             DB.CodeFirst.InitTables<FSK.Sensitivity.Core.Entity.Patient,
                 FSK.Sensitivity.Core.Entity.Manger,
-                FSK.Sensitivity.Core.Entity.CheckResult,
+                FSK.Sensitivity.Core.Entity.FitLog,
                 FSK.Sensitivity.Core.Entity.Dict>();
 
             #endregion
