@@ -11,6 +11,9 @@
     <Compile Update="Controls\LoadingOverlay.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Controls\Pagination.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\CheckHistory.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -39,6 +42,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\MainMenu.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Patients.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\SecondaryContrast.xaml.cs">

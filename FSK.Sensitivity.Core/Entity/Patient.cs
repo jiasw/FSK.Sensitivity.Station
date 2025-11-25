@@ -81,7 +81,7 @@ namespace FSK.Sensitivity.Core.Entity
         /// <summary>
         /// 班级
         /// </summary>
-        [SqlSugar.SugarColumn(IsNullable = true)]
+        [SqlSugar.SugarColumn(IsNullable = true,IsIgnore = true)]
         public string GradeClass => Grade + " " + Class;
         ///// <summary>
         ///// 瞳距

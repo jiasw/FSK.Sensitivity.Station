@@ -2,7 +2,6 @@
 using FSK.Sensitivity.Core.Entity;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Repositories;
-using Prism.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
-    public class UserInfoViewModel : BaseViewModel
+    public class PatientsViewModel : BaseViewModel
     {
-        private readonly MangerRepository mangerRepository;
+        private readonly PatientRepository patientRepository;
         private readonly IDialogService dialogService;
-        private ObservableCollection<Manger> mangers = new ObservableCollection<Manger>();
+        private ObservableCollection<Patient> mangers = new ObservableCollection<Patient>();
         private int pageIndex = 1;
         private int pageSize = 10;
 
 
-        public ObservableCollection<Manger> Mangers
+        public ObservableCollection<Patient> Mangers
         {
             get { return mangers; }
             set { SetProperty(ref mangers, value); }
@@ -32,7 +31,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref pageIndex, value); }
         }
 
-       
+
 
         private int totalPage;
         public int TotalPage
@@ -42,18 +41,13 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
 
-        public UserInfoViewModel(MangerRepository mangerRepository, IDialogService dialogService)
+        public PatientsViewModel(PatientRepository patientRepository, IDialogService dialogService)
         {
-            this.mangerRepository = mangerRepository;
+            this.patientRepository = patientRepository;
             this.dialogService = dialogService;
         }
 
-        public DelegateCommand LoadCommand=>new DelegateCommand(async () =>
-        {
-            await LoadData(PageIndex);
-        });
-
-        public DelegateCommand PageUpdatedCmd=>new DelegateCommand(async () =>
+        public DelegateCommand LoadCommand => new DelegateCommand(async () =>
         {
             await LoadData(PageIndex);
         });
@@ -63,28 +57,28 @@ namespace FSK.Sensitivity.Main.ViewModels
             PageIndex--;
             await LoadData(PageIndex);
         });
-        public DelegateCommand NextCmd => new DelegateCommand(async () =>
+public DelegateCommand NextCmd => new DelegateCommand(async () =>
         {
             PageIndex++;
             await LoadData(PageIndex);
         });
 
-        private async Task<PageModel<Manger>> LoadData(int pageIndex=1)
+        private async Task<PageModel<Patient>> LoadData(int pageIndex = 1)
         {
-            PageModel<Manger> pageModel = await mangerRepository.QueryPage(n => n.Id > 0, pageIndex, pageSize);
+            PageModel<Patient> pageModel = await patientRepository.QueryPage(n => n.Id > 0, pageIndex, pageSize);
             TotalPage = pageModel.pageCount;
-            Mangers = new ObservableCollection<Manger>(pageModel.data);
+            Mangers = new ObservableCollection<Patient>(pageModel.data);
             return pageModel;
         }
-        public DelegateCommand<Manger> DeleteMangerCommand => new DelegateCommand<Manger>(async (n) =>
+        public DelegateCommand<Patient> DeleteMangerCommand => new DelegateCommand<Patient>(async (n) =>
         {
-            await mangerRepository.DeleteById(n.Id);
+            await patientRepository.DeleteById(n.Id);
             await LoadData(PageIndex);
         });
 
-        public DelegateCommand<Manger> EditMangerCommand => new DelegateCommand<Manger>(async (n) =>
+        public DelegateCommand<Patient> EditMangerCommand => new DelegateCommand<Patient>(async (n) =>
         {
-            dialogService.ShowDialog(AppConst.Main_Dialog_Setting_UserInfo_Add, new DialogParameters()
+            dialogService.ShowDialog(AppConst.Main_Dialog_Register, new DialogParameters()
             {
                 { "id", n.Id }
             }, async result =>
@@ -93,7 +87,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 {
                     await LoadData(PageIndex);
                 }
-                
+
             });
         });
 
@@ -109,7 +103,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             });
         });
 
-        
-        
+
+
     }
 }

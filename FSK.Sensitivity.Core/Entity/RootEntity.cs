@@ -16,8 +16,9 @@ namespace FSK.Sensitivity.Core.Entity
         [SugarColumn(IsNullable = false, IsPrimaryKey = true)]
         public long Id { get; set; }
 
+        [SugarColumn(InsertServerTime = true)]
         public DateTime CreateTime { get; set; }
-
+        [SugarColumn(UpdateServerTime = true)]
         public DateTime UpdateTime { get; set; }
 
         public bool IsDeleted { get; set; }

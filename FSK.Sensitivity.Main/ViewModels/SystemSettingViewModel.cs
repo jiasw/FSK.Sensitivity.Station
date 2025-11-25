@@ -69,5 +69,9 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_Setting_UserInfo);
         });
+        public DelegateCommand PatientInfoCommand => new DelegateCommand(() =>
+        {
+            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_Setting_Patient);
+        });
     }
 }

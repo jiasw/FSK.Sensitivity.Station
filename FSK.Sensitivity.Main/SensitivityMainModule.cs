@@ -42,7 +42,7 @@ namespace FSK.Sensitivity.Main
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SerialPortConfig));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(Store));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(UserInfo));
-
+            regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(Patients));
 
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondaryInit));
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondaryContrast));

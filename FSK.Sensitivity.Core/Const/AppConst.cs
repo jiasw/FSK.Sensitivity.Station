@@ -38,7 +38,7 @@ namespace FSK.Sensitivity.Core.Const
 
         public const string Main_Page_Setting_Store = "Store";
         public const string Main_Page_Setting_UserInfo = "UserInfo";
-        
+        public const string Main_Page_Setting_Patient = "Patients";
 
         public const string Main_Page_CheckHistory = "CheckHistory";
 

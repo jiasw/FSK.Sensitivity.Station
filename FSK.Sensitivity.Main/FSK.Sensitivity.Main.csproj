@@ -19,6 +19,7 @@
     <None Remove="Resource\Images\left22.png" />
     <None Remove="Resource\Images\logo.ico" />
     <None Remove="Resource\Images\logo.png" />
+    <None Remove="Resource\Images\mange.png" />
     <None Remove="Resource\Images\menu_csf.png" />
     <None Remove="Resource\Images\menu_dea.png" />
     <None Remove="Resource\Images\menu_setting.png" />
@@ -152,6 +153,9 @@
     </Resource>
     <Resource Include="Resource\Images\logo.ico" />
     <Resource Include="Resource\Images\logo.png" />
+    <Resource Include="Resource\Images\mange.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\Images\remote.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

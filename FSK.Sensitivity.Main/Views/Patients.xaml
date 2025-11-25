@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="FSK.Sensitivity.Main.Views.UserInfo"
+﻿<UserControl x:Class="FSK.Sensitivity.Main.Views.Patients"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:FSK.Sensitivity.Main.Views"
              xmlns:ctl="clr-namespace:FSK.Sensitivity.Main.Controls"
              mc:Ignorable="d" 
-             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+                          xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:hc="https://handyorg.github.io/handycontrol"
 xmlns:prism="http://prismlibrary.com/"
 prism:ViewModelLocator.AutoWireViewModel="True"
@@ -24,19 +24,30 @@ prism:ViewModelLocator.AutoWireViewModel="True"
         </Grid.RowDefinitions>
         <Button Content="新增" Style="{StaticResource NavButton}" HorizontalAlignment="Right" Margin="0,0,50,5" Command="{Binding AddMangerCommand}"></Button>
         <ListView Grid.Row="1" Style="{StaticResource MyCommonListViewStyle}" ItemsSource="{Binding Mangers}" >
-            
+
 
             <ListView.View>
                 <GridView>
-
-                    <GridViewColumn Width="200" >
+                    <GridViewColumn Width="100" >
+                        <GridViewColumn.Header>
+                            <TextBlock Text="登录账号"  HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock  FontSize="20"
+    Text="{Binding LoginName}"  
+/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" >
                         <GridViewColumn.Header>
                             <TextBlock Text="姓名"  HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock  FontSize="20"
-    Text="{Binding name}"  
+    Text="{Binding PatientName}"  
 />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -45,35 +56,58 @@ prism:ViewModelLocator.AutoWireViewModel="True"
 
                     <GridViewColumn Width="100" >
                         <GridViewColumn.Header >
-                            <TextBlock Text="姓名"   />
+                            <TextBlock Text="联系电话"   />
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding gender_desc}"   />
-                                
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Width="100" Header="年龄"  >
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding age}"    />
+                                <TextBlock  FontSize="20"  Text="{Binding Phone}"   />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="200" Header="联系电话"  >
+                    <GridViewColumn Width="100" Header="身份证号"  >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding phone}"   />
+                                <TextBlock  FontSize="20"  Text="{Binding IdCard}"    />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="150" Header="人员类别" >
+                    <GridViewColumn Width="200" Header="年龄"  >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding type_desc}"   />
+                                <TextBlock  FontSize="20"  Text="{Binding Age}"   />
+
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="50" Header="性别" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock  FontSize="20"  Text="{Binding Gender}"   />
+
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="50" Header="学校" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock  FontSize="20"  Text="{Binding School}"   />
+
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="50" Header="年级" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock  FontSize="20"  Text="{Binding Grade}"   />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="50" Header="班级" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock  FontSize="20"  Text="{Binding Class}"   />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -91,9 +125,8 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                 </GridView>
             </ListView.View>
         </ListView>
-        
         <ctl:Pagination Grid.Row="2"  Margin="0,20,0,50" TotalPages="{Binding  TotalPage}" CurrentPage="{Binding PageIndex,Mode=TwoWay}" PreviousCommand="{Binding PrevCmd}" NextCommand="{Binding NextCmd}" >
-
+            
         </ctl:Pagination>
     </Grid>
 </UserControl>
