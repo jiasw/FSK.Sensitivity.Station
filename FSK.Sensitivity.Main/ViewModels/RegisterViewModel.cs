@@ -1,10 +1,12 @@
 ﻿using FSK.Sensitivity.Core.Entity;
+using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.Repositories;
 using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +14,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 {
     public class RegisterViewModel : BaseViewModel, IDialogAware
     {
-
+       
 
         public List<string> SexList =>new List<string> { "男", "女" };
 
@@ -103,9 +105,27 @@ namespace FSK.Sensitivity.Main.ViewModels
         public void OnDialogClosed()
         {
         }
-
-        public void OnDialogOpened(IDialogParameters parameters)
+        private long id = 0;
+        public async void OnDialogOpened(IDialogParameters parameters)
         {
+            parameters.TryGetValue("id", out id);
+            if (id != 0)
+            {
+                var manger = await patientRepository.QueryById(id);
+                if (manger == null)
+                {
+                    return;
+                }
+                LoginAccount= manger.LoginName;
+                Name = manger.PatientName;
+                Phone = manger.Phone;
+                IdCard = manger.IdCard;
+                Age = manger.Age.ToString();
+                Gender = manger.Sex == 1 ? "男" : "女";
+                School = manger.School;
+                Grade = manger.Grade;
+                ClassName = manger.Class;
+            }
         }
 
         public DelegateCommand CloseCommand=>new DelegateCommand(Close);

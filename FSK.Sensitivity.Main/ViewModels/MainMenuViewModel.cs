@@ -112,11 +112,11 @@ namespace FSK.Sensitivity.Main.ViewModels
         public DelegateCommand CSFCommand => new DelegateCommand(CSF);
         private void CSF()
         {
-            //if (!AppData.Instance.IsLogin)
-            //{
-            //    AlertMessageBox.Show("请先登录！");
-            //    return;
-            //}
+            if (!AppData.Instance.IsLogin)
+            {
+                AlertMessageBox.Show("请先登录！");
+                return;
+            }
             if (!HardwareAvailable())
             {
                 AlertMessageBox.Show("硬件设备未连接，请连接后重试！");
@@ -128,11 +128,11 @@ namespace FSK.Sensitivity.Main.ViewModels
         public DelegateCommand DEACommand => new DelegateCommand(DEA);
         private void DEA()
         {
-            //if (!AppData.Instance.IsLogin)
-            //{
-            //    AlertMessageBox.Show("请先登录！");
-            //    return;
-            //}
+            if (!AppData.Instance.IsLogin)
+            {
+                AlertMessageBox.Show("请先登录！");
+                return;
+            }
             if (!HardwareAvailable())
             {
                 AlertMessageBox.Show("硬件设备未连接，请连接后重试！");

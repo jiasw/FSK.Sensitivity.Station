@@ -10,13 +10,12 @@ using System.Windows.Media.Imaging;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
-    public class SecondarySensitivityViewModel : BaseViewModel
+    public class SecondaryContrastViewModel : BaseViewModel
     {
-        public SecondarySensitivityViewModel(IEventAggregator eventAggregator)
+        public SecondaryContrastViewModel(IEventAggregator eventAggregator)
         {
             this.eventAggregator = eventAggregator;
-             eventAggregator.GetEvent<SensitivitySignChangeEvent>().Subscribe(OnScreenChange);
-
+            eventAggregator.GetEvent<ContrastSignChangeEvent>().Subscribe(OnScreenChange);
         }
         private SolidColorBrush selectedColor = new SolidColorBrush(Colors.White);
         public SolidColorBrush SelectedColor
@@ -29,7 +28,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         public SolidColorBrush TitleColor
         {
             get { return titileColor; }
-            set { SetProperty(ref titileColor, value); }    
+            set { SetProperty(ref titileColor, value); }
         }
         private SolidColorBrush backColor = new SolidColorBrush(Colors.White);
         public SolidColorBrush BackColor
@@ -54,17 +53,17 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
 
-        private void OnScreenChange(SensitivityChangeSignOptions options)
+        private void OnScreenChange(ContrastChangeSignOptions options)
         {
-            
-            if (options.BackgroundBrush == SignBackGround.White)
+            SignImage = null;
+            if (options.Brush == SignBackGround.White)
             {
                 BackColor = new SolidColorBrush(Colors.White);
-                TitleColor= new SolidColorBrush(Colors.Black);
+                TitleColor = new SolidColorBrush(Colors.Black);
             }
             else
             {
-                BackColor = new SolidColorBrush(Color.FromRgb(153, 153, 153));
+                BackColor = new SolidColorBrush(Colors.Black);
                 TitleColor = new SolidColorBrush(Colors.White);
             }
             if (!string.IsNullOrWhiteSpace(options.PicturePath))
@@ -75,7 +74,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 SignImage = bitmapImage;
             }
 
-                
+
         }
 
         private BitmapImage _signImage;

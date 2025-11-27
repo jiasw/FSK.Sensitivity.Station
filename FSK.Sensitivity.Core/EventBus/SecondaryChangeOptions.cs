@@ -15,7 +15,7 @@ namespace FSK.Sensitivity.Core.EventBus
         Idle = 1,
         //对比敏感度
         Sensitivity,
-        //按适应检测
+        //暗适应检测
         Contrast,
     }
 

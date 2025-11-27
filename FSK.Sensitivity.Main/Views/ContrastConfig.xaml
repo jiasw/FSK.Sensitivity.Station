@@ -83,17 +83,17 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="检查时间(秒)" Grid.Column="1" Style="{DynamicResource CheckTitleStyle}"></TextBlock>
                     <WrapPanel HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1">
-                        <RadioButton GroupName="DCK_time" IsChecked="True" Content="5"  Style="{StaticResource TimeRadioButtonStyle}"/>
+                        <RadioButton GroupName="DCK_time" IsChecked="{Binding SelectedTime, Converter={StaticResource RadioButonCheckedConverter}, ConverterParameter=5}" Content="5"  Style="{StaticResource TimeRadioButtonStyle}"/>
 
-                        <RadioButton GroupName="DCK_time" IsChecked="False" Content="10"   Style="{StaticResource TimeRadioButtonStyle}"/>
+                        <RadioButton GroupName="DCK_time" IsChecked="{Binding SelectedTime, Converter={StaticResource RadioButonCheckedConverter}, ConverterParameter=10}" Content="10"   Style="{StaticResource TimeRadioButtonStyle}"/>
 
-                        <RadioButton GroupName="DCK_time" IsChecked="False" Content="15"  Style="{StaticResource TimeRadioButtonStyle}"/>
+                        <RadioButton GroupName="DCK_time" IsChecked="{Binding SelectedTime, Converter={StaticResource RadioButonCheckedConverter}, ConverterParameter=15}" Content="15"  Style="{StaticResource TimeRadioButtonStyle}"/>
 
-                        <RadioButton GroupName="DCK_time" IsChecked="False" Content="20" Style="{StaticResource TimeRadioButtonStyle}"/>
+                        <RadioButton GroupName="DCK_time" IsChecked="{Binding SelectedTime, Converter={StaticResource RadioButonCheckedConverter}, ConverterParameter=20}" Content="20" Style="{StaticResource TimeRadioButtonStyle}"/>
 
-                        <RadioButton GroupName="DCK_time" IsChecked="False" Content="30"  Style="{StaticResource TimeRadioButtonStyle}"/>
+                        <RadioButton GroupName="DCK_time" IsChecked="{Binding SelectedTime, Converter={StaticResource RadioButonCheckedConverter}, ConverterParameter=30}" Content="30"  Style="{StaticResource TimeRadioButtonStyle}"/>
 
-                        <RadioButton GroupName="DCK_time" IsChecked="False" Content="50" Style="{StaticResource TimeRadioButtonStyle}"/>
+                        <RadioButton GroupName="DCK_time" IsChecked="{Binding SelectedTime, Converter={StaticResource RadioButonCheckedConverter}, ConverterParameter=50}" Content="50" Style="{StaticResource TimeRadioButtonStyle}"/>
                         
                     </WrapPanel>
                 </Grid>

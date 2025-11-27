@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <None Remove="Resource\Images\bg.png" />
+    <None Remove="Resource\Images\black.png" />
     <None Remove="Resource\Images\btn_exit.png" />
     <None Remove="Resource\Images\file.png" />
     <None Remove="Resource\Images\hardware.png" />
@@ -139,12 +140,16 @@
     <None Remove="Resource\Images\startbg.png" />
     <None Remove="Resource\Images\store.png" />
     <None Remove="Resource\Images\user.png" />
+    <None Remove="Resource\Images\white.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Resource\AppSetting.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resource\Images\black.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\Images\file.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -518,6 +523,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\Images\user.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Images\white.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

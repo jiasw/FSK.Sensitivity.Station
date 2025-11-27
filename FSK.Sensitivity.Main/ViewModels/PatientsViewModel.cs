@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
+    [RegionMemberLifetime(KeepAlive = false)]
     public class PatientsViewModel : BaseViewModel
     {
         private readonly PatientRepository patientRepository;
@@ -18,7 +19,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private ObservableCollection<Patient> mangers = new ObservableCollection<Patient>();
         private int pageIndex = 1;
         private int pageSize = 10;
-
+        
 
         public ObservableCollection<Patient> Mangers
         {
@@ -93,7 +94,7 @@ public DelegateCommand NextCmd => new DelegateCommand(async () =>
 
         public DelegateCommand AddMangerCommand => new DelegateCommand(async () =>
         {
-            dialogService.ShowDialog(AppConst.Main_Dialog_Setting_UserInfo_Add, new DialogParameters(), async result =>
+            dialogService.ShowDialog(AppConst.Main_Dialog_Register, new DialogParameters(), async result =>
             {
                 if (result.Result == ButtonResult.OK)
                 {

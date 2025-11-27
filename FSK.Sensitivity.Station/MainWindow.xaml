@@ -25,7 +25,7 @@
             <ImageBrush ImageSource="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/bg.png" />
         </Grid.Background>
        
-            <ContentControl prism:RegionManager.RegionName="MainRegion"   ></ContentControl>
+            <ContentControl prism:RegionManager.RegionName="MainRegion"  ></ContentControl>
            
        
         

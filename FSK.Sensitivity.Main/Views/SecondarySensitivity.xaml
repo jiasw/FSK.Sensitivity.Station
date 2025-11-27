@@ -76,8 +76,8 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                 </ImageBrush>
             </Border.Background>
         </Border>
-        
-        <WrapPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" >
+
+        <UniformGrid Grid.Row="2" Rows="2" HorizontalAlignment="Center" >
             <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="1" Command="{Binding SelectCommand}" CommandParameter="1"  Style="{StaticResource SignToggleButtonBaseStyle}"/>
             <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=2}"  Content="2" Command="{Binding SelectCommand}" CommandParameter="2"  Style="{StaticResource SignToggleButtonBaseStyle}"/>
             <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=3}" Content="3" Command="{Binding SelectCommand}" CommandParameter="3"  Style="{StaticResource SignToggleButtonBaseStyle}"/>
@@ -88,6 +88,6 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=8}"  Content="8" Command="{Binding SelectCommand}" CommandParameter="8" Style="{StaticResource SignToggleButtonBaseStyle}"/>
             <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=9}" Content="9" Command="{Binding SelectCommand}" CommandParameter="9"  Style="{StaticResource SignToggleButtonBaseStyle}"/>
             <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=10}" Content="10" Command="{Binding SelectCommand}" CommandParameter="10"    Style="{StaticResource SignToggleButtonBaseStyle}"/>
-        </WrapPanel>
+        </UniformGrid>
     </Grid>
 </UserControl>

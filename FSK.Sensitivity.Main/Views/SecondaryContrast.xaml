@@ -4,9 +4,90 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FSK.Sensitivity.Main.Views"
+                          xmlns:hc="https://handyorg.github.io/handycontrol"
+                  xmlns:prism="http://prismlibrary.com/"
+prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" Name="对比度视标"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            <TextBlock Text="对比度视标" FontSize="24" Margin="10,10,10,0"/>
+    <UserControl.Resources>
+        <Style x:Key="SignToggleButtonBaseStyle" BasedOn="{StaticResource ButtonBaseBaseStyle}" TargetType="ToggleButton">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="120"/>
+            <Setter Property="Margin" Value="20,0"/>
+            <Setter Property="hc:BorderElement.CornerRadius" Value="10"/>
+            <Setter Property="Foreground" Value="{DynamicResource MainBrush}"></Setter>
+            <Setter Property="BorderBrush" Value="{DynamicResource MainBrush}"></Setter>
+            <Setter Property="FontSize" Value="84"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <hc:SimplePanel>
+                            <Border Background="{TemplateBinding Background}" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <Border BorderThickness="2" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}">
+                                    <Path x:Name="PathMain" Width="{TemplateBinding hc:IconElement.Width}" Height="{TemplateBinding hc:IconElement.Height}" Fill="{TemplateBinding Foreground}" SnapsToDevicePixels="True" Stretch="Uniform" Data="{TemplateBinding hc:IconElement.Geometry}"/>
+                                    <ContentPresenter x:Name="ContentPresenterMain" RecognizesAccessKey="True" VerticalAlignment="Center" Margin="0,0,0,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Margin="-1" Visibility="Collapsed" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}" x:Name="BorderChecked" BorderThickness="4" BorderBrush="{DynamicResource MainBrush}"/>
+                        </hc:SimplePanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter TargetName="BorderChecked" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="Content" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="ContentPresenterMain"/>
+                            </Trigger>
+                            <Trigger Property="hc:IconElement.Geometry" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="PathMain"/>
+                                <Setter Property="Margin" Value="0" TargetName="ContentPresenterMain"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value=".9"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Opacity" Value=".6"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Foreground" Value="White"></Setter>
+                    <Setter Property="Background" Value="{DynamicResource MainBrush}"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="{Binding BackColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.8*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <TextBlock FontSize="44" Foreground="{Binding TitleColor}" Text="请选择您能看清的编号最大的视标，并选择下方的按钮。"  VerticalAlignment="Bottom" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+
+        <Border Grid.Row="1">
+            <Border.Background>
+                <ImageBrush RenderOptions.BitmapScalingMode="HighQuality"  Stretch="Uniform" ImageSource="{Binding SignImage}">
+
+                </ImageBrush>
+            </Border.Background>
+        </Border>
+
+        <UniformGrid Grid.Row="2" Rows="2" HorizontalAlignment="Center" >
+            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="1" Command="{Binding SelectCommand}" CommandParameter="1"  Style="{StaticResource SignToggleButtonBaseStyle}"/>
+            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=2}"  Content="2" Command="{Binding SelectCommand}" CommandParameter="2"  Style="{StaticResource SignToggleButtonBaseStyle}"/>
+            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=3}" Content="3" Command="{Binding SelectCommand}" CommandParameter="3"  Style="{StaticResource SignToggleButtonBaseStyle}"/>
+            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=4}" Content="4" Command="{Binding SelectCommand}" CommandParameter="4"    Style="{StaticResource SignToggleButtonBaseStyle}"/>
+            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=5}"  Content="5" Command="{Binding SelectCommand}" CommandParameter="5"  Style="{StaticResource SignToggleButtonBaseStyle}"/>
+            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=6}" Content="6" Command="{Binding SelectCommand}" CommandParameter="6"  Style="{StaticResource SignToggleButtonBaseStyle}"/>
+            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=7}" Content="7" Command="{Binding SelectCommand}" CommandParameter="7"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=8}"  Content="8" Command="{Binding SelectCommand}" CommandParameter="8" Style="{StaticResource SignToggleButtonBaseStyle}"/>
+            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=9}" Content="9" Command="{Binding SelectCommand}" CommandParameter="9"  Style="{StaticResource SignToggleButtonBaseStyle}"/>
+            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=10}" Content="10" Command="{Binding SelectCommand}" CommandParameter="10"    Style="{StaticResource SignToggleButtonBaseStyle}"/>
+        </UniformGrid>
     </Grid>
 </UserControl>

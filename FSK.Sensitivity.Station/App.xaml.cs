@@ -6,6 +6,8 @@ using Prism.Ioc;
 using Prism.Modularity;
 using HandyControl.Tools;
 using FSK.Sensitivity.Main;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace FSK.Sensitivity.Station
 {
@@ -18,7 +20,6 @@ namespace FSK.Sensitivity.Station
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            
         }
         protected override Window CreateShell()
         {

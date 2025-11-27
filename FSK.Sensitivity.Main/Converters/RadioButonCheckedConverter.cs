@@ -16,7 +16,7 @@ namespace FSK.Sensitivity.Main.Converters
             {
                 return false;
             }
-            return value.Equals(parameter);
+            return value.ToString()==parameter.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

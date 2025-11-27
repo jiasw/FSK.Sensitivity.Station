@@ -4,12 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FSK.Sensitivity.Main.Views"
+             xmlns:cvt="clr-namespace:FSK.Sensitivity.Main.Converters"
              mc:Ignorable="d" 
              xmlns:hc="https://handyorg.github.io/handycontrol"
                 xmlns:prism="http://prismlibrary.com/"
                 prism:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="650" d:DesignWidth="1200">
     <UserControl.Resources>
+        <cvt:BackgroundConverter x:Key="BackgroundConverter"/>
         <SolidColorBrush Color="#66FFFFFF" x:Key="BordelBackGround"></SolidColorBrush>
         <Style x:Key="txtTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="22"/>
@@ -47,7 +49,7 @@
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1.2*"/>
-                        <ColumnDefinition Width="*" MinWidth="100"/>
+                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="1.2*" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="1.2*"/>
@@ -82,20 +84,20 @@
                     <TextBlock  Grid.Column="1" Grid.Row="1" Text="张三"  TextWrapping="WrapWithOverflow" Style="{StaticResource txtValue}"/>
 
                     <TextBlock Grid.Column="2"  Grid.Row="1" Style="{StaticResource txtTitle}">
-        <Run Text="瞳距"/>
+        <Run Text="时间"/>
         <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Column="3"  Grid.Row="1" Text="55"  Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Column="3"  Grid.Row="1" Text="{Binding CheckDuration}"  Style="{StaticResource txtValue}"/>
                     <TextBlock Grid.Column="4"  Grid.Row="1" Style="{StaticResource txtTitle}">
-<Run Text="灯光"/>
+<Run Text="倒计时"/>
 <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Column="5"  Grid.Row="1" Text="开"  Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Column="5"  Grid.Row="1" Text="{Binding WaitDuration}"  Style="{StaticResource txtValue}"/>
                 </Grid>
 
             </Border>
-            <Border Grid.Column="1" Style="{DynamicResource TrainSignBorderStyle}">
-                <Image Source="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/sign.jpg" Stretch="Fill" />
+            <Border Grid.Column="1" Style="{DynamicResource TrainSignBorderStyle}" Background="{Binding BackgroundSource, Converter={StaticResource BackgroundConverter}}">
+                
             </Border>
             <Grid Grid.Column="2" Margin="0,5" DataContext="{Binding ArrowButtonStauts}">
                 <Grid.ColumnDefinitions>

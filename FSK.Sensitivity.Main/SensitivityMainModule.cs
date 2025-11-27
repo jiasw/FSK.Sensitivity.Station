@@ -25,8 +25,6 @@ namespace FSK.Sensitivity.Main
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-
-
             regionManager.RegisterViewWithRegion(AppConst.MainRegion, typeof(MainMenu));
             regionManager.RegisterViewWithRegion(AppConst.MainRegion, typeof(TrainFrame));
             regionManager.RegisterViewWithRegion(AppConst.MainRegion, typeof(Manger));
@@ -35,14 +33,14 @@ namespace FSK.Sensitivity.Main
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SystemSetting));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SensitivityConfig));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SensitivityTraining));
-            regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(ContrastConfig));
+           
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(CheckHistory));
-            regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(ContrastTraining));
+            
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SystemSetting));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SerialPortConfig));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(Store));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(UserInfo));
-            regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(Patients));
+            
 
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondaryInit));
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondaryContrast));
@@ -56,9 +54,11 @@ namespace FSK.Sensitivity.Main
             var appConfig = configurationHelper.GetAppConfiguration();
             containerRegistry.RegisterInstance(appConfig);
             containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
-           
-            //注册网络服务
 
+            // 默认情况下，每次都创建新实例
+            containerRegistry.RegisterForNavigation<Patients, PatientsViewModel>();
+            containerRegistry.RegisterForNavigation<ContrastTraining, ContrastTrainingViewModel>();
+            containerRegistry.RegisterForNavigation<ContrastConfig, ContrastConfigViewModel>();
 
             #region 注册数据操作层
             var DB = new SqlSugarScope(new ConnectionConfig
