@@ -14,9 +14,9 @@ namespace FSK.Sensitivity.Core.Enums
     {
         [Description("关闭")]
         Off =0,
-        [Description("强哥")]
-        Strong = 1,
         [Description("弱光")]
-        Weak = 2
+        Weak = 1,
+        [Description("强光")]
+        Strong = 2,
     }
 }
