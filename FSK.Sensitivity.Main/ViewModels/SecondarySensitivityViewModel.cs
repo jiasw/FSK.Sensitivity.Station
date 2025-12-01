@@ -91,7 +91,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void Select()
         {
-            eventAggregator.GetEvent<SecondarySelectedEvent>().Publish(SelectedIndex);
+            eventAggregator.GetEvent<SensitivitySelectedEvent>().Publish(SelectedIndex);
             selectedIndex = -1;
             Growl.Info("选择成功");
         }

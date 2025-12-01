@@ -14,13 +14,13 @@ namespace FSK.Sensitivity.Station
     {
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
-        private readonly SecondarySelectedEvent secondarySelectedEvent;
+        private readonly SensitivitySelectedEvent secondarySelectedEvent;
 
         public SecondaryWindowViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
-            secondarySelectedEvent = this.eventAggregator.GetEvent<SecondarySelectedEvent>();
+            secondarySelectedEvent = this.eventAggregator.GetEvent<SensitivitySelectedEvent>();
             eventAggregator.GetEvent<SecondaryChangeEvent>().Subscribe(OnScreenChange);
         }
         

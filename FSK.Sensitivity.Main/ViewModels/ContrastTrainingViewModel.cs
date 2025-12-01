@@ -17,6 +17,7 @@ namespace FSK.Sensitivity.Main.ViewModels
     {
         private readonly SecondaryChangeEvent secondaryChangeEvent;//副屏页面切换事件
         private readonly ContrastSignChangeEvent contrastSignChangeEvent;//对比度标志位事件
+        private readonly ContrastSelectedEvent contrastSelectedEvent;//对比度选择事件
         private string black = "black";
         private string white = "white";
 
@@ -63,6 +64,11 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             secondaryChangeEvent = eventAggregator.GetEvent<SecondaryChangeEvent>();
             contrastSignChangeEvent = eventAggregator.GetEvent<ContrastSignChangeEvent>();
+            contrastSelectedEvent = eventAggregator.GetEvent<ContrastSelectedEvent>();
+            contrastSelectedEvent.Subscribe((index) =>
+            {
+                SaveSelectedContrast(index);
+            }); 
             _waittimer = new DispatcherTimer();
             _waittimer.Interval = TimeSpan.FromSeconds(1);
             _waittimer.Tick += Timer_Tick;
@@ -70,6 +76,11 @@ namespace FSK.Sensitivity.Main.ViewModels
             _checktimer.Interval = TimeSpan.FromSeconds(1);
             _checktimer.Tick += CheckTimer_Tick;
             
+        }
+
+        private void SaveSelectedContrast(int index)
+        {
+
         }
         private void CheckTimer_Tick(object? sender, EventArgs e)
         {

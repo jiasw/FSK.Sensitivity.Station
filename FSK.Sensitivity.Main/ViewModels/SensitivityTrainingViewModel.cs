@@ -220,7 +220,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IRegionNavigationJournal journal;
         private readonly SecondaryChangeEvent secondaryChangeEvent;
         private readonly SensitivitySignChangeEvent sensitivitySignChangeEvent;
-        private readonly SecondarySelectedEvent sensitivitySignSelectedEvent;
+        private readonly SensitivitySelectedEvent sensitivitySignSelectedEvent;
         private Eye CurrentCheckEye = Eye.OS;
         private Eye CheckPlan = Eye.OS;//检查双眼时，先检查左眼，再检查右眼
         private int CheckDruationTime = 30;//每只眼睛检查时间
@@ -235,7 +235,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.journal = regionManager.Regions[AppConst.MainRegion].NavigationService.Journal;
             secondaryChangeEvent = eventAggregator.GetEvent<SecondaryChangeEvent>();
             sensitivitySignChangeEvent= eventAggregator.GetEvent<SensitivitySignChangeEvent>();
-            sensitivitySignSelectedEvent = eventAggregator.GetEvent<SecondarySelectedEvent>();
+            sensitivitySignSelectedEvent = eventAggregator.GetEvent<SensitivitySelectedEvent>();
             sensitivitySignSelectedEvent.Subscribe(VaValueChanged);
             
             
