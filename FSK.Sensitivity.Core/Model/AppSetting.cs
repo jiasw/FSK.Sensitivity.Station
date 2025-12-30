@@ -18,23 +18,10 @@ namespace FSK.Sensitivity.Core.Model
         public StoreInfo StoreInfo { get; set; }
 
         /// <summary>
-        /// 手柄串口配置
+        /// Modbus串口名称
         /// </summary>
-        public SerialPortConfig HandlerConfig { get; set; }
+        public string ModbusPortName { get; set; }
 
-        /// <summary>
-        /// 电机串口配置
-        /// </summary>
-        public SerialPortConfig MotorConfig { get; set; }
 
-        /// <summary>
-        /// 灯光串口
-        /// </summary>
-        public SerialPortConfig LightConfig { get; set; }
-
-        /// <summary>
-        /// 扫码器串口配置
-        /// </summary>
-        public SerialPortConfig ScannerConfig { get; set; }
     }
 }

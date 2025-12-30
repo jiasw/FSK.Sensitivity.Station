@@ -8,34 +8,7 @@
     "StoreAddress": "火炬大厦",
     "StoreTel": "xx"
   },
-  "HandlerConfig": {
-    "SerialPortName": "COM1",
-    "BaudRate": 9600,
-    "DataBits": 8,
-    "StopBits": 1,
-    "Parity": "None"
-  },
-  "MotorConfig": {
-    "SerialPortName": "COM1",
-    "BaudRate": 9600,
-    "DataBits": 8,
-    "StopBits": 1,
-    "Parity": "None"
-  },
-  "LightConfig": {
-    "SerialPortName": "COM1",
-    "BaudRate": 9600,
-    "DataBits": 8,
-    "StopBits": 1,
-    "Parity": "None"
-  },
-  "ScannerConfig": {
-    "SerialPortName": "COM1",
-    "BaudRate": 9600,
-    "DataBits": 8,
-    "StopBits": 1,
-    "Parity": "None"
-  }
+  "ModbusPortName": "COM1"
 
 
 }

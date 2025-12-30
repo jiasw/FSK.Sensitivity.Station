@@ -13,18 +13,34 @@ namespace FSK.Sensitivity.Core.HardWare.Peripherals
         /// </summary>
         bool IsAvailable { get; }
         /// <summary>
-        /// 打开
+        /// 打开左边灯光
         /// </summary>
-        void TurnOn();
-        /// <summary>
-        /// 关闭
-        /// </summary>
-        void TurnOff();
+        Task<bool> TurnOnLeft();
 
-        ///弱光
         /// <summary>
-        /// 弱光
+        /// 打开右边灯光
         /// </summary>
-        void WeakLight();
+        Task<bool> TurnOnRight();
+
+        /// <summary>
+        /// 关闭左边灯光
+        /// </summary>
+        Task<bool> TurnOffLeft();
+
+        /// <summary>
+        /// 关闭右边灯光
+        /// </summary>
+        Task<bool> TurnOffRight();
+
+        /// <summary>
+        /// 打开所有灯光
+        /// </summary>
+        Task<bool> TurnOnAll();
+
+        /// <summary>
+        /// 关闭所有灯光
+        /// </summary>
+        Task<bool> TurnOffAll();
+
     }
 }

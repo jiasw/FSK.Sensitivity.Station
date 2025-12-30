@@ -81,20 +81,12 @@ namespace FSK.Sensitivity.Core.Const
 
         public const string Dict_TypeCode_SerialPort = "001";
         #region 串口信息
-        /// <summary>
-        /// 字典键值：手柄串口
-        /// </summary>
-        public const string Dict_Key_HandlePort = "01";
+        
 
         /// <summary>
         /// 字典键值：电机串口
         /// </summary>
         public const string Dict_Key_MotorPort = "02";
-
-        /// <summary>
-        /// 字典键值：灯光串口
-        /// </summary>
-        public const string Dict_Key_LightPort = "03";
 
         /// <summary>
         /// 字典键值：扫描仪串口

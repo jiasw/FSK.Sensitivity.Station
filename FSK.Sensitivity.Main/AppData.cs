@@ -55,33 +55,13 @@ namespace FSK.Sensitivity.Main
         public IScanner Scanner { get; set; }
 
 
-        public bool IsHardwareReady()
-        {
-            if(Handler==null || Handler.IsAvailable == false)
-            {
-                AlertMessageBox.Show("手柄未连接，请稍候重试");
-                return false;
-            }
-
-            return true;
-        }
-
-        public void InitHardware()
-        {
-            if (Handler != null)
-            {
-
-            }
-        }
+       
         /// <summary>
         /// 是否登录
         /// </summary>
         public bool IsLogin { get; set; }
 
-        /// <summary>
-        /// 硬件信息是否更改
-        /// </summary>
-        public bool HardWareConfigIsChanged { get; set; }=true;
+        
 
 
 

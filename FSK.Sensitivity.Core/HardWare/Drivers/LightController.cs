@@ -1,4 +1,5 @@
-﻿using FSK.Sensitivity.Core.HardWare.Peripherals;
+﻿
+using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
 using Serilog;
@@ -15,59 +16,53 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
     /// </summary>
     public class LightController : ILight
     {
-        System.IO.Ports.SerialPort serialPort;
-        public LightController(SerialPortConfig config)
-        {
-            Config = config;
-            Initalize();
-        }
-
-
-        private void Initalize()
-        {
-            if (Config == null|| string.IsNullOrEmpty(Config.SerialPortName))
-            {
-                LogHelper.Instance.LogError("灯光控制器配置为空");
-            }
-            try
-            {
-                SerialPortHelper serialPortHelper = new SerialPortHelper();
-               bool isOpen =serialPortHelper.OpenSerialPort(Config.SerialPortName, Config.BaudRate, Config.DataBits, Config.Parity, Config.StopBits);
-                if (isOpen)
-                {
-                    serialPort = serialPortHelper.GetSerialPort();
-                    _isAvailable = true;
-                }
-                else
-                {
-                    LogHelper.Instance.LogError("打开串口失败");
-                }
-            }
-            catch (Exception ex)
-            { 
-                LogHelper.Instance.LogError( "打开串口失败", ex);
-            }
-
-        }
-
         private bool _isAvailable = false;
+        private readonly IModbusService modbusService;
+
         public bool IsAvailable => _isAvailable;
 
-        public SerialPortConfig Config { get; }
 
-        public void TurnOff()
+        public LightController(IModbusService modbusService)
         {
-            
+            this.modbusService = modbusService;
         }
 
-        public void TurnOn()
+        public async Task<bool> TurnOnLeft()
         {
-           
+           return await modbusService.WriteSingleRegisterAsync( 4, 2);
         }
 
-        public void WeakLight()
+        public async Task<bool> TurnOnRight()
         {
-            
+            return await modbusService.WriteSingleRegisterAsync(5, 2);
         }
+
+        public async Task<bool> TurnOffLeft()
+        {
+            return await modbusService.WriteSingleRegisterAsync(4, 2);
+        }
+
+        public async Task<bool> TurnOffRight()
+        {
+            return await modbusService.WriteSingleRegisterAsync(4, 2);
+        }
+
+        public async Task<bool> TurnOnAll()
+        {
+            await TurnOnRight();
+            await TurnOnLeft();
+            return true;
+        }
+
+        public async Task<bool> TurnOffAll()
+        {
+            await TurnOffRight();
+            await TurnOffLeft();
+            return true;
+        }
+
+        
+
+        
     }
 }

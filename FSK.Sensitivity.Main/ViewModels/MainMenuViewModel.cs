@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.Const;
+using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Utility;
 using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
@@ -19,11 +20,13 @@ namespace FSK.Sensitivity.Main.ViewModels
     {
         private readonly IRegionManager regionManager;
         private readonly IDialogService dialogService;
+        private readonly IModbusService modbusService;
 
-        public MainMenuViewModel(IRegionManager regionManager, IDialogService dialogService)
+        public MainMenuViewModel(IRegionManager regionManager, IDialogService dialogService, IModbusService modbusService)
         {
             this.regionManager = regionManager;
             this.dialogService = dialogService;
+            this.modbusService = modbusService;
             AppData.Instance.DialogService = dialogService;
             
         }
@@ -84,28 +87,24 @@ namespace FSK.Sensitivity.Main.ViewModels
             LoginVisibility = Visibility.Visible;
         }
 
-        private bool HardwareAvailable()
-        {
-            return true;
-        }
+        
 
         private async Task CheckHardware()
         {
-            
-            if (!AppData.Instance.HardWareConfigIsChanged)
-            {
-                return;
-            }
             IsLoading = true;
-            LoadingMessageText="正在检测电机设备，请稍候...";
-            await Task.Delay(100);
-
-            LoadingMessageText = "正在检测灯光设备，请稍候...";
-            //await Task.Delay(1000);
+            if (!modbusService.IsConnected)
+            {
+                modbusService.Initialize("");
+                 modbusService.Connect();
+            }
+           
+            if (!modbusService.IsConnected)
+            {
+                AlertMessageBox.Show("硬件设备未连接，请连接后重试！");
+            }
 
 
             IsLoading = false;
-            AppData.Instance.HardWareConfigIsChanged = false;
         }
 
 
@@ -117,7 +116,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 AlertMessageBox.Show("请先登录！");
                 return;
             }
-            if (!HardwareAvailable())
+            if (!modbusService.IsConnected)
             {
                 AlertMessageBox.Show("硬件设备未连接，请连接后重试！");
                 return;
@@ -133,7 +132,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 AlertMessageBox.Show("请先登录！");
                 return;
             }
-            if (!HardwareAvailable())
+            if (!modbusService.IsConnected)
             {
                 AlertMessageBox.Show("硬件设备未连接，请连接后重试！");
                 return;

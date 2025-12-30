@@ -1,5 +1,7 @@
 ﻿using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Entity;
+using FSK.Sensitivity.Core.HardWare.Drivers;
+using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Repositories;
 using FSK.Sensitivity.Main.ViewModels;
@@ -11,6 +13,7 @@ using Prism.Ioc;
 using Prism.Navigation.Regions;
 using SqlSugar;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace FSK.Sensitivity.Main
 {
@@ -49,17 +52,19 @@ namespace FSK.Sensitivity.Main
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            ConfigurationHelper configurationHelper = new ConfigurationHelper();
-            configurationHelper.BuildAppConfiguration();
-            var appConfig = configurationHelper.GetAppConfiguration();
-            containerRegistry.RegisterInstance(appConfig);
+            containerRegistry.RegisterSingleton<IConfigurationService, ConfigurationService>();
             containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
+
+            // 使用 RegisterSingleton 确保全局只有一个实例
+            containerRegistry.RegisterSingleton<IModbusService, ModbusService>();
 
             // 默认情况下，每次都创建新实例
             containerRegistry.RegisterForNavigation<Patients, PatientsViewModel>();
             containerRegistry.RegisterForNavigation<ContrastTraining, ContrastTrainingViewModel>();
             containerRegistry.RegisterForNavigation<ContrastConfig, ContrastConfigViewModel>();
-
+            var container = containerRegistry.GetContainer();
+            var appSettingService = container.Resolve<IConfigurationService>();
+            var appConfig =  appSettingService.LoadSetting();
             #region 注册数据操作层
             var DB = new SqlSugarScope(new ConnectionConfig
             {

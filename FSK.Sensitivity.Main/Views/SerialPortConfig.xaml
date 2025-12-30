@@ -32,21 +32,10 @@ prism:ViewModelLocator.AutoWireViewModel="True"
     <Grid>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" >
             <StackPanel Orientation="Horizontal">
-                <TextBlock  Text="电机串口:" Style="{StaticResource serialPortConfigTitle}" />
+                <TextBlock  Text="硬件串口:" Style="{StaticResource serialPortConfigTitle}" />
                 <ComboBox   Style="{StaticResource serialPortConfigComboBox}" ItemsSource="{Binding SerialPortNames}" SelectedValue="{Binding MotorSerialPortName}" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="手柄串口:" Style="{StaticResource serialPortConfigTitle}"  />
-                <ComboBox   Style="{StaticResource serialPortConfigComboBox}" ItemsSource="{Binding SerialPortNames}" SelectedValue="{Binding HandlerSerialPortName}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="灯光串口:" Style="{StaticResource serialPortConfigTitle}"  />
-                <ComboBox   Style="{StaticResource serialPortConfigComboBox}" ItemsSource="{Binding SerialPortNames}" SelectedValue="{Binding LightSerialPortName}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="扫码器串口:" Style="{StaticResource serialPortConfigTitle}"  />
-                <ComboBox   Style="{StaticResource serialPortConfigComboBox}" ItemsSource="{Binding SerialPortNames}" SelectedValue="{Binding ScannerSerialPortName}"/>
-            </StackPanel>
+            
             <Button  Content="保存" FontSize="26" Width="250" Margin="0,30" Style="{StaticResource NavButton}" Command="{Binding SaveCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </StackPanel>
     </Grid>
