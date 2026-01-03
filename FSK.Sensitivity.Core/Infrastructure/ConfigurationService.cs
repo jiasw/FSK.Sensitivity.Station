@@ -18,6 +18,7 @@ namespace FSK.Sensitivity.Core.Infrastructure
     {
         private readonly string _configPath;
         private readonly JsonSerializerOptions _jsonOptions;
+        private AppSetting _setting;
         public ConfigurationService()
         {
             // 配置文件路径
@@ -28,7 +29,7 @@ namespace FSK.Sensitivity.Core.Infrastructure
             {
                 WriteIndented = true,
                 Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                PropertyNameCaseInsensitive = true
             };
             // 确保配置文件目录存在
             var configDir = Path.GetDirectoryName(_configPath);
@@ -44,13 +45,19 @@ namespace FSK.Sensitivity.Core.Infrastructure
             {
                 throw new FileNotFoundException("配置文件未找到", _configPath);
             }
-            var json =  File.ReadAllText(_configPath);
+            string json =  File.ReadAllText(_configPath);
+            Console.WriteLine($"读取配置文件: {json}");
             if (string.IsNullOrWhiteSpace(json))
             {
                 throw new FileNotFoundException("配置文件为空未找到", _configPath);
             }
+            if(_setting != null)
+            {
+                return _setting;
+            }
             var setting = System.Text.Json.JsonSerializer.Deserialize<AppSetting>(json, _jsonOptions);
-            return setting ;
+            _setting= setting ;
+            return setting;
         }
         public void SaveSetting(AppSetting setting)
         {
@@ -60,6 +67,8 @@ namespace FSK.Sensitivity.Core.Infrastructure
                     throw new ArgumentNullException(nameof(setting));
                 var json = System.Text.Json.JsonSerializer.Serialize(setting, _jsonOptions);
                  File.WriteAllText(_configPath, json);
+                Console.WriteLine($"保存配置文件: {json}");
+                _setting = null; // 清除缓存以确保下次加载时读取最新配置
             }
             catch (Exception ex)
             {

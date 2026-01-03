@@ -13,6 +13,8 @@ namespace FSK.Sensitivity.Core.Const
         /// </summary>
         public  const  string MainRegion = nameof(MainRegion);
 
+        public const string HardWareTest = nameof(HardWareTest);
+
         /// <summary>
         /// 检查内容区域
         /// </summary>

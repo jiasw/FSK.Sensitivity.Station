@@ -1,5 +1,7 @@
 ﻿using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
+using FSK.Sensitivity.Core.Infrastructure;
+using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Utility;
 using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
@@ -21,12 +23,16 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IDialogService dialogService;
         private readonly IModbusService modbusService;
+        private readonly IConfigurationService configurationService;
+        private readonly AppSetting appSetting;
 
-        public MainMenuViewModel(IRegionManager regionManager, IDialogService dialogService, IModbusService modbusService)
+        public MainMenuViewModel(IRegionManager regionManager, IDialogService dialogService, IModbusService modbusService, IConfigurationService configurationService)
         {
             this.regionManager = regionManager;
             this.dialogService = dialogService;
             this.modbusService = modbusService;
+            this.configurationService = configurationService;
+            this.appSetting = configurationService.LoadSetting();
             AppData.Instance.DialogService = dialogService;
             
         }
@@ -94,7 +100,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             IsLoading = true;
             if (!modbusService.IsConnected)
             {
-                modbusService.Initialize("");
+                modbusService.Initialize(appSetting.ModbusPortName);
                  modbusService.Connect();
             }
            
@@ -167,18 +173,18 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void Login()
         {
-
+            dialogService.ShowDialog("HardWareTest");
             //登录
-            dialogService.ShowDialog(AppConst.Main_Page_Login, new DialogParameters(), result =>
-            {
-                if (result.Result == ButtonResult.OK)
-                {
-                    AppData.Instance.IsLogin = true;
-                    UserName = AppData.Instance.CurrentPatient.PatientName;
-                    UserVisibility= Visibility.Visible;
-                }
+            //dialogService.ShowDialog(AppConst.Main_Page_Login, new DialogParameters(), result =>
+            //{
+            //    if (result.Result == ButtonResult.OK)
+            //    {
+            //        AppData.Instance.IsLogin = true;
+            //        UserName = AppData.Instance.CurrentPatient.PatientName;
+            //        UserVisibility= Visibility.Visible;
+            //    }
 
-            });
+            //});
 
         }
 

@@ -8,7 +8,7 @@
     "StoreAddress": "火炬大厦",
     "StoreTel": "xx"
   },
-  "ModbusPortName": "COM1"
+  "ModbusPortName": "COM2"
 
 
 }

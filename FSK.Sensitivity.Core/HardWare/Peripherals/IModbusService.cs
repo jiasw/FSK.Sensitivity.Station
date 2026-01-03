@@ -14,9 +14,12 @@ namespace FSK.Sensitivity.Core.HardWare.Peripherals
         bool Connect();
         // 读取保持寄存器
         // 替换 ReadHoldingRegistersAsync 方法，避免在异步方法中使用 Span/unsafe
-        Task<short[]> ReadHoldingRegistersAsync(int startAddress, int count);
+        Task<short[]> ReadHoldingRegistersAsync(ushort startAddress, ushort count);
 
         // 写入单个寄存器
-        Task<bool> WriteSingleRegisterAsync(int registeraddress, short value);
+        Task<bool> WriteSingleRegisterAsync(ushort registeraddress, short value);
+
+        // 写入多个寄存器
+        Task<bool> WriteMultipleRegistersAsync(ushort startAddress, short[] values);
     }
 }

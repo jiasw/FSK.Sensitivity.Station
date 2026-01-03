@@ -9,10 +9,6 @@ namespace FSK.Sensitivity.Core.HardWare.Peripherals
     public interface ILight
     {
         /// <summary>
-        /// 是否可用
-        /// </summary>
-        bool IsAvailable { get; }
-        /// <summary>
         /// 打开左边灯光
         /// </summary>
         Task<bool> TurnOnLeft();

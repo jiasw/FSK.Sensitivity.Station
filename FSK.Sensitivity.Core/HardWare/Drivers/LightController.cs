@@ -16,11 +16,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
     /// </summary>
     public class LightController : ILight
     {
-        private bool _isAvailable = false;
         private readonly IModbusService modbusService;
-
-        public bool IsAvailable => _isAvailable;
-
 
         public LightController(IModbusService modbusService)
         {
@@ -29,36 +25,33 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
 
         public async Task<bool> TurnOnLeft()
         {
-           return await modbusService.WriteSingleRegisterAsync( 4, 2);
+           return await modbusService.WriteSingleRegisterAsync( 4, 1);
         }
 
         public async Task<bool> TurnOnRight()
         {
-            return await modbusService.WriteSingleRegisterAsync(5, 2);
+            return await modbusService.WriteSingleRegisterAsync(5, 1);
         }
 
         public async Task<bool> TurnOffLeft()
         {
-            return await modbusService.WriteSingleRegisterAsync(4, 2);
+            return await modbusService.WriteSingleRegisterAsync(4, 0);
         }
 
         public async Task<bool> TurnOffRight()
         {
-            return await modbusService.WriteSingleRegisterAsync(4, 2);
+            return await modbusService.WriteSingleRegisterAsync(4, 0);
         }
 
         public async Task<bool> TurnOnAll()
         {
-            await TurnOnRight();
-            await TurnOnLeft();
-            return true;
+            return await modbusService.WriteMultipleRegistersAsync(4, new short[] { 1, 1 });
+            
         }
 
         public async Task<bool> TurnOffAll()
         {
-            await TurnOffRight();
-            await TurnOffLeft();
-            return true;
+            return await modbusService.WriteMultipleRegistersAsync(4, new short[] { 0, 0 });
         }
 
         

@@ -29,22 +29,17 @@ namespace FSK.Sensitivity.Main
         public void OnInitialized(IContainerProvider containerProvider)
         {
             regionManager.RegisterViewWithRegion(AppConst.MainRegion, typeof(MainMenu));
+            regionManager.RegisterViewWithRegion(AppConst.MainRegion, typeof(HardWareTest));
             regionManager.RegisterViewWithRegion(AppConst.MainRegion, typeof(TrainFrame));
             regionManager.RegisterViewWithRegion(AppConst.MainRegion, typeof(Manger));
-
-            
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SystemSetting));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SensitivityConfig));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SensitivityTraining));
-           
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(CheckHistory));
-            
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SystemSetting));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SerialPortConfig));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(Store));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(UserInfo));
-            
-
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondaryInit));
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondaryContrast));
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondarySensitivity));
@@ -52,11 +47,11 @@ namespace FSK.Sensitivity.Main
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            
             containerRegistry.RegisterSingleton<IConfigurationService, ConfigurationService>();
             containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
 
-            // 使用 RegisterSingleton 确保全局只有一个实例
-            containerRegistry.RegisterSingleton<IModbusService, ModbusService>();
+           
 
             // 默认情况下，每次都创建新实例
             containerRegistry.RegisterForNavigation<Patients, PatientsViewModel>();
@@ -112,10 +107,18 @@ namespace FSK.Sensitivity.Main
             containerRegistry.RegisterDialog<Scan, ScanViewModel>();
             containerRegistry.RegisterDialog<UserInfoAdd, UserInfoAddViewModel>();
             containerRegistry.RegisterDialog<AlertMsg, AlertMsgViewModel>();
+            containerRegistry.RegisterDialog<HardWareTest, HardWareTestViewModel>();
             #endregion
             #region 注册界面
 
             #endregion
+            #region 注册硬件操作类
+            containerRegistry.RegisterSingleton<IModbusService, ModbusService>();
+            containerRegistry.RegisterSingleton<ILight, LightController>();
+            containerRegistry.RegisterSingleton<IJoystick, JoystickController>();
+            containerRegistry.RegisterSingleton<IMotor, MotorController>();
+            #endregion
+
 
         }
     }

@@ -12,12 +12,19 @@ namespace FSK.Sensitivity.Core.HardWare.Peripherals
     /// </summary>
     public interface IJoystick
     {
-        bool IsAvailable { get; }
-        public event EventHandler<JoystickEventArgs> UpPressed;
-        public event EventHandler<JoystickEventArgs> DownPressed;
-        public event EventHandler<JoystickEventArgs> LeftPressed;
-        public event EventHandler<JoystickEventArgs> RightPressed;
-        public event EventHandler<JoystickEventArgs> TriggerPressed;
-        public event EventHandler<JoystickEventArgs> ConfirmPressed;
+        public event EventHandler<JoystickEventArgs> Pressed;
+
+        /// <summary>
+        /// 开始监听
+        /// </summary>
+        void StartMonitoring();
+
+
+        /// <summary>
+        /// 停止监听
+        /// </summary>
+        void StopMonitoring();
+
+
     }
 }
