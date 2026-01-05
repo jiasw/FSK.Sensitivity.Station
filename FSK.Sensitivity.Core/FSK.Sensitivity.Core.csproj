@@ -19,6 +19,7 @@
     <PackageReference Include="SqlSugarCore" Version="5.1.4.188" />
     <PackageReference Include="System.IO.Ports" Version="9.0.4" />
     <PackageReference Include="WpfScreenHelper" Version="2.1.1" />
+    <PackageReference Include="Yitter.IdGenerator" Version="1.0.14" />
   </ItemGroup>
 
 </Project>

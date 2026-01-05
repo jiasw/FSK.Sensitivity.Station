@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,13 +9,25 @@ namespace FSK.Sensitivity.Core.Enums
 {
     public enum TrainStatus
     {
-        [System.ComponentModel.Description("待训练")]
+        /// <summary>
+        /// 待训练
+        /// </summary>
+        [Description("待训练")]
         Pending,
-        [System.ComponentModel.Description("训练中")]
+        /// <summary>
+        /// 训练中
+        /// </summary>
+        [Description("训练中")]
         Training,
-        [System.ComponentModel.Description("已完成")]
+        /// <summary>
+        /// 已完成
+        /// </summary>
+        [Description("已完成")]
         Trained,
-        [System.ComponentModel.Description("未训练")]
+        /// <summary>
+        /// 不需训练
+        /// </summary>
+        [Description("不需训练")]
         NotTrain
 
     }

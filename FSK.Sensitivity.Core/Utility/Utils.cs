@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Yitter.IdGenerator;
 
 namespace FSK.Sensitivity.Core.Utility
 {
@@ -85,6 +86,17 @@ namespace FSK.Sensitivity.Core.Utility
                 result = random.Next(start, end);
             }
             return result;
+        }
+
+        /// <summary>
+        /// 生成雪花ID
+        /// </summary>
+        /// <returns></returns>
+        public static long GenerateSnowID()
+        {
+            var options = new IdGeneratorOptions(1); // 1 是机器码，分布式环境下需唯一
+            YitIdHelper.SetIdGenerator(options);
+            return YitIdHelper.NextId();
         }
 
     }

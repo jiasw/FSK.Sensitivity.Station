@@ -10,6 +10,9 @@ namespace FSK.Sensitivity.Core.Entity
 
     public class CheckResult: RootEntity
     {
+
+        public long CheckId { get; set; }
+
         /// <summary>
         /// 用户ID
         /// </summary>

@@ -86,13 +86,5 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref _signImage, value); }
         }
 
-        public DelegateCommand SelectCommand => new DelegateCommand(Select);
-
-        private void Select()
-        {
-            eventAggregator.GetEvent<ContrastSelectedEvent>().Publish(SelectedIndex);
-            selectedIndex = -1;
-            Growl.Info("选择成功");
-        }
     }
 }
