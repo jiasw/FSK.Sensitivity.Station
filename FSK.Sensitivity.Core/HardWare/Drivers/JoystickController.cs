@@ -68,16 +68,32 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
                 try
                 {
                     short[] registers = await _modbusService.ReadHoldingRegistersAsync(startAddress, numberOfPoints);
-                    LogHelper.Instance.LogDebug($"摇杆状态返回: {string.Join(",", registers)}");
-                    if (registers != null && registers.Length >= numberOfPoints)
+                    if (registers != null)
                     {
-                        ProcessButtonState(JoystickStatus.Front, registers[4]);
-                        ProcessButtonState(JoystickStatus.Back, registers[6]);
-                        ProcessButtonState(JoystickStatus.Left, registers[8]);
-                        ProcessButtonState(JoystickStatus.Right, registers[10]);
-                        ProcessButtonState(JoystickStatus.Confirm, registers[12]);
-                        ProcessButtonState(JoystickStatus.Trigger, registers[14]);
+                        LogHelper.Instance.LogDebug($"摇杆状态返回: {string.Join(",", registers)}");
+                        //判断数组中是否有1
+                        if (registers.Any(r => r == 1))
+                        {
+                            string logstr = $@"摇杆按下=======================
+                                                    摇杆状态返回: {string.Join(",", registers)}
+                                                摇杆按下=======================";
+                            LogHelper.Instance.LogDebug(logstr);
+                        }
+                        if (registers != null && registers.Length >= numberOfPoints)
+                        {
+                            ProcessButtonState(JoystickStatus.Front, registers[0]);
+                            ProcessButtonState(JoystickStatus.Back, registers[1]);
+                            ProcessButtonState(JoystickStatus.Left, registers[2]);
+                            ProcessButtonState(JoystickStatus.Right, registers[3]);
+                            ProcessButtonState(JoystickStatus.Confirm, registers[4]);
+                            ProcessButtonState(JoystickStatus.Trigger, registers[5]);
+                        }
                     }
+                    else
+                    {
+                        LogHelper.Instance.LogDebug("读取摇杆状态失败,registers为null");
+                    }
+                    
                 }
                 catch (OperationCanceledException) { /* 正常退出 */ }
                 catch (Exception ex)
@@ -86,12 +102,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
                     // 这里建议增加日志记录
                     Debug.WriteLine($"Joystick Error: {ex.Message}");
                 }
-
-                try
-                {
-                    await Task.Delay(50, token);
-                }
-                catch (OperationCanceledException) { break; }
+                await Task.Delay(5, token);
             }
         }
 

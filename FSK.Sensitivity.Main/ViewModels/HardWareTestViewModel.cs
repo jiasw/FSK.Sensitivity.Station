@@ -98,21 +98,22 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void StartOrStopJoystick()
         {
             if (isJoystickEnabled) {
-                joystick.StartMonitoring();
-                joystick.Pressed += Joystick_Pressed;
-                isJoystickEnabled = false;
-                BtnJoystickContentProperty="停止摇杆监听";
-            }
-            else
-            {
                 joystick.StopMonitoring();
                 joystick.Pressed -= Joystick_Pressed;
                 isJoystickEnabled = true;
                 BtnJoystickContentProperty = "启动摇杆监听";
+                JoystickStatus = "";
+            }
+            else
+            {
+                joystick.StartMonitoring();
+                joystick.Pressed += Joystick_Pressed;
+                isJoystickEnabled = false;
+                BtnJoystickContentProperty = "停止摇杆监听";
             }
         }
 
-        private string joystickStatus="";
+        private string joystickStatus="摇杆监听...";
         public string JoystickStatus
         {
             get { return joystickStatus; }

@@ -61,12 +61,51 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         /// <returns></returns>
         public async Task<bool> SetSlideBlock(short position)
         {
-            if (position < 0 || position > 5)
-            {
-                return false;
-            }
+            
             return await modbusService.WriteSingleRegisterAsync(8, position);
 
         }
+        /// <summary>
+        /// 判断丝杆是否在移动
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> IsSlideMove()
+        {
+            short[] data = await modbusService.ReadHoldingRegistersAsync(41, 1);
+            if (data != null && data.Length > 0)
+            {
+                return data[0] == 1;
+            }
+            return false;
+        }
+        /// <summary>
+        /// 判断做转盘是否在运动
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> IsLeftMove()
+        {
+            short[] data = await modbusService.ReadHoldingRegistersAsync(21, 1);
+            if (data != null && data.Length > 0)
+            {
+                return data[0] == 1;
+            }
+            return false;
+        }
+        /// <summary>
+        /// 判断右转盘是否在运动
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> IsRightMove()
+        {
+            short[] data = await modbusService.ReadHoldingRegistersAsync(31, 1);
+            if (data != null && data.Length > 0)
+            {
+                return data[0] == 1;
+            }
+            return false;
+        }
+
+
+
     }
 }

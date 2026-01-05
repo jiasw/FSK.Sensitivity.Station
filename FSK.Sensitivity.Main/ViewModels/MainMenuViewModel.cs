@@ -173,18 +173,18 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void Login()
         {
-            dialogService.ShowDialog("HardWareTest");
+            //dialogService.ShowDialog("HardWareTest");
             //登录
-            //dialogService.ShowDialog(AppConst.Main_Page_Login, new DialogParameters(), result =>
-            //{
-            //    if (result.Result == ButtonResult.OK)
-            //    {
-            //        AppData.Instance.IsLogin = true;
-            //        UserName = AppData.Instance.CurrentPatient.PatientName;
-            //        UserVisibility= Visibility.Visible;
-            //    }
+            dialogService.ShowDialog(AppConst.Main_Page_Login, new DialogParameters(), result =>
+            {
+                if (result.Result == ButtonResult.OK)
+                {
+                    AppData.Instance.IsLogin = true;
+                    UserName = AppData.Instance.CurrentPatient.PatientName;
+                    UserVisibility = Visibility.Visible;
+                }
 
-            //});
+            });
 
         }
 

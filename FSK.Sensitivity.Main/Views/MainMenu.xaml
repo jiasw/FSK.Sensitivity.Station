@@ -153,14 +153,14 @@
 
 
             <Grid Grid.Row="1" >
-                <!--<Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="6*"></ColumnDefinition>
                     <ColumnDefinition Width="6*"></ColumnDefinition>
                     <ColumnDefinition Width="6*"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>-->
-                <!--<Button Grid.Column="1" Command="{Binding CSFCommand}" Style="{StaticResource MenuButtonStyle}" Content="对比敏感度检查" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_csf.png" >
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Command="{Binding CSFCommand}" Style="{StaticResource MenuButtonStyle}" Content="对比敏感度检查" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_csf.png" >
 
                 </Button>
                 <Button Grid.Column="2"  Command="{Binding DEACommand}" Style="{StaticResource MenuButtonStyle}" Content="暗环境适应检查" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_dea.png" >
@@ -168,7 +168,7 @@
                 </Button>
                 <Button Grid.Column="3"  Command="{Binding ConfigCommand}" Style="{StaticResource MenuButtonStyle}" Content="系统设置" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_setting.png" >
 
-                </Button>-->
+                </Button>
 
                 <StackPanel Orientation="Horizontal">
                     <Button Content="开灯"></Button>
