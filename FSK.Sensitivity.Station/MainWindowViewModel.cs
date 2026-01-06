@@ -29,9 +29,7 @@ namespace FSK.Sensitivity.Station
 
         private void Load()
         {
-            var secondaryWindow = containerProvider.Resolve<SecondaryWindow>();
-            secondaryWindow.Show();
-            secondaryWindow.Left = 0;
+            
             
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
             

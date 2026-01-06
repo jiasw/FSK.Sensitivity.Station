@@ -18,12 +18,18 @@ namespace FSK.Sensitivity.Station
     /// </summary>
     public partial class MainWindow : Window
     {
-        
-        public MainWindow()
+        private readonly IContainerProvider containerProvider;
+
+        public MainWindow(IContainerProvider containerProvider)
         {
             InitializeComponent();
+            this.containerProvider = containerProvider;
         }
 
-       
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var secondaryWindow = containerProvider.Resolve<SecondaryWindow>();
+            secondaryWindow.Show();
+        }
     }
 }

@@ -53,7 +53,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref signPath, value); }
         }
 
-        private int selectedIndex = 1;
+        private int selectedIndex = 2;
         public int SelectedIndex
         {
             get { return selectedIndex; }
@@ -121,16 +121,16 @@ namespace FSK.Sensitivity.Main.ViewModels
                 }
                 else if (e.Command == JoystickStatus.Left)
                 {
-                    if (SelectedIndex < 10)
+                    if (SelectedIndex >1)
                     {
-                        SelectedIndex += 1;
+                        SelectedIndex -= 1;
                     }
                 }
                 else if (e.Command == JoystickStatus.Right)
                 {
-                    if (SelectedIndex > 1)
+                    if (SelectedIndex <10)
                     {
-                        SelectedIndex -= 1;
+                        SelectedIndex += 1;
                     }
                 }
 
@@ -139,7 +139,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 args = new ActionArgs()
                 {
                     Index = -1,
-                    Action = new Core.HardWare.Drivers.JoystickEventArgs(JoystickStatus.Confirm)
+                    Action = new Core.HardWare.Drivers.JoystickEventArgs(e.Command)
                 };
             }
             joystickEvent.Publish(args);
