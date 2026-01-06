@@ -532,7 +532,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             CheckUserModel = model;
             //加载对比敏感度视标页面
             secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Sensitivity, Brush = CheckUserModel.DayNight == Core.Enums.DayOrNight.Day ? SignBackGround.White : SignBackGround.Black });
-            //_ = StartTask();
+            StartTask();
             
             eventAggregator.GetEvent<JoystickEvent>().Subscribe(JoystickAction);
         }
@@ -574,9 +574,8 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (TrainModelsQueue.Count > 0)
             {
-                
-                currentCSFTrainModel = TrainModelsQueue.Dequeue();
                 RefreshSignImage();//刷新视标
+                currentCSFTrainModel = TrainModelsQueue.Dequeue();
                 if (currentCSFTrainModel.TrainStatus == TrainStatus.NotTrain)
                 {
                    await StartTask();

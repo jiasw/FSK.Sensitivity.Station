@@ -165,7 +165,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             long id= await patientRepository.Add(addPatient);
             if (id > 0)
             {
-                Growl.Success("注册成功！");
+                MessageBoxService.Instance.Show("注册成功！");
                 addPatient.Id = id;
                 AppData.Instance.CurrentPatient = addPatient;
                 Close();
