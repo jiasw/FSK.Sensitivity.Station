@@ -141,12 +141,12 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (string.IsNullOrEmpty(LoginAccount))
             {
-                AlertMessageBox.Show("请输入登录账号！");
+                MessageBoxService.Instance.Show("请输入登录账号！");
                 return;
             }
             if (string.IsNullOrEmpty(Name))
             {
-                AlertMessageBox.Show("请输入姓名！");
+                MessageBoxService.Instance.Show("请输入姓名！");
                 return;
             }
 
@@ -165,14 +165,14 @@ namespace FSK.Sensitivity.Main.ViewModels
             long id= await patientRepository.Add(addPatient);
             if (id > 0)
             {
-                AlertMessageBox.Show("注册成功！");
+                MessageBoxService.Instance.Show("注册成功！");
                 addPatient.Id = id;
                 AppData.Instance.CurrentPatient = addPatient;
                 Close();
             }
             else
             {
-                AlertMessageBox.Show("注册失败！");
+                MessageBoxService.Instance.Show("注册失败！");
             }
 
         }

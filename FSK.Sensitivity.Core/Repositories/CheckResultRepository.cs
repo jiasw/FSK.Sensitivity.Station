@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FSK.Sensitivity.Core.Repositories
 {
-    public class CheckResultRepository : BaseRepository<Manger>
+    public class CheckResultRepository : BaseRepository<CheckResult>
     {
         private readonly ISqlSugarClient sqlSugarClient;
 

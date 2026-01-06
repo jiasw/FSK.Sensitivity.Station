@@ -39,7 +39,7 @@ namespace FSK.Sensitivity.Core.Enums
     public enum CSFValue
     {
         [Description("无")]
-        None,
+        None=0,
         [Description("1")]
         CS001,
         [Description("6")]

@@ -70,7 +70,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             appSetting.ModbusPortName=MotorSerialPortName;
             configurationService.SaveSetting(appSetting);
             modbusService.Initialize(MotorSerialPortName);
-            AlertMessageBox.Show("保存成功");
+            MessageBoxService.Instance.Show("保存成功");
         }
         
         

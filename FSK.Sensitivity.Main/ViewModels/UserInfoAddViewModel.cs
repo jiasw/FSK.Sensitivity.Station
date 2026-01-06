@@ -89,7 +89,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     manger.Id = id;
                     await mangerRepository.Update(manger);
                 }
-                AlertMessageBox.Show("保存成功！");
+                MessageBoxService.Instance.Show("保存成功！");
                 RequestClose.Invoke(new DialogResult(ButtonResult.OK));
             }
             
@@ -99,7 +99,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (string.IsNullOrEmpty(Name))
             {
-                AlertMessageBox.Show("姓名不能为空！");
+                MessageBoxService.Instance.Show("姓名不能为空！");
                 return false;
             }
            

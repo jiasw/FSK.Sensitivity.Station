@@ -18,9 +18,23 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public string Gender { get; set; }
 
-        public string PD { get; set; }
+        public int PD { get; set; }
 
-        public string Light { get; set; }
+        public LightStatus Light { get; set; }
+
+        public string LightDesc {
+            get
+            {
+                if (Light == LightStatus.Off)
+                {
+                    return "关";
+                }
+                else
+                {
+                    return "开";
+                }
+            }
+        }
 
         public DayOrNight DayNight { get; set; }
 
@@ -41,5 +55,43 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
         public Eye CheckEyeMode { get; set; }
+
+        public CheckDistance checkDistance { get; set; }
+
+
+        /// <summary>
+        /// 左眼检查用时
+        /// </summary>
+        public int LeftEyeDuration { get; set; } = 0;
+
+        /// <summary>
+        /// 右眼检查用时
+        /// </summary>
+        public int RightEyeDuration { get; set; } = 0;
+
+        /// <summary>
+        /// 当前检查用时
+        /// </summary>
+        public int CurrentDuration {
+            get
+            {
+                if (this.CheckEyeMode == Eye.OS)
+                {
+                    return this.LeftEyeDuration;
+                }else if (this.CheckEyeMode==Eye.OD)
+                {
+                    return this.RightEyeDuration;
+                }
+                return 0;
+            }
+        } 
+
+        /// <summary>
+        /// 总用时
+        /// </summary>
+        public int TotalDuration
+        {
+            get { return LeftEyeDuration + RightEyeDuration; }
+        }
     }
 }

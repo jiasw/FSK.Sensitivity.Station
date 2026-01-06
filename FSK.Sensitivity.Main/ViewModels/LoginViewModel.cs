@@ -128,7 +128,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (Patients==null || Patients.Count==0||string.IsNullOrEmpty(Username))
             {
-                AlertMessageBox.Show("请选择用户");
+                MessageBoxService.Instance.Show("请选择用户");
                 return;
             }
             AppData.Instance.CurrentPatient= _patientList.First(p => p.Id == _seleedPatientId);

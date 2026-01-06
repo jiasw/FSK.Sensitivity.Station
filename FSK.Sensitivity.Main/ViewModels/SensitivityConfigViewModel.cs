@@ -135,7 +135,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (await HardWareIsMove())
             {
-                AlertMessageBox.Show("设备正在初始化,请稍候...");
+                MessageBoxService.Instance.Show("设备正在初始化,请稍候...");
                 return;
             }
 

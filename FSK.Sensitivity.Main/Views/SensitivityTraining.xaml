@@ -96,7 +96,7 @@
 <Run Text="灯光"/>
 <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Column="5"  Grid.Row="1" Text="{Binding Light}"  Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Column="5"  Grid.Row="1" Text="{Binding LightDesc}"  Style="{StaticResource txtValue}"/>
                 </Grid>
                 
             </Border>

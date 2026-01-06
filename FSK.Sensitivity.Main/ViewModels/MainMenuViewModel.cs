@@ -106,7 +106,8 @@ namespace FSK.Sensitivity.Main.ViewModels
            
             if (!modbusService.IsConnected)
             {
-                AlertMessageBox.Show("硬件设备未连接，请连接后重试！");
+                MessageBoxService.Instance.Show("硬件设备未连接，请连接后重试！", "设备未连接", MessageBoxButton.OK);
+                //MessageBoxService.Instance.Show("硬件设备未连接，请连接后重试！");
             }
 
 
@@ -119,12 +120,12 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (!AppData.Instance.IsLogin)
             {
-                AlertMessageBox.Show("请先登录！");
+                MessageBoxService.Instance.Show("请先登录！");
                 return;
             }
             if (!modbusService.IsConnected)
             {
-                AlertMessageBox.Show("硬件设备未连接，请连接后重试！");
+                MessageBoxService.Instance.Show("硬件设备未连接，请连接后重试！");
                 return;
             }
 
@@ -135,12 +136,12 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (!AppData.Instance.IsLogin)
             {
-                AlertMessageBox.Show("请先登录！");
+                MessageBoxService.Instance.Show("请先登录！");
                 return;
             }
             if (!modbusService.IsConnected)
             {
-                AlertMessageBox.Show("硬件设备未连接，请连接后重试！");
+                MessageBoxService.Instance.Show("硬件设备未连接，请连接后重试！");
                 return;
             }
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", "DEA" } });

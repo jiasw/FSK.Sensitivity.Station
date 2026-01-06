@@ -31,7 +31,7 @@ namespace FSK.Sensitivity.Core.Entity
         /// <summary>
         /// 检查距离
         /// </summary>
-        public CheckDistance CeckDistance { get; set; }
+        public CheckDistance CheckDistance { get; set; }
 
         /// <summary>
         /// 光照状态

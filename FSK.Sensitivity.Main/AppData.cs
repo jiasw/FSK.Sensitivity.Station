@@ -34,27 +34,7 @@ namespace FSK.Sensitivity.Main
         /// 当前管理员
         /// </summary>
         public Manger CurrentManger { get; set; }
-        /// <summary>
-        /// 手柄
-        /// </summary>
-        public IJoystick Handler { get; set; }
-
-        /// <summary>
-        /// 灯光
-        /// </summary>
-        public ILight Light { get; set; }
-
-        /// <summary>
-        /// 导轨电机
-        /// </summary>
-        public IMotor Motor { get; set; }
-
-        /// <summary>
-        /// 扫码器
-        /// </summary>
-        public IScanner Scanner { get; set; }
-
-
+       
        
         /// <summary>
         /// 是否登录
@@ -62,9 +42,6 @@ namespace FSK.Sensitivity.Main
         public bool IsLogin { get; set; }
 
         
-
-
-
         /// <summary>
         /// 弹窗服务
         /// </summary>

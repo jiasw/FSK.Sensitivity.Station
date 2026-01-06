@@ -62,7 +62,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 });
                     
             }
-            AlertMessageBox.Show("保存成功");
+            MessageBoxService.Instance.Show("保存成功");
                 
         }
     }

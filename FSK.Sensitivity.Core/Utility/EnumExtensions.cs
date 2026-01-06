@@ -106,5 +106,12 @@ namespace FSK.Sensitivity.Core
             var attribute = field.GetCustomAttribute<DescriptionAttribute>();
             return attribute?.Description ?? value.ToString();
         }
+
+        public static T Next<T>(this T src) where T : struct, Enum
+        {
+            T[] arr = (T[])Enum.GetValues(typeof(T));
+            int j = Array.IndexOf(arr, src) + 1;
+            return (arr.Length == j) ? arr[j - 1] : arr[j]; // 这里处理为停留在最后一个
+        }
     }
 }
