@@ -169,10 +169,7 @@
                 <Button Grid.Column="3"  Command="{Binding ConfigCommand}" Style="{StaticResource MenuButtonStyle}" Content="系统设置" Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/menu_setting.png" >
 
                 </Button>
-
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="开灯"></Button>
-                </StackPanel>
+                
             </Grid>
             <Grid Grid.Row="2" >
 

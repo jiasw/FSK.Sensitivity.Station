@@ -68,13 +68,18 @@ namespace FSK.Sensitivity.Core.Const
         /// <summary>
         /// csf训练左眼时长,单位：秒
         /// </summary>
-        public const int LeftEyeDruation = 30;
+        public const int LeftEyeDuration = 30;
         /// <summary>
         /// csf训练右眼时长,单位：秒
         /// </summary>
-        public const int RightEyeDruation = 30;
+        public const int RightEyeDuration = 30;
 
-        
+        /// <summary>
+        /// 暗环境适应等待时长,单位：秒
+        /// </summary>
+        public const int ContrastWaitDuration = 30;
+
+
 
         /// <summary>
         /// 字典键值：门店名称

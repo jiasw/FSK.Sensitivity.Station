@@ -97,6 +97,7 @@ namespace FSK.Sensitivity.Main
             DB.CodeFirst.InitTables<FSK.Sensitivity.Core.Entity.Patient,
                 FSK.Sensitivity.Core.Entity.Manger,
                 FSK.Sensitivity.Core.Entity.FitLog,
+                 FSK.Sensitivity.Core.Entity.CheckResult,
                 FSK.Sensitivity.Core.Entity.Dict>();
 
             #endregion

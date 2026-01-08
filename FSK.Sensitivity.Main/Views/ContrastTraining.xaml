@@ -213,15 +213,7 @@
                                     <Run Text="60"></Run>
                                     <Run Text="S"></Run>
                                 </TextBlock>
-                                <TextBlock Grid.Row="3"  Style="{StaticResource txtParam}">
-    <Run Text="VA:"></Run>
-    <Run Text="0.06"></Run>
-                                </TextBlock>
-                                <TextBlock Grid.Row="4"  Style="{StaticResource txtParam}">
-<Run Text="距离:"></Run>
-<Run Text="5"></Run>
-<Run Text="米"></Run>
-                                </TextBlock>
+                                
                             </Grid>
                         </Border>
                     </Grid>
@@ -280,15 +272,7 @@
                                     <Run Text="60"></Run>
                                     <Run Text="S"></Run>
                                 </TextBlock>
-                                <TextBlock Grid.Row="3"  Style="{StaticResource txtParam}">
-    <Run Text="VA:"></Run>
-    <Run Text="0.06"></Run>
-                                </TextBlock>
-                                <TextBlock Grid.Row="4"  Style="{StaticResource txtParam}">
-<Run Text="距离:"></Run>
-<Run Text="5"></Run>
-<Run Text="米"></Run>
-                                </TextBlock>
+                                
                             </Grid>
                         </Border>
                     </Grid>

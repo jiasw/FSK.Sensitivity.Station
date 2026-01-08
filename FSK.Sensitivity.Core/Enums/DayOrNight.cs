@@ -10,9 +10,17 @@ namespace FSK.Sensitivity.Core.Enums
     public enum DayOrNight
     {
         [Description("日")]
-        Day =1,
+        Day = 1,
         [Description("夜")]
         Night
+    }
+
+    public enum SignBackGround
+    {
+        //白色背景
+        White = 1,
+        //黑色背景
+        Black,
     }
 
     /// <summary>

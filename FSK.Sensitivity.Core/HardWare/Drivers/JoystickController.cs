@@ -78,16 +78,18 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
                                                     摇杆状态返回: {string.Join(",", registers)}
                                                 摇杆按下=======================";
                             LogHelper.Instance.LogDebug(logstr);
+                            if (registers != null && registers.Length >= numberOfPoints)
+                            {
+                               
+                            }
                         }
-                        if (registers != null && registers.Length >= numberOfPoints)
-                        {
-                            ProcessButtonState(JoystickStatus.Front, registers[0]);
-                            ProcessButtonState(JoystickStatus.Back, registers[1]);
-                            ProcessButtonState(JoystickStatus.Left, registers[2]);
-                            ProcessButtonState(JoystickStatus.Right, registers[3]);
-                            ProcessButtonState(JoystickStatus.Confirm, registers[4]);
-                            ProcessButtonState(JoystickStatus.Trigger, registers[5]);
-                        }
+                        ProcessButtonState(JoystickStatus.Front, registers[0]);
+                        ProcessButtonState(JoystickStatus.Back, registers[1]);
+                        ProcessButtonState(JoystickStatus.Left, registers[2]);
+                        ProcessButtonState(JoystickStatus.Right, registers[3]);
+                        ProcessButtonState(JoystickStatus.Confirm, registers[4]);
+                        ProcessButtonState(JoystickStatus.Trigger, registers[5]);
+
                     }
                     else
                     {

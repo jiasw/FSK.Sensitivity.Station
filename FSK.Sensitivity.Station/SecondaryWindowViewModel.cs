@@ -11,7 +11,7 @@ using Prism.Ioc;
 
 namespace FSK.Sensitivity.Station
 {
-    public class SecondaryWindowViewModel : BindableBase
+    public class SecondaryWindowViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
@@ -22,8 +22,21 @@ namespace FSK.Sensitivity.Station
             this.eventAggregator = eventAggregator;
             eventAggregator.GetEvent<SecondaryChangeEvent>().Subscribe(OnScreenChange);
         }
-        
-        
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return false;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            
+        }
 
         private void OnScreenChange(SecondaryChangeOptions options)
         {

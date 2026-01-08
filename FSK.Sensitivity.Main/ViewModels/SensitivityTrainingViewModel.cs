@@ -26,62 +26,7 @@ using System.Windows.Media.Imaging;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
-
-
-    public class ArrowButtonStauts : BaseViewModel
-    {
-        private bool _lefButtonStatus = false;
-        public bool LeftButtonStatus
-        {
-            get { return _lefButtonStatus; }
-            set { SetProperty(ref _lefButtonStatus, value); }
-        }
-
-        private bool _rightButtonStatus = false;
-        public bool RightButtonStatus
-        {
-            get { return _rightButtonStatus; }
-            set { SetProperty(ref _rightButtonStatus, value); }
-        }
-
-        private bool _upButtonStatus = false;
-        public bool UpButtonStatus
-        {
-            get { return _upButtonStatus; }
-            set { SetProperty(ref _upButtonStatus, value); }
-        }
-
-        private bool _downButtonStatus = false;
-        public bool DownButtonStatus
-        {
-            get { return _downButtonStatus; }
-            set { SetProperty(ref _downButtonStatus, value); }
-        }
-        /// <summary>
-        /// 顶部的确认按钮
-        /// </summary>
-        private bool _saveButtonStatus=false; 
-        public bool SaveButtonStatus
-        {
-            get { return _saveButtonStatus; }
-            set { SetProperty(ref _saveButtonStatus, value); }
-        }
-        /// <summary>
-        /// 扳机按钮
-        /// </summary>
-        private bool _triggerButtonStatus=false;
-        public bool TriggerButtonStatus
-        {
-            get { return _triggerButtonStatus; }
-            set { SetProperty(ref _triggerButtonStatus, value); }
-        }
-        
-    }
-
-
-    
-
-    public class CSFTrainModel : BaseViewModel
+    public class CSFTrainModel : BaseViewModel,IDisposable
     {
         private string title = "";
         public string Title
@@ -188,6 +133,8 @@ namespace FSK.Sensitivity.Main.ViewModels
             timer.Start();
             TrainStatus = TrainStatus.Training;
             timer.Elapsed += Timer_Elapsed;
+            this.IsTraining = true;
+            
         }
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -211,6 +158,12 @@ namespace FSK.Sensitivity.Main.ViewModels
             TrainFinish?.Invoke(this, new EventArgs());
         }
 
+        public void Dispose()
+        {
+            timer?.Stop();
+            timer?.Dispose();
+        }
+
         /// <summary>
         /// 本次训练完成事件
         /// </summary>
@@ -219,7 +172,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         public Dictionary<CSFVA, int> DictResult = new Dictionary<CSFVA, int>();
 
     }
-
+    [RegionMemberLifetime(KeepAlive = false)]
     public class SensitivityTrainingViewModel:BaseViewModel,INavigationAware
     {
         private readonly IRegionManager regionManager;
@@ -233,6 +186,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private CSFTrainModel rightCSFTrainModel = new CSFTrainModel();
         private CSFTrainModel currentCSFTrainModel = null;
         private long checkid = -1;
+        
         public SensitivityTrainingViewModel(IRegionManager regionManager,IEventAggregator eventAggregator, CheckResultRepository checkResultRepository)
         {
             this.regionManager = regionManager;
@@ -376,6 +330,10 @@ namespace FSK.Sensitivity.Main.ViewModels
         
         private void JoystickAction(ActionArgs actionArgs)
         {
+            if(currentCSFTrainModel==null || !currentCSFTrainModel.IsTraining)
+            {
+                return;
+            }
             SetBtnStyle(actionArgs);
             if (actionArgs.Action.Command== JoystickStatus.Confirm)
             {
@@ -459,6 +417,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 Age = AppData.Instance.CurrentPatient.Age.ToString(),
                
             };
+            currentCSFTrainModel = null;
             checkid=Utils.GenerateSnowID();
             TrainModelsQueue.Clear();
             
@@ -474,10 +433,10 @@ namespace FSK.Sensitivity.Main.ViewModels
                 {
                     LeftCSFTrainModel = new CSFTrainModel()
                     {
-                        AT = AppConst.LeftEyeDruation.ToString(),
+                        AT = AppConst.LeftEyeDuration.ToString(),
                         DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
                         VA=CSFVA.VA06,
-                        RT = AppConst.LeftEyeDruation,
+                        RT = AppConst.LeftEyeDuration,
                         TrainStatus = TrainStatus.Pending
                     };
                     RightCSFTrainModel = new CSFTrainModel()
@@ -491,10 +450,10 @@ namespace FSK.Sensitivity.Main.ViewModels
                 {
                     RightCSFTrainModel = new CSFTrainModel()
                     {
-                        AT = AppConst.LeftEyeDruation.ToString(),
+                        AT = AppConst.LeftEyeDuration.ToString(),
                         DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
                         VA = CSFVA.VA06,
-                        RT = AppConst.LeftEyeDruation,
+                        RT = AppConst.LeftEyeDuration,
                         TrainStatus = TrainStatus.Pending
                     };
                     LeftCSFTrainModel = new CSFTrainModel()
@@ -509,18 +468,18 @@ namespace FSK.Sensitivity.Main.ViewModels
                     
                     RightCSFTrainModel = new CSFTrainModel()
                     {
-                        AT = AppConst.LeftEyeDruation.ToString(),
+                        AT = AppConst.LeftEyeDuration.ToString(),
                         DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
                         VA = CSFVA.VA06,
-                        RT = AppConst.LeftEyeDruation,
+                        RT = AppConst.LeftEyeDuration,
                         TrainStatus = TrainStatus.Pending
                     };
                     LeftCSFTrainModel = new CSFTrainModel()
                     {
-                        AT = AppConst.LeftEyeDruation.ToString(),
+                        AT = AppConst.LeftEyeDuration.ToString(),
                         DistanceText = sensitivityConfigParam.CheckDistanceDisplay,
                         VA = CSFVA.VA06,
-                        RT = AppConst.LeftEyeDruation,
+                        RT = AppConst.LeftEyeDuration,
                         TrainStatus = TrainStatus.Pending,
                     };
                 }
@@ -532,30 +491,56 @@ namespace FSK.Sensitivity.Main.ViewModels
             CheckUserModel = model;
             //加载对比敏感度视标页面
             secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Sensitivity, Brush = CheckUserModel.DayNight == Core.Enums.DayOrNight.Day ? SignBackGround.White : SignBackGround.Black });
-            StartTask();
+           _= StartTask();
             
             eventAggregator.GetEvent<JoystickEvent>().Subscribe(JoystickAction);
         }
         private async Task SaveTrainResult()
         {
-            await checkResultRepository.Add(new Core.Entity.CheckResult()
+            if(LeftCSFTrainModel.TrainStatus== TrainStatus.Trained)
             {
-                CheckId=checkid,
-                DayOrNight= CheckUserModel.DayNight,
-                UserId= CheckUserModel.Id,
-                FitTime= DateTime.Now,
-                CheckDuration=CheckUserModel.CurrentDuration,
-                CheckDistance=CheckUserModel.checkDistance,
-                LightStatus=CheckUserModel.Light,
-                Eye= CheckUserModel.CheckEyeMode,
-                PupilDistance= CheckUserModel.PD,
-                VA06= GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA06),
-                VA10= GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA10),
-                VA20= GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA20),
-                VA40= GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA40),
-                VA60= GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA60),
-                VA80= GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA80),
-            });
+                await checkResultRepository.Add(new Core.Entity.CheckResult()
+                {
+                    CheckId = checkid,
+                    DayOrNight = CheckUserModel.DayNight,
+                    UserId = CheckUserModel.Id,
+                    FitTime = DateTime.Now,
+                    CheckDuration = CheckUserModel.CurrentDuration,
+                    CheckDistance = CheckUserModel.checkDistance,
+                    LightStatus = CheckUserModel.Light,
+                    Eye = Eye.OS,
+                    PupilDistance = CheckUserModel.PD,
+                    VA06 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA06),
+                    VA10 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA10),
+                    VA20 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA20),
+                    VA40 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA40),
+                    VA60 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA60),
+                    VA80 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA80),
+                });
+            }
+            if (RightCSFTrainModel.TrainStatus==TrainStatus.Trained)
+            {
+                await checkResultRepository.Add(new Core.Entity.CheckResult()
+                {
+                    CheckId = checkid,
+                    DayOrNight = CheckUserModel.DayNight,
+                    UserId = CheckUserModel.Id,
+                    FitTime = DateTime.Now,
+                    CheckDuration = CheckUserModel.CurrentDuration,
+                    CheckDistance = CheckUserModel.checkDistance,
+                    LightStatus = CheckUserModel.Light,
+                    Eye = Eye.OD,
+                    PupilDistance = CheckUserModel.PD,
+                    VA06 = GetVaResult(RightCSFTrainModel.DictResult, CSFVA.VA06),
+                    VA10 = GetVaResult(RightCSFTrainModel.DictResult, CSFVA.VA10),
+                    VA20 = GetVaResult(RightCSFTrainModel.DictResult, CSFVA.VA20),
+                    VA40 = GetVaResult(RightCSFTrainModel.DictResult, CSFVA.VA40),
+                    VA60 = GetVaResult(RightCSFTrainModel.DictResult, CSFVA.VA60),
+                    VA80 = GetVaResult(RightCSFTrainModel.DictResult, CSFVA.VA80),
+                });
+            }
+
+            
         }
 
         int GetVaResult(Dictionary<CSFVA, int> result, CSFVA va)
@@ -570,32 +555,42 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
         }
 
+
+
+        private bool _isProcessing = false;
         private async Task StartTask()
         {
-            if (TrainModelsQueue.Count > 0)
+            if (_isProcessing) return;
+            _isProcessing = true;
+
+            while (TrainModelsQueue.Count > 0)
             {
-                RefreshSignImage();//刷新视标
                 currentCSFTrainModel = TrainModelsQueue.Dequeue();
-                if (currentCSFTrainModel.TrainStatus == TrainStatus.NotTrain)
+                RefreshSignImage();
+
+                if (currentCSFTrainModel.TrainStatus == TrainStatus.Pending)
                 {
-                   await StartTask();
+                    // 创建一个可以等待的任务
+                    var tcs = new TaskCompletionSource<bool>();
+                    EventHandler handler = (s, e) => tcs.TrySetResult(true);
+
+                    currentCSFTrainModel.TrainFinish += handler;
+                    currentCSFTrainModel.StartTrain();
+
+                    await tcs.Task; // 等待当前训练完成
+                    currentCSFTrainModel.TrainFinish -= handler; // 解绑
                 }
-                currentCSFTrainModel.IsTraining = true;
-                currentCSFTrainModel.StartTrain();
-                currentCSFTrainModel.TrainFinish += async (e,d)=> {
-                    await StartTask();
-                };
             }
-            else
+
+            // 循环结束后执行清理逻辑
+            await SaveTrainResult();
+            secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Idle });
+            eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
+            if(TrainModelsQueue.Count <= 0)
             {
-                await SaveTrainResult();
-                //训练结束
-                secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Idle });
-                eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
                 MessageBoxService.Instance.Show("训练结束");
             }
-            
-
+            _isProcessing = false;
         }
 
         
@@ -607,6 +602,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
+            currentCSFTrainModel?.StopTrain();
             secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Idle });
             eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
 

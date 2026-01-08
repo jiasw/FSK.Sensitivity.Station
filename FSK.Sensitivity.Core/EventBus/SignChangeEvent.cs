@@ -14,10 +14,5 @@ namespace FSK.Sensitivity.Core.EventBus
     {
 
     }
-    /// <summary>
-    /// 对比度视标切换事件
-    /// </summary>
-    public class ContrastSignChangeEvent : PubSubEvent<ContrastChangeSignOptions>
-    {
-    }
+    
 }

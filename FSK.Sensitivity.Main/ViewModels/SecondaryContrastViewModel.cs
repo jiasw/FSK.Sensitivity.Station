@@ -1,4 +1,5 @@
-﻿using FSK.Sensitivity.Core.EventBus;
+﻿using FSK.Sensitivity.Core.Enums;
+using FSK.Sensitivity.Core.EventBus;
 using HandyControl.Controls;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         public SecondaryContrastViewModel(IEventAggregator eventAggregator)
         {
             this.eventAggregator = eventAggregator;
-            eventAggregator.GetEvent<ContrastSignChangeEvent>().Subscribe(OnScreenChange);
+            eventAggregator.GetEvent<SensitivitySignChangeEvent>().Subscribe(OnScreenChange);
         }
         private SolidColorBrush selectedColor = new SolidColorBrush(Colors.White);
         public SolidColorBrush SelectedColor
@@ -53,10 +54,10 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
 
-        private void OnScreenChange(ContrastChangeSignOptions options)
+        private void OnScreenChange(SensitivityChangeSignOptions options)
         {
             SignImage = null;
-            if (options.Brush == SignBackGround.White)
+            if (options.BackgroundBrush == SignBackGround.White)
             {
                 BackColor = new SolidColorBrush(Colors.White);
                 TitleColor = new SolidColorBrush(Colors.Black);

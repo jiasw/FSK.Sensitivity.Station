@@ -87,6 +87,8 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            selectedIndex = 1;
+            BackColor= new SolidColorBrush(Colors.White);
             joystick.StartMonitoring();
             joystick.Pressed += Joystick_Pressed;
         }
@@ -121,25 +123,23 @@ namespace FSK.Sensitivity.Main.ViewModels
                 }
                 else if (e.Command == JoystickStatus.Left)
                 {
-                    if (SelectedIndex < 10)
-                    {
-                        SelectedIndex += 1;
-                    }
-                }
-                else if (e.Command == JoystickStatus.Right)
-                {
                     if (SelectedIndex > 1)
                     {
                         SelectedIndex -= 1;
                     }
                 }
-
-
-
+                else if (e.Command == JoystickStatus.Right)
+                {
+                    if (SelectedIndex < 10)
+                    {
+                        SelectedIndex += 1;
+                    }
+                    
+                }
                 args = new ActionArgs()
                 {
                     Index = -1,
-                    Action = new Core.HardWare.Drivers.JoystickEventArgs(JoystickStatus.Confirm)
+                    Action = new Core.HardWare.Drivers.JoystickEventArgs(e.Command)
                 };
             }
             joystickEvent.Publish(args);

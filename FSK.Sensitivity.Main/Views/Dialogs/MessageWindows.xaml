@@ -63,6 +63,7 @@
                           MaxHeight="250">
                 <TextBlock Text="{Binding Message}" 
                            TextWrapping="Wrap" 
+                           Foreground="{StaticResource MainBrush}"
                            TextAlignment="Center"
                            FontSize="24"
                            VerticalAlignment="Center"/>

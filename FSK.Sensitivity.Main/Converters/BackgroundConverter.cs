@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FSK.Sensitivity.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -18,18 +19,23 @@ namespace FSK.Sensitivity.Main.Converters
             {
                 return Brushes.White;
             }
-            if(value.ToString().Equals("black", StringComparison.CurrentCultureIgnoreCase) || value.ToString().Equals("white", StringComparison.CurrentCultureIgnoreCase))
-            {
-                return value.ToString().ToLower() == "black"? Brushes.Black : Brushes.White;
-            }
             else
             {
-                var image = new BitmapImage(new Uri("pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/Sign/"+value.ToString()));
-                return new ImageBrush(image)
+                string currentValue = value.ToString();
+                if (currentValue.Equals(SignBackGround.Black.ToString(), StringComparison.CurrentCultureIgnoreCase) || currentValue.Equals(SignBackGround.Black.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
-                    Stretch = Stretch.Fill
-                };
+                    return string.Equals(currentValue, SignBackGround.Black.ToString(), StringComparison.OrdinalIgnoreCase) ? Brushes.Black : Brushes.White;
+                }
+                else
+                {
+                    var image = new BitmapImage(new Uri("pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/Sign/" + value.ToString()));
+                    return new ImageBrush(image)
+                    {
+                        Stretch = Stretch.Fill
+                    };
+                }
             }
+            
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
