@@ -18,11 +18,11 @@ namespace FSK.Sensitivity.Core.Entity
 
         [SugarColumn(InsertServerTime = true)]
         public DateTime CreateTime { get; set; }
-        [SugarColumn(UpdateServerTime = true)]
+        [SugarColumn(IsNullable = true)]
         public DateTime UpdateTime { get; set; }
-
+        [SugarColumn(IsNullable = true)]
         public bool IsDeleted { get; set; }
-
+        [SugarColumn(IsNullable=true)]
         public DateTime DeleteTime { get; set; }
 
 

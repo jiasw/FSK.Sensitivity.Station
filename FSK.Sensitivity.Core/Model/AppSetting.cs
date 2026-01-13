@@ -22,6 +22,11 @@ namespace FSK.Sensitivity.Core.Model
         /// </summary>
         public string ModbusPortName { get; set; }
 
+        /// <summary>
+        /// 确认密码
+        /// </summary>
+        public string ComfirmPassword { get; set; }
+
 
     }
 }

@@ -22,7 +22,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Button Content="新增" Style="{StaticResource NavButton}" HorizontalAlignment="Right" Margin="0,0,50,5" Command="{Binding AddMangerCommand}"></Button>
+        <Button Content="新增" Style="{StaticResource NavButton}" Width="150" HorizontalAlignment="Right" Margin="50,10" Command="{Binding AddMangerCommand}"></Button>
         <ListView Grid.Row="1" Style="{StaticResource MyCommonListViewStyle}" ItemsSource="{Binding Mangers}" >
 
 
@@ -73,7 +73,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="200" Header="年龄"  >
+                    <GridViewColumn Width="80" Header="年龄"  >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock  FontSize="20"  Text="{Binding Age}"   />
@@ -81,7 +81,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="50" Header="性别" >
+                    <GridViewColumn Width="80" Header="性别" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock  FontSize="20"  Text="{Binding Gender}"   />
@@ -89,7 +89,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="50" Header="学校" >
+                    <GridViewColumn Width="100" Header="学校" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock  FontSize="20"  Text="{Binding School}"   />
@@ -97,14 +97,14 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="50" Header="年级" >
+                    <GridViewColumn Width="80" Header="年级" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock  FontSize="20"  Text="{Binding Grade}"   />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="50" Header="班级" >
+                    <GridViewColumn Width="80" Header="班级" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock  FontSize="20"  Text="{Binding Class}"   />

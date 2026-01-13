@@ -14,27 +14,15 @@ namespace FSK.Sensitivity.Station
 {
     public class MainWindowViewModel : BindableBase
     {
-        private readonly IRegionManager regionManager;
-        private readonly IContainerProvider containerProvider;
+        
 
-        public MainWindowViewModel( IRegionManager regionManager,IContainerProvider containerProvider)
+        public MainWindowViewModel()
         {
             
-            this.regionManager = regionManager;
-            this.containerProvider = containerProvider;
+           
         }
 
 
-        public DelegateCommand LoadCommand => new DelegateCommand(Load);
-
-        private void Load()
-        {
-            var secondaryWindow = containerProvider.Resolve<SecondaryWindow>();
-            secondaryWindow.Show();
-            
-            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
-            
-            
-        }
+        
     }
 }

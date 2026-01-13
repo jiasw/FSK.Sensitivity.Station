@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="PublishOutput\**" />
+    <EmbeddedResource Remove="PublishOutput\**" />
+    <None Remove="PublishOutput\**" />
+    <Page Remove="PublishOutput\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="logo.ico" />
   </ItemGroup>
 

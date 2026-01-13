@@ -15,28 +15,39 @@ prism:ViewModelLocator.AutoWireViewModel="True"
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <UserControl.Resources>
-        <Style TargetType="TextBlock" x:Key="serialPortConfigTitle">
-            <Setter Property="FontSize" Value="48" />
+        <Style TargetType="TextBlock" x:Key="serialPortConfigTitle" >
+            <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
+            <Setter Property="Foreground" Value="White"></Setter>
             <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Margin" Value="30,25" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Width" Value="300" />
+            <Setter Property="Margin" Value="10,25" />
             <Setter Property="TextAlignment" Value="Right"></Setter>
         </Style>
         <Style TargetType="ComboBox" x:Key="serialPortConfigComboBox" BasedOn="{StaticResource ComboBoxBaseStyle}">
             <Setter Property="Width" Value="350" />
             <Setter Property="Height" Value="65" />
-            <Setter Property="FontSize" Value="30"></Setter>
+            <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}"></Setter>
         </Style>
     </UserControl.Resources>
-    <Grid>
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" >
-            <StackPanel Orientation="Horizontal">
-                <TextBlock  Text="硬件串口:" Style="{StaticResource serialPortConfigTitle}" />
-                <ComboBox   Style="{StaticResource serialPortConfigComboBox}" ItemsSource="{Binding SerialPortNames}" SelectedValue="{Binding MotorSerialPortName}" />
-            </StackPanel>
-            
-            <Button  Content="保存" FontSize="26" Width="250" Margin="0,30" Style="{StaticResource NavButton}" Command="{Binding SaveCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </StackPanel>
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*" />
+
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid  Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock  Text="硬件串口:" Style="{StaticResource serialPortConfigTitle}" />
+            <ComboBox  Grid.Column="1"  Style="{StaticResource serialPortConfigComboBox}" ItemsSource="{Binding SerialPortNames}" SelectedValue="{Binding MotorSerialPortName}" />
+            <Button Grid.Row="1" Grid.Column="1"  Content="保存"  Width="250" Margin="0,30" Style="{StaticResource NavButton}" Command="{Binding SaveCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        </Grid>
     </Grid>
 </UserControl>

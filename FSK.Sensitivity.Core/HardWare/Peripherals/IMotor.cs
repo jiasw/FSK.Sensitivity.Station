@@ -51,5 +51,11 @@ namespace FSK.Sensitivity.Core.HardWare.Peripherals
         /// </summary>
         /// <returns></returns>
         Task<bool> IsRightMove();
+
+        /// <summary>
+        /// 停止所有电机
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> StopAllMotor();
     }
 }

@@ -22,7 +22,7 @@ namespace FSK.Sensitivity.Main.Converters
             else
             {
                 string currentValue = value.ToString();
-                if (currentValue.Equals(SignBackGround.Black.ToString(), StringComparison.CurrentCultureIgnoreCase) || currentValue.Equals(SignBackGround.Black.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                if (currentValue.Equals(SignBackGround.Black.ToString(), StringComparison.CurrentCultureIgnoreCase) || currentValue.Equals(SignBackGround.White.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
                     return string.Equals(currentValue, SignBackGround.Black.ToString(), StringComparison.OrdinalIgnoreCase) ? Brushes.Black : Brushes.White;
                 }

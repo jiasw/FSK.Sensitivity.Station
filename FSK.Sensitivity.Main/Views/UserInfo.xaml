@@ -22,7 +22,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Button Content="新增" Style="{StaticResource NavButton}" HorizontalAlignment="Right" Margin="0,0,50,5" Command="{Binding AddMangerCommand}"></Button>
+        <Button Content="新增" Style="{StaticResource NavButton}" Width="120" HorizontalAlignment="Right" Margin="50,10" Command="{Binding AddMangerCommand}"></Button>
         <ListView Grid.Row="1" Style="{StaticResource MyCommonListViewStyle}" ItemsSource="{Binding Mangers}" >
             
 

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FSK.Sensitivity.Main.Views.Dialogs"
         mc:Ignorable="d" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Title="MessageWindows" MinWidth="550" 
-        MinHeight="280"
+        MinHeight="320"
         MaxWidth="600"
         MaxHeight="400"
         SizeToContent="WidthAndHeight"
@@ -16,19 +16,15 @@
         AllowsTransparency="True"
         Background="Transparent">
     <Window.Resources>
-        <Style x:Key="btnStyle" BasedOn="{StaticResource RoundedButtonStyle}" TargetType="Button">
-            <Setter Property="Width" Value="110"></Setter>
-            <Setter Property="Height" Value="45"></Setter>
-            <Setter Property="FontSize" Value="23"></Setter>
-        </Style>
+        
         
     </Window.Resources>
     <Border Background="#F7F9FA" CornerRadius="10" BorderBrush="{StaticResource MenuSelectedBrush}" BorderThickness="1">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="90"/>
             </Grid.RowDefinitions>
             <!-- 标题栏 -->
             <Border Grid.Row="0" Background="{StaticResource MainBrush}" CornerRadius="10,10,0,0">
@@ -39,8 +35,7 @@
                                Margin="15,0,0,0" 
                                Foreground="White" 
                                TextWrapping="Wrap"
-                               FontWeight="Bold" 
-                               FontSize="16"/>
+                               FontSize="{StaticResource FontSizeTitle}"/>
                     <Button x:Name="CloseButton" 
                             Content="×" 
                             Width="30" 
@@ -65,7 +60,7 @@
                            TextWrapping="Wrap" 
                            Foreground="{StaticResource MainBrush}"
                            TextAlignment="Center"
-                           FontSize="24"
+                           FontSize="{StaticResource FontSizeTitle}"
                            VerticalAlignment="Center"/>
             </ScrollViewer>
             <!-- 按钮区域 -->
@@ -74,32 +69,26 @@
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Center">
                 <Button x:Name="OkButton" 
-                        Content="确定" 
-                        Style="{StaticResource btnStyle}"
+                        Content="确定" Width="150"
+                        Style="{StaticResource NavButton}"
                         Click="OkButton_Click"/>
                 <Button x:Name="CancelButton" 
                         Content="取消" 
-                        Width="80" 
-                        Height="30" 
-                        Margin="5,0" 
-                        Background="#FFCCCCCC"
+                        Style="{StaticResource NavButton}"
                         Click="CancelButton_Click" 
                         Visibility="Collapsed"/>
                 <Button x:Name="YesButton" 
                         Content="是" 
-                        Width="80" 
-                        Height="30" 
-                        Margin="5,0" 
-                        Background="#FF0078D7" 
-                        Foreground="White"
+                        Margin="20,5"
+                        MinWidth="120"
+                        Style="{StaticResource NavButton}"
                         Click="YesButton_Click" 
                         Visibility="Collapsed"/>
                 <Button x:Name="NoButton" 
                         Content="否" 
-                        Width="80" 
-                        Height="30" 
-                        Margin="5,0" 
-                        Background="#FFCCCCCC"
+                        MinWidth="120"
+                        Margin="20,5"
+                        Style="{StaticResource NavButton}"
                         Click="NoButton_Click" 
                         Visibility="Collapsed"/>
             </StackPanel>

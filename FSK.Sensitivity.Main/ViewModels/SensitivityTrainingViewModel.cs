@@ -58,14 +58,14 @@ namespace FSK.Sensitivity.Main.ViewModels
                 switch (TrainStatus)
                 {
                     case TrainStatus.Pending:
-                        _trainStatusText= "等待训练";
+                        _trainStatusText= "等待检查";
                         break;
                     case TrainStatus.Training:
-                        _trainStatusText= "正在训练";break;
+                        _trainStatusText= "正在检查";break;
                     case TrainStatus.Trained:
-                        _trainStatusText= "训练完成";break;
+                        _trainStatusText= "检查完成";break;
                     case TrainStatus.NotTrain:
-                        _trainStatusText= "无需训练"; break;
+                        _trainStatusText= "无需检查"; break;
                     default:
                         _trainStatusText= ""; break;
                 }
@@ -156,6 +156,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             timer.Stop();
             TrainFinish?.Invoke(this, new EventArgs());
+
         }
 
         public void Dispose()
@@ -172,12 +173,13 @@ namespace FSK.Sensitivity.Main.ViewModels
         public Dictionary<CSFVA, int> DictResult = new Dictionary<CSFVA, int>();
 
     }
-    [RegionMemberLifetime(KeepAlive = false)]
+    
     public class SensitivityTrainingViewModel:BaseViewModel,INavigationAware
     {
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
         private readonly CheckResultRepository checkResultRepository;
+        private readonly IMotor motor;
         private readonly IRegionNavigationJournal journal;
         private readonly SecondaryChangeEvent secondaryChangeEvent;
         private readonly SensitivitySignChangeEvent sensitivitySignChangeEvent;
@@ -186,12 +188,14 @@ namespace FSK.Sensitivity.Main.ViewModels
         private CSFTrainModel rightCSFTrainModel = new CSFTrainModel();
         private CSFTrainModel currentCSFTrainModel = null;
         private long checkid = -1;
-        
-        public SensitivityTrainingViewModel(IRegionManager regionManager,IEventAggregator eventAggregator, CheckResultRepository checkResultRepository)
+        private CancellationTokenSource _cts;
+
+        public SensitivityTrainingViewModel(IRegionManager regionManager,IEventAggregator eventAggregator, CheckResultRepository checkResultRepository, IMotor motor)
         {
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
             this.checkResultRepository = checkResultRepository;
+            this.motor = motor;
             this.journal = regionManager.Regions[AppConst.MainRegion].NavigationService.Journal;
             secondaryChangeEvent = eventAggregator.GetEvent<SecondaryChangeEvent>();
             sensitivitySignChangeEvent= eventAggregator.GetEvent<SensitivitySignChangeEvent>();
@@ -562,23 +566,39 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             if (_isProcessing) return;
             _isProcessing = true;
-
+            // 每次启动时创建一个新的 TokenSource
+            _cts = new CancellationTokenSource();
+            
+            var token = _cts.Token;
             while (TrainModelsQueue.Count > 0)
             {
+                // 1. 在循环开始处检查取消请求
+                if (token.IsCancellationRequested) break;
                 currentCSFTrainModel = TrainModelsQueue.Dequeue();
                 RefreshSignImage();
 
                 if (currentCSFTrainModel.TrainStatus == TrainStatus.Pending)
                 {
+
                     // 创建一个可以等待的任务
                     var tcs = new TaskCompletionSource<bool>();
-                    EventHandler handler = (s, e) => tcs.TrySetResult(true);
+                    // 2. 注册取消回调：如果用户点击取消，立即结束等待
+                    using (token.Register(() => tcs.TrySetCanceled()))
+                    {
+                        EventHandler handler = (s, e) => tcs.TrySetResult(true);
+                        currentCSFTrainModel.TrainFinish += handler;
 
-                    currentCSFTrainModel.TrainFinish += handler;
-                    currentCSFTrainModel.StartTrain();
+                        try
+                        {
+                            currentCSFTrainModel.StartTrain();
 
-                    await tcs.Task; // 等待当前训练完成
-                    currentCSFTrainModel.TrainFinish -= handler; // 解绑
+                            await tcs.Task; 
+                        }
+                        finally
+                        {
+                            currentCSFTrainModel.TrainFinish -= handler;
+                        }
+                    }
                 }
             }
 
@@ -586,9 +606,10 @@ namespace FSK.Sensitivity.Main.ViewModels
             await SaveTrainResult();
             secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Idle });
             eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
-            if(TrainModelsQueue.Count <= 0)
+            await motor.StopAllMotor();
+            if (TrainModelsQueue.Count <= 0)
             {
-                MessageBoxService.Instance.Show("训练结束");
+                MessageBoxService.Instance.Show("检查结束");
             }
             _isProcessing = false;
         }
@@ -602,10 +623,11 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
+            _cts?.Cancel();
             currentCSFTrainModel?.StopTrain();
             secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Idle });
             eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
-
+             motor.StopAllMotor();
         }
 
         public DelegateCommand ListResultCommand => new DelegateCommand(ListResult);

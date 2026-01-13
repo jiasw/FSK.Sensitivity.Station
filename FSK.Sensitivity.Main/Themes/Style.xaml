@@ -5,7 +5,8 @@
                     xmlns:lcext="clr-namespace:FSK.Sensitivity.Main.Controls.Extend"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
                     xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
-
+    <system:Double x:Key="FontSizeTitle">36</system:Double>
+    <system:Double x:Key="FontSizeSecondTitle">28</system:Double>
     <lclcv:EnumConverter x:Key="EnumConverter" />
     <lclcv:LightStatusToBoolConverter x:Key="LightStatusToBoolConverter" />
     <lclcv:ListViewItemBackgroundColorConverter x:Key="ListViewItemBackgroundColorConverter" />
@@ -69,7 +70,15 @@
         
         
     </Style>
-    
+
+    <Style x:Key="NormalTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}"></Setter>
+        <Setter Property="Foreground" Value="{StaticResource MainBrush}"></Setter>
+    </Style>
+    <Style x:Key="NormalBoxStyle" TargetType="TextBox">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}"></Setter>
+        <Setter Property="Foreground" Value="{StaticResource MainBrush}"></Setter>
+    </Style>
     
     <Style x:Key="NormalButton" TargetType="Button" BasedOn="{StaticResource ButtonBaseStyle}">
         <Setter Property="Foreground" Value="White" />
@@ -211,10 +220,18 @@
         </Style.Triggers>
     </Style>
 
+    <!--一级界面的按钮样式-->
     <Style x:Key="NavButton" TargetType="Button" BasedOn="{StaticResource NormalButton}">
-        <Setter Property="Height" Value="55" />
+        <Setter Property="Height" Value="65" />
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontSize" Value="30"></Setter>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}"></Setter>
+        <Setter Property="hc:BorderElement.CornerRadius" Value="6"/>
+    </Style>
+    <!--弹窗界面的按钮样式-->
+    <Style x:Key="ConfirmButton" TargetType="Button" BasedOn="{StaticResource NormalButton}">
+        <Setter Property="Height" Value="60" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}"></Setter>
         <Setter Property="hc:BorderElement.CornerRadius" Value="6"/>
     </Style>
 

@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.Const;
+using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.Model;
 using Prism.Navigation.Regions;
 using System;
@@ -32,10 +33,10 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             this.regionManager = regionManager;
             List<CheckInfo> lists = new List<CheckInfo>();
-            lists.Add(new CheckInfo() { Item = "对比敏感度检测", Result = "不合格", Status = "查看" });
-            lists.Add(new CheckInfo() { Item = "暗适应检测", Result = "不合格", Status = "查看" });
-            lists.Add(new CheckInfo() { Item = "对比敏感度检测", Result = "不合格", Status = "查看" });
-            lists.Add(new CheckInfo() { Item = "暗适应检测", Result = "不合格", Status = "查看" });
+            lists.Add(new CheckInfo() { Type = CheckItem.CSF, Result = "不合格", Status = "查看" });
+            lists.Add(new CheckInfo() { Type = CheckItem.DCK, Result = "不合格", Status = "查看" });
+            lists.Add(new CheckInfo() { Type = CheckItem.CSF, Result = "不合格", Status = "查看" });
+            lists.Add(new CheckInfo() { Type = CheckItem.DCK, Result = "不合格", Status = "查看" });
             CheckInfos = lists;
 List<CheckDateItem> dateItems = new List<CheckDateItem>();
             dateItems.Add(new CheckDateItem() { Date = "2021-01-01" });

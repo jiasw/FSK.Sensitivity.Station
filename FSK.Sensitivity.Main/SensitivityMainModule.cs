@@ -39,6 +39,7 @@ namespace FSK.Sensitivity.Main
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SystemSetting));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SerialPortConfig));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(Store));
+            regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(NetWork));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(UserInfo));
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondaryInit));
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondaryContrast));
@@ -109,14 +110,13 @@ namespace FSK.Sensitivity.Main
             containerRegistry.RegisterDialog<UserInfoAdd, UserInfoAddViewModel>();
             containerRegistry.RegisterDialog<HardWareTest, HardWareTestViewModel>();
             #endregion
-            #region 注册界面
-
-            #endregion
+            
             #region 注册硬件操作类
             containerRegistry.RegisterSingleton<IModbusService, ModbusService>();
             containerRegistry.RegisterSingleton<ILight, LightController>();
             containerRegistry.RegisterSingleton<IJoystick, JoystickController>();
             containerRegistry.RegisterSingleton<IMotor, MotorController>();
+            containerRegistry.RegisterSingleton<Iwifi, WifiService>();
             #endregion
 
 

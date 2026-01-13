@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FSK.Sensitivity.Main.Views"
+            xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:lcext="clr-namespace:FSK.Sensitivity.Main.Controls.Extend"
              xmlns:prism="http://prismlibrary.com/"
@@ -93,7 +94,7 @@
                     </TextBlock>
                     <TextBlock  Grid.Column="3"  Grid.Row="1" Text="{Binding PD}"  Style="{StaticResource txtValue}"/>
                     <TextBlock Grid.Column="4"  Grid.Row="1" Style="{StaticResource txtTitle}">
-<Run Text="灯光"/>
+<Run Text="炫光"/>
 <Run Text="："/>
                     </TextBlock>
                     <TextBlock  Grid.Column="5"  Grid.Row="1" Text="{Binding LightDesc}"  Style="{StaticResource txtValue}"/>
@@ -196,9 +197,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Border CornerRadius="5"  Margin="0,0,10,0" >
-                            <Border.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/left22.png" />
-                            </Border.Background>
+                            <Image gif:AnimationBehavior.SourceUri="/FSK.Sensitivity.Main;component/Resource/Images/leftEye.gif"  />
                         </Border>
                         <Border CornerRadius="5" Grid.Row="1"  Margin="0,20,10,0" Background="{StaticResource BordelBackGround}" >
                             <UniformGrid Rows="2" Visibility="{Binding IsTraining, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -234,7 +233,7 @@
                                 <TextBlock Grid.Row="4"  Style="{StaticResource txtParam}">
 <Run Text="距离:"></Run>
 <Run Text="{Binding DistanceText}"></Run>
-<Run Text="米"></Run>
+<Run Text="M"></Run>
                                 </TextBlock>
                             </Grid>
                         </Border>
@@ -267,9 +266,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Border CornerRadius="5"  Margin="0,0,10,0" >
-                            <Border.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/right22.jpg" />
-                            </Border.Background>
+                            <Image gif:AnimationBehavior.SourceUri="/FSK.Sensitivity.Main;component/Resource/Images/rightEye.gif"  />
                         </Border>
                         <Border CornerRadius="5" Grid.Row="1"  Margin="0,20,10,0" Background="{StaticResource BordelBackGround}" >
                             <UniformGrid Rows="2" Visibility="{Binding IsTraining, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -305,7 +302,7 @@
                                 <TextBlock Grid.Row="4"  Style="{StaticResource txtParam}">
 <Run Text="距离:"></Run>
 <Run Text="{Binding DistanceText}"></Run>
-<Run Text="米"></Run>
+<Run Text="M"></Run>
                                 </TextBlock>
                             </Grid>
                         </Border>

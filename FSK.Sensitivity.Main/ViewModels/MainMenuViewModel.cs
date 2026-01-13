@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -25,8 +26,10 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IModbusService modbusService;
         private readonly IConfigurationService configurationService;
         private readonly AppSetting appSetting;
+        private System.Timers.Timer checkNetWorkTimer;
 
-        public MainMenuViewModel(IRegionManager regionManager, IDialogService dialogService, IModbusService modbusService, IConfigurationService configurationService)
+        public MainMenuViewModel(IRegionManager regionManager, IDialogService dialogService
+            , IModbusService modbusService, IConfigurationService configurationService)
         {
             this.regionManager = regionManager;
             this.dialogService = dialogService;
@@ -34,6 +37,14 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.configurationService = configurationService;
             this.appSetting = configurationService.LoadSetting();
             AppData.Instance.DialogService = dialogService;
+            checkNetWorkTimer = new System.Timers.Timer(5000); // 设置定时器间隔为5秒
+            checkNetWorkTimer.Elapsed += new ElapsedEventHandler(CheckNetWork);
+            checkNetWorkTimer.Start();
+        }
+
+        private void CheckNetWork(object? sender, ElapsedEventArgs e)
+        {
+            NetWorkActive=Utils.CheckInternalNetWorkStatus();
             
         }
 
@@ -77,11 +88,33 @@ namespace FSK.Sensitivity.Main.ViewModels
             get { return _userName; }
             set { SetProperty(ref _userName, value); }
         }
+
+        /// <summary>
+        /// 网络连接状态
+        /// </summary>
+        private bool _netWorkActive = false;
+        public bool NetWorkActive
+        {
+            get { return _netWorkActive; }
+            set { SetProperty(ref _netWorkActive, value); }
+        }
+        /// <summary>
+        /// 工作台连接状态
+        /// </summary>
+        private bool _platformActive = false;
+        public bool PlatformActive
+        {
+            get { return _platformActive; }
+            set { SetProperty(ref _platformActive, value); }
+        }
+
+
         public DelegateCommand LoadedCommand => new DelegateCommand(Loaded);
 
         private void Loaded()
         {
             _ = CheckHardware();
+
         }
         public DelegateCommand ExitCommand=> new DelegateCommand(ExitLogin);
 
@@ -209,13 +242,22 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void ShutDown()
         {
             //关机
-            if(System.Windows.MessageBox.Show("确定要关闭系统吗？", "关闭系统", MessageBoxButton.OKCancel, MessageBoxImage.Question)== MessageBoxResult.OK)
+            if(MessageBoxService.Instance.ShowConfirm("确定要关闭系统吗？", "关闭系统")== MessageBoxResult.Yes)
             {
                 Utils.ShutDown();
             }
         }
 
+        public DelegateCommand RestartCommand=>new DelegateCommand(Restart);
 
+        private void Restart()
+        {
+            //关机
+            if (MessageBoxService.Instance.ShowConfirm("确定要重启系统吗？", "重启系统") == MessageBoxResult.Yes)
+            {
+                Utils.ShutDown();
+            }
+        }
 
         private bool _isActive;
         public bool IsActive

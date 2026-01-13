@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,6 +75,45 @@ namespace FSK.Sensitivity.Core.Utility
             process.StartInfo.CreateNoWindow = true;
             process.Start();
         }
+        /// <summary>
+        /// 重启设备
+        /// </summary>
+        public static void Restart()
+        {
+            using var process = new System.Diagnostics.Process();
+            process.StartInfo.FileName = "shutdown";
+            process.StartInfo.Arguments = "/r /t 0"; // /r重启, /t 0延迟0秒
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.CreateNoWindow = true;
+            process.Start();
+        }
+
+        /// <summary>
+        /// 检查内部网络连接状态
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckInternalNetWorkStatus(string host = "www.baidu.com")
+        {
+            Ping ping = new Ping();
+            try
+            {
+                PingReply reply = ping.Send(host);
+                if (reply.Status == IPStatus.Success)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
 
 
         /// 生成一个区间的随机数，并排除指定的数字

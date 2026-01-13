@@ -74,12 +74,12 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             short[] data = await modbusService.ReadHoldingRegistersAsync(41, 1);
             if (data != null && data.Length > 0)
             {
-                return data[0] == 1;
+                return data[0] == 2;
             }
             return false;
         }
         /// <summary>
-        /// 判断做转盘是否在运动
+        /// 判断左转盘是否在运动
         /// </summary>
         /// <returns></returns>
         public async Task<bool> IsLeftMove()
@@ -87,7 +87,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             short[] data = await modbusService.ReadHoldingRegistersAsync(21, 1);
             if (data != null && data.Length > 0)
             {
-                return data[0] == 1;
+                return data[0] == 2;
             }
             return false;
         }
@@ -100,9 +100,20 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             short[] data = await modbusService.ReadHoldingRegistersAsync(31, 1);
             if (data != null && data.Length > 0)
             {
-                return data[0] == 1;
+                return data[0] == 2;
             }
             return false;
+        }
+        /// <summary>
+        /// 停止所有电机
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> StopAllMotor()
+        {
+            bool leftStop = await modbusService.WriteSingleRegisterAsync(21, 0);//设置左侧电机停止
+            bool rightStop = await modbusService.WriteSingleRegisterAsync(31, 1);//设置右侧电机停止
+            bool slideStop = await modbusService.WriteSingleRegisterAsync(41, 1);//设置丝杆电机停止
+            return leftStop && rightStop && slideStop;
         }
 
 

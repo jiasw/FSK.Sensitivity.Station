@@ -29,6 +29,9 @@
     <Compile Update="Views\Dialogs\MessageWindows.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Dialogs\PasswordWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Dialogs\Register.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -45,6 +48,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\MainMenu.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\NetWork.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Patients.xaml.cs">

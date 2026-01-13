@@ -41,6 +41,7 @@ namespace FSK.Sensitivity.Core.Const
         public const string Main_Page_Setting_Store = "Store";
         public const string Main_Page_Setting_UserInfo = "UserInfo";
         public const string Main_Page_Setting_Patient = "Patients";
+        public const string Main_Page_Setting_Netork = "NetWork";
 
         public const string Main_Page_CheckHistory = "CheckHistory";
 
@@ -84,7 +85,11 @@ namespace FSK.Sensitivity.Core.Const
         /// <summary>
         /// 字典键值：门店名称
         /// </summary>
-        public const string Dict_TypeCode_Store = "006";
+        public const string Dict_TypeCode_StoreName = "006";
+
+        public const string Dict_TypeCode_StoreCode = "007";
+
+        public const string Dict_TypeCode_StoreLogo = "008";
 
         public const string Dict_TypeCode_SerialPort = "001";
         #region 串口信息

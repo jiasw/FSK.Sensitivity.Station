@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FSK.Sensitivity.Main.Views"
+             xmlns:lcext="clr-namespace:FSK.Sensitivity.Main.Controls.Extend"
              xmlns:cvt="clr-namespace:FSK.Sensitivity.Main.Converters"
+            xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
              mc:Ignorable="d" 
              xmlns:hc="https://handyorg.github.io/handycontrol"
                 xmlns:prism="http://prismlibrary.com/"
@@ -110,7 +112,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Button    hc:IconElement.Geometry="{StaticResource RingGeometry}"   Style="{DynamicResource ArrowButtontwinkle}" RenderTransformOrigin="0.5,0.5">
+                <Button   lcext:ButtonActiveAttach.IsButtonActive="{Binding SaveButtonStatus}"  hc:IconElement.Geometry="{StaticResource RingGeometry}"   Style="{DynamicResource ArrowButtontwinkle}" RenderTransformOrigin="0.5,0.5">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -121,10 +123,10 @@
                     </Button.RenderTransform>
 
                 </Button>
-                <Button Grid.Column="2" Padding="3" hc:IconElement.Geometry="{StaticResource TriangleGeometry}"  Style="{DynamicResource ArrowButtontwinkle}"  RenderTransformOrigin="0.5,0.5">
+                <Button Grid.Column="2" Padding="3" lcext:ButtonActiveAttach.IsButtonActive="{Binding TriggerButtonStatus}" hc:IconElement.Geometry="{StaticResource TriangleGeometry}"  Style="{DynamicResource ArrowButtontwinkle}"  RenderTransformOrigin="0.5,0.5">
 
                 </Button>
-                <Button  Grid.Column="1" hc:IconElement.Geometry="{StaticResource ArrowGeometry}"  Style="{DynamicResource ArrowButtontwinkle}" RenderTransformOrigin="0.5,0.5">
+                <Button  Grid.Column="1"  lcext:ButtonActiveAttach.IsButtonActive="{Binding UpButtonStatus}" hc:IconElement.Geometry="{StaticResource ArrowGeometry}"  Style="{DynamicResource ArrowButtontwinkle}" RenderTransformOrigin="0.5,0.5">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -135,7 +137,7 @@
                     </Button.RenderTransform>
 
                 </Button>
-                <Button  Grid.Row="1"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"    Style="{DynamicResource ArrowButtontwinkle}" RenderTransformOrigin="0.5,0.5">
+                <Button  Grid.Row="1" lcext:ButtonActiveAttach.IsButtonActive="{Binding LeftButtonStatus}"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"    Style="{DynamicResource ArrowButtontwinkle}" RenderTransformOrigin="0.5,0.5">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -146,7 +148,7 @@
                     </Button.RenderTransform>
 
                 </Button>
-                <Button  Grid.Row="1" Grid.Column="2"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"    Style="{DynamicResource ArrowButtontwinkle}" RenderTransformOrigin="0.5,0.5">
+                <Button  Grid.Row="1" Grid.Column="2" lcext:ButtonActiveAttach.IsButtonActive="{Binding RightButtonStatus}"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"    Style="{DynamicResource ArrowButtontwinkle}" RenderTransformOrigin="0.5,0.5" >
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -157,9 +159,13 @@
                     </Button.RenderTransform>
 
                 </Button>
-                <Button  Grid.Row="2" Grid.Column="1"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"  Style="{DynamicResource ArrowButtontwinkle}"  RenderTransformOrigin="0.5,0.5">
+                <Button  Grid.Row="2" Grid.Column="1" lcext:ButtonActiveAttach.IsButtonActive="{Binding DownButtonStatus}"  hc:IconElement.Geometry="{StaticResource ArrowGeometry}"  Style="{DynamicResource ArrowButtontwinkle}"  RenderTransformOrigin="0.5,0.5">
 
                 </Button>
+                <Button  Grid.Row="2"  hc:IconElement.Geometry="{StaticResource RotateLeftGeometry}"  Style="{DynamicResource ArrowButton}" Command="{Binding Path=DataContext.RefreshCommand,RelativeSource={RelativeSource AncestorType=UserControl}}" RenderTransformOrigin="0.5,0.5">
+
+                </Button>
+
             </Grid>
         </Grid>
         <UniformGrid Grid.Row="1" Columns="2">
@@ -182,9 +188,9 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Border CornerRadius="5"  Margin="0,0,10,0" >
-                            <Border.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/left22.png" />
-                            </Border.Background>
+
+                            <Image gif:AnimationBehavior.SourceUri="/FSK.Sensitivity.Main;component/Resource/Images/leftEye.gif"  />
+                                
                         </Border>
                         <Border CornerRadius="5" Grid.Row="1"  Margin="0,20,10,0" Background="{StaticResource BordelBackGround}" >
                             <UniformGrid Rows="2">
@@ -241,9 +247,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Border CornerRadius="5"  Margin="0,0,10,0" >
-                            <Border.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/right22.jpg" />
-                            </Border.Background>
+                            <Image gif:AnimationBehavior.SourceUri="/FSK.Sensitivity.Main;component/Resource/Images/rightEye.gif"  />
                         </Border>
                         <Border CornerRadius="5" Grid.Row="1"  Margin="0,20,10,0" Background="{StaticResource BordelBackGround}" >
                             <UniformGrid Rows="2">

@@ -5,10 +5,11 @@
   "StoreInfo": {
     "StoreID": "10000001",
     "StoreName": "对比敏感度管理系统",
+    "LogoUrl": "",
     "StoreAddress": "火炬大厦",
     "StoreTel": "xx"
   },
-  "ModbusPortName": "COM2"
-
+  "ModbusPortName": "COM2",
+  "ComfirmPassword": "19450902"
 
 }

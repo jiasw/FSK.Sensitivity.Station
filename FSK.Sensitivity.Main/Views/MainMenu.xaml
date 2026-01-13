@@ -13,7 +13,7 @@
              xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True" Name="MainMenuView"
              Loaded="MainMenuView_Loaded"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="1200">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
@@ -48,7 +48,7 @@
                                     <RowDefinition Height="2*"></RowDefinition>
                                     <RowDefinition Height="*"></RowDefinition>
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="1" VerticalAlignment="Top"  HorizontalAlignment="Center" Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" Foreground="White" FontSize="34"></TextBlock>
+                                <TextBlock Grid.Row="1" VerticalAlignment="Top"  HorizontalAlignment="Center" Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" Foreground="White" FontSize="{StaticResource FontSizeTitle}"></TextBlock>
                             </Grid>
 
                         </Border>
@@ -139,12 +139,12 @@
             </Grid.RowDefinitions>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding LoginVisibility}">
 
-                <Button Margin="20,0" Height="70" Visibility="{Binding LoginVisibility}"  hc:IconElement.Geometry="{StaticResource ScanCodeGeometry}" hc:IconElement.Width="35"  Style="{DynamicResource NavButton}" Command="{Binding ScanCommand}" Content="扫码登录"   Width="180"  ></Button>
-                <Button Margin="20,0" Height="70"  Visibility="{Binding LoginVisibility}" Style="{DynamicResource NavButton}" Command="{Binding LoginCommand}" Content="登录"  Width="150"  ></Button>
-                <Button Margin="20,0" Height="70" Style="{DynamicResource NavButton}" Command="{Binding RegisterCommand}" Content="注册"  Width="150"  ></Button>
+                <Button Margin="20,0" FontSize="{StaticResource FontSizeTitle}" Height="70" Visibility="{Binding LoginVisibility}"  hc:IconElement.Geometry="{StaticResource ScanCodeGeometry}" hc:IconElement.Width="35"  Style="{DynamicResource NavButton}" Command="{Binding ScanCommand}" Content="扫码登录"   Width="230"  ></Button>
+                <Button Margin="20,0" FontSize="{StaticResource FontSizeTitle}" Height="70"  Visibility="{Binding LoginVisibility}" Style="{DynamicResource NavButton}" Command="{Binding LoginCommand}" Content="登录"  Width="150"  ></Button>
+                <Button Margin="20,0" FontSize="{StaticResource FontSizeTitle}" Height="70" Style="{DynamicResource NavButton}" Command="{Binding RegisterCommand}" Content="注册"  Width="150"  ></Button>
             </StackPanel>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding UserVisibility}">
-                <TextBlock  Foreground="White" FontSize="34" VerticalAlignment="Center">
+                <TextBlock  Foreground="White" FontSize="{StaticResource FontSizeTitle}" VerticalAlignment="Center">
              <Run Text="欢迎，"></Run>
              <Run Text="{Binding UserName, Mode=OneWay}"></Run>
                 </TextBlock>
@@ -173,14 +173,104 @@
             </Grid>
             <Grid Grid.Row="2" >
 
-                <Button Tag="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/btn_exit.png" Style="{DynamicResource ImageButton}"  Margin="20,0" Height="45" Width="45" HorizontalAlignment="Left" Command="{Binding ShutDownCommand}" >
 
-                </Button>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
+                    <Button Width="100" Height="50"  Margin="0,0,20,0" Command="{Binding ShutDownCommand}" >
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image x:Name="BtnImage" Stretch="Uniform" Source="/FSK.Sensitivity.Main;component/Resource/Images/shutdown.png" />
+                                                <TextBlock Text="关机" Margin="5,1" FontSize="20" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                                            </StackPanel>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Width="100" Height="50"  Margin="0,0,20,0" Command="{Binding RestartCommand}" >
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image x:Name="BtnImage" Stretch="Uniform" Source="/FSK.Sensitivity.Main;component/Resource/Images/restart.png" />
+                                                <TextBlock Text="重启" Margin="5,1" FontSize="20" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                                            </StackPanel>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Width="100" Height="50"  Margin="0,0,20,0">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image x:Name="BtnImage" Stretch="Uniform"  />
+                                                <TextBlock Text="网络" Margin="5,1" FontSize="20" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                                            </StackPanel>
+                                            <ControlTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding NetWorkActive}" Value="True">
+                                                    <Setter TargetName="BtnImage" Property="Source" Value="/FSK.Sensitivity.Main;component/Resource/Images/network.png" />
+                                                </DataTrigger>
+
+                                                <DataTrigger Binding="{Binding NetWorkActive}" Value="False">
+                                                    <Setter TargetName="BtnImage" Property="Source" Value="/FSK.Sensitivity.Main;component/Resource/Images/wifibreak.png" />
+                                                </DataTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Width="120" Height="50"  Margin="0,0,20,0">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image x:Name="BtnImage" Stretch="Uniform"  />
+                                                <TextBlock Text="工作台" Margin="5,1" FontSize="20" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                                            </StackPanel>
+                                            <ControlTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding PlatformActive}" Value="True">
+                                                    <Setter TargetName="BtnImage" Property="Source" Value="/FSK.Sensitivity.Main;component/Resource/Images/platform_online.png" />
+                                                </DataTrigger>
+
+                                                <DataTrigger Binding="{Binding PlatformActive}" Value="False">
+                                                    <Setter TargetName="BtnImage" Property="Source" Value="/FSK.Sensitivity.Main;component/Resource/Images/platform_offline.png" />
+                                                </DataTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                   
+                    
+                </StackPanel>
+                
             </Grid>
 
         </Grid>
         <!-- 加载层 -->
-        <controls:LoadingOverlay Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" LoadingText="{Binding LoadingMessageText}" />
+        <!--<controls:LoadingOverlay Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" LoadingText="{Binding LoadingMessageText}" />-->
     </Grid>
    
 </UserControl>

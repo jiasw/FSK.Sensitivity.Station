@@ -131,6 +131,19 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                 </Border>
 
             </Button>
+            <Button  Style="{StaticResource SettingButton}" Command="{Binding NetWorkCommand}">
+                <Border Style="{StaticResource ItemsBoder}" Background="{DynamicResource MainBrush}" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/wifi.png" Margin="25,0"  VerticalAlignment="Center" HorizontalAlignment="Right"></Image>
+                        <TextBlock Grid.Column="1" Text="网络配置" Style="{StaticResource ItemTitle}"></TextBlock>
+                    </Grid>
+                </Border>
+
+            </Button>
             <Button  Style="{StaticResource SettingButton}" Command="{Binding OpenFileSystemCommand}">
                 <Border Style="{StaticResource ItemsBoder}" Background="{DynamicResource MainBrush}" >
                     <Grid>
