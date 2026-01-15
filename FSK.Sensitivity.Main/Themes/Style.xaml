@@ -309,7 +309,7 @@
 
     <Style x:Key="ConfigParamTitleStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontSize" Value="30" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Foreground" Value="White" />

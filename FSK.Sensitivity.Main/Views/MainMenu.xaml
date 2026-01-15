@@ -270,7 +270,7 @@
 
         </Grid>
         <!-- 加载层 -->
-        <!--<controls:LoadingOverlay Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" LoadingText="{Binding LoadingMessageText}" />-->
+        <controls:LoadingOverlay Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" LoadingText="{Binding LoadingMessageText}" />
     </Grid>
    
 </UserControl>

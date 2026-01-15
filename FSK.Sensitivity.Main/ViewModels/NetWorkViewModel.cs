@@ -1,8 +1,11 @@
-﻿using System;
+﻿using FSK.Sensitivity.Core.HardWare.Peripherals;
+using FSK.Sensitivity.Main.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
@@ -25,6 +28,13 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
          string _wifiPassword;
+        private readonly Iwifi iwifi;
+
+        public NetWorkViewModel(Iwifi iwifi)
+        {
+            this.iwifi = iwifi;
+        }
+
         public string WifiPassword
         {
             get { return _wifiPassword; }
@@ -35,9 +45,22 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void Load()
         {
-            WifiNames = new List<string>() { "FSK-Guest","FSK-Admin","FSK-Test"};
-            SelectedWifi = WifiNames.FirstOrDefault();
+            WifiNames = iwifi.GetAvailableNetworks().ToList();
+            if (WifiNames.Count > 0)
+            {
+                SelectedWifi = WifiNames.First();
+            }
+
+            
         }
+
+        public DelegateCommand ConnectCommand => new DelegateCommand(Connect);
+        private void Connect()
+        {
+           
+
+            
+            }
 
 
     }

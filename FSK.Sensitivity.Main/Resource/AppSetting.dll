@@ -2,13 +2,6 @@
   "SqlLiteDb": "FSK.db",
   "AdminPassword": "19450902",
   "RemoteSupportPath": "C:\\Program Files\\Oray\\SunLogin\\SunloginClient\\SunloginClient.exe",
-  "StoreInfo": {
-    "StoreID": "10000001",
-    "StoreName": "对比敏感度管理系统",
-    "LogoUrl": "",
-    "StoreAddress": "火炬大厦",
-    "StoreTel": "xx"
-  },
   "ModbusPortName": "COM2",
   "ComfirmPassword": "19450902"
 

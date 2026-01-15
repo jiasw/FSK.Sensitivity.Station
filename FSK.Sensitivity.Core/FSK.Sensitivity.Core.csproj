@@ -8,7 +8,6 @@
   </PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="FluentModbus" Version="5.3.2" />
-		<PackageReference Include="ManagedNativeWifi" Version="3.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 		<PackageReference Include="System.Private.Uri" Version="4.3.2" />
 	</ItemGroup>
@@ -21,6 +20,11 @@
     <PackageReference Include="System.IO.Ports" Version="9.0.4" />
     <PackageReference Include="WpfScreenHelper" Version="2.1.1" />
     <PackageReference Include="Yitter.IdGenerator" Version="1.0.14" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SimpleWifi">
+      <HintPath>DLL\SimpleWifi.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

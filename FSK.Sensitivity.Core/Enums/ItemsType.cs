@@ -19,7 +19,8 @@ namespace FSK.Sensitivity.Core.Enums
         [Description("距离")]
         Distance = 3,
         [Description("瞳距")]
-        PD = 4
-
+        PD = 4,
+        [Description("暗环境时长")]
+        DarkTime = 5
     }
 }

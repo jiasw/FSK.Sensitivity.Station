@@ -116,6 +116,18 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             return leftStop && rightStop && slideStop;
         }
 
+        /// <summary>
+        /// 判断电机是否全部停止
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> IsAllStop()
+        {
+            bool isLeftMove = await IsLeftMove();
+            bool isRightMove = await IsRightMove();
+            bool isSlideMove = await IsSlideMove();
+            return !isLeftMove && !isRightMove && !isSlideMove;
+        }
+
 
 
     }

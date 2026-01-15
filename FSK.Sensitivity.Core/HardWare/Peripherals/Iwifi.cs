@@ -18,12 +18,7 @@ namespace FSK.Sensitivity.Core.HardWare.Peripherals
         /// 连接WIFI网络
         /// </summary>
         /// <returns></returns>
-        Task<bool> ConnectAsync();
+        bool Connect(string name,string password, Action<bool> onConnectComplete);
 
-        /// <summary>
-        /// 刷新网络列表
-        /// </summary>
-        /// <returns></returns>
-        Task RefreshAsync();
     }
 }

@@ -57,5 +57,12 @@ namespace FSK.Sensitivity.Core.HardWare.Peripherals
         /// </summary>
         /// <returns></returns>
         Task<bool> StopAllMotor();
+
+
+        /// <summary>
+        /// 判断电机是否全部停止
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> IsAllStop();
     }
 }

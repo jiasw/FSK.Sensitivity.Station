@@ -71,17 +71,17 @@ namespace FSK.Sensitivity.Core.Enums
     public enum DCKTime
     {
         [Description("5")]
-        T05 = 1,
+        T05 = 5,
         [Description("10")]
-        T10,
+        T10=10,
         [Description("15")]
-        T15,
+        T15=15,
         [Description("20")]
-        T20,
+        T20=20,
         [Description("30")]
-        T30,
+        T30=30,
         [Description("50")]
-        T50
+        T50=50
     }
 
     public enum DCKValue

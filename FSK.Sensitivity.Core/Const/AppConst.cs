@@ -65,7 +65,11 @@ namespace FSK.Sensitivity.Core.Const
         public const string Sign_Page_Contrast = "SecondaryContrast";
 
         public const string Sign_Page_Sensitivity = "SecondarySensitivity";
-        
+
+
+        //等待硬件运动完成最长时间，单位：秒
+        public const int WaitHardwareMotionTimeout = 12;
+
         /// <summary>
         /// csf训练左眼时长,单位：秒
         /// </summary>

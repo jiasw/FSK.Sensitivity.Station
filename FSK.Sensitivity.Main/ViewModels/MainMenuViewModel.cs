@@ -37,7 +37,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.configurationService = configurationService;
             this.appSetting = configurationService.LoadSetting();
             AppData.Instance.DialogService = dialogService;
-            checkNetWorkTimer = new System.Timers.Timer(5000); // 设置定时器间隔为5秒
+            checkNetWorkTimer = new System.Timers.Timer(10000); // 设置定时器间隔为5秒
             checkNetWorkTimer.Elapsed += new ElapsedEventHandler(CheckNetWork);
             checkNetWorkTimer.Start();
         }
@@ -113,7 +113,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void Loaded()
         {
-            _ = CheckHardware();
+             CheckHardware();
 
         }
         public DelegateCommand ExitCommand=> new DelegateCommand(ExitLogin);
@@ -128,7 +128,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         
 
-        private async Task CheckHardware()
+        private void CheckHardware()
         {
             IsLoading = true;
             if (!modbusService.IsConnected)
@@ -140,7 +140,6 @@ namespace FSK.Sensitivity.Main.ViewModels
             if (!modbusService.IsConnected)
             {
                 MessageBoxService.Instance.Show("硬件设备未连接，请连接后重试！", "设备未连接", MessageBoxButton.OK);
-                //MessageBoxService.Instance.Show("硬件设备未连接，请连接后重试！");
             }
 
 

@@ -110,7 +110,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
 
         /// <summary>
-        /// 训练状态
+        /// 检查状态
         /// </summary>
         public TrainStatus TrainStatus
         {
@@ -124,20 +124,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             get
             {
-                switch (TrainStatus)
-                {
-                    case TrainStatus.Pending:
-                        _trainStatusDisplay = "等待训练";
-                        break;
-                    case TrainStatus.Training:
-                        _trainStatusDisplay = "正在训练"; break;
-                    case TrainStatus.Trained:
-                        _trainStatusDisplay = "训练完成"; break;
-                    case TrainStatus.NotTrain:
-                        _trainStatusDisplay = "无需训练"; break;
-                    default:
-                        _trainStatusDisplay = ""; break;
-                }
+                _trainStatusDisplay = dictTrainDisplay[TrainStatus];
                 return _trainStatusDisplay;
             }
             set { SetProperty(ref _trainStatusDisplay, value); }
@@ -154,7 +141,14 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private ArrowButtonStauts _arrowButtonStauts = new ArrowButtonStauts();
 
-        public Dictionary<DCKTime, int> DictResult = new Dictionary<DCKTime, int>();
+        public Dictionary<DCKTime, int> dictResult = new Dictionary<DCKTime, int>();
+        public Dictionary<TrainStatus,string> dictTrainDisplay= new Dictionary<TrainStatus, string>()
+        {
+            { TrainStatus.Pending,"等待检查" },
+            { TrainStatus.Training,"正在检查" },
+            { TrainStatus.Trained,"检查完成" },
+            { TrainStatus.NotTrain,"无需检查" },
+        };
 
         public ContrastTrainingViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
@@ -178,12 +172,11 @@ namespace FSK.Sensitivity.Main.ViewModels
                 //记录va值
                 if (DckTime == DCKTime.T50)
                 {
-                    
                     StopTrain();
                 }
                 else
                 {
-                    DictResult.Add(DckTime, actionArgs.Index);
+                    dictResult.Add(DckTime, actionArgs.Index);
                     DckTime = DckTime.Next();
                     RefreshSignImage();
                     StartTrain();
@@ -254,18 +247,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
             }
         }
-        /// <summary>
-        /// 用户选择视标事件
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private void VaValueChanged(int obj)
-        {
-            
-
-            
-
-        }
+        
 
         private string GetSignName()
         {
@@ -281,11 +263,6 @@ namespace FSK.Sensitivity.Main.ViewModels
             BackgroundSource = imageName;
         }
 
-
-        private void SaveSelectedContrast(int index)
-        {
-
-        }
 
         private void StartTrain()
         {
@@ -394,7 +371,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 Age = AppData.Instance.CurrentPatient.Age.ToString(),
                 
             };
-            DictResult.Clear();
+            dictResult.Clear();
             StartTrain();
         }
 

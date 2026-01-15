@@ -95,7 +95,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         /// </summary>
         private void InitHardWare()
         {
-            light.TurnOffRight();
+            light.TurnOffAll();
             motor.Initialize();
         }
 
@@ -122,23 +122,61 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
 
-        private async Task<bool> HardWareIsMove()
-        {
-            return false;
-            return await motor.IsSlideMove() || await motor.IsLeftMove() || await motor.IsRightMove();
-        }
-
 
         public DelegateCommand SaveCommand => new DelegateCommand(async () => await Save());
 
         private async Task Save()
         {
-            if (await HardWareIsMove())
+            // 1. 初次判断：如果已经结束，直接跳转
+            if (await IsMotionFinished())
             {
-                MessageBoxService.Instance.Show("设备正在初始化,请稍候...");
+                NavigateToNextPage();
                 return;
             }
+            IsLoading = true;
+            LoadingMessageText="硬件初始化中，请稍后...";
 
+            using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(AppConst.WaitHardwareMotionTimeout)))
+            {
+                try
+                {
+                    // 3. 后台轮询任务
+                    await Task.Run(async () =>
+                    {
+                        while (!cts.Token.IsCancellationRequested)
+                        {
+                            if (await IsMotionFinished())
+                            {
+                                break; // 下位机运动结束，跳出循环
+                            }
+                            // 轮询间隔，防止占用 CPU 过高
+                            await Task.Delay(100, cts.Token);
+                        }
+                    }, cts.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    
+                    Console.WriteLine("等待超时，强制跳转");
+                }
+                finally
+                {
+                    IsLoading= false;
+                    NavigateToNextPage();
+                }
+            }
+
+        }
+
+        // 模拟下位机状态获取
+        private async Task<bool> IsMotionFinished()
+        {
+            return await motor.IsAllStop();
+        }
+
+        // 界面跳转逻辑
+        private void NavigateToNextPage()
+        {
             regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_SensitivityTraining
                 , new NavigationParameters() { { "sensitivityConfigParam", SensitivityConfigParam } });
         }
@@ -157,19 +195,21 @@ namespace FSK.Sensitivity.Main.ViewModels
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_CheckHistory);
         }
 
-        public DelegateCommand<string> ShowItemsDialogCommand => new DelegateCommand<string>(ShowItemsDialog);
+        public DelegateCommand<ItemsType?> ShowItemsDialogCommand => new DelegateCommand<ItemsType?>(ShowItemsDialog);
 
-        private void ShowItemsDialog(string itemsType)
+        private void ShowItemsDialog(ItemsType? itemsType)
         {
-            dialogService.ShowDialog(AppConst.Main_Dialog_ShowItems, new DialogParameters() { { "itemsType", itemsType } }, result =>
+            ItemsType paramtype=itemsType?? ItemsType.Eyes;
+            
+            dialogService.ShowDialog(AppConst.Main_Dialog_ShowItems, new DialogParameters() { { "ItemsType", paramtype } }, result =>
             {
                 
                 if (result.Result == ButtonResult.OK)
                 {
-                   
-                    string itemsType=result.Parameters.GetValue<string>("itemsType");
+
+                    ItemsType resulttype =result.Parameters.GetValue<ItemsType>(nameof(ItemsType));
                     ShowItemsModel showItemsModel = result.Parameters.GetValue<ShowItemsModel>("selectedOption");
-                    if (itemsType == "1")
+                    if (resulttype == ItemsType.Eyes)
                     {
                         Eye eye = (Eye)Enum.Parse(typeof(Eye), showItemsModel.Value);
                         SensitivityConfigParam.Eyes = eye;
@@ -183,18 +223,18 @@ namespace FSK.Sensitivity.Main.ViewModels
                         }
                         SetHardWareDistance();
                     }
-                    else if (itemsType == "2")
+                    else if (resulttype==ItemsType.DayTypes)
                     {
                         DayOrNight dayNight = (DayOrNight)Enum.Parse(typeof(DayOrNight), showItemsModel.Value);
                         SensitivityConfigParam.DayNight = dayNight;
                     }
-                    else if (itemsType == "3")
+                    else if (resulttype == ItemsType.Distance)
                     {
                         CheckDistance checkDistance = (CheckDistance)Enum.Parse(typeof(CheckDistance), showItemsModel.Value);
                         SensitivityConfigParam.CheckDistance = checkDistance;
                         SetHardWareDistance();
                     }
-                    else if (itemsType == "4")
+                    else if (resulttype == ItemsType.PD)
                     {
                         SensitivityConfigParam.PD = int.Parse(showItemsModel.Value);
                         SetHardWarePD();

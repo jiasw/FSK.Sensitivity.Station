@@ -1,4 +1,5 @@
-﻿using FSK.Sensitivity.Core.Enums;
+﻿using FSK.Sensitivity.Core;
+using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Utility;
@@ -36,7 +37,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref items, value); }
         }
 
-        private string itemsType;
+        private ItemsType itemsType;
 
         private string title;
         public string Title
@@ -59,27 +60,31 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            LogHelper.Instance.LogInformation("ShowItemsDialogViewModel opened");
             Title = "选择";
-            itemsType = parameters.GetValue<string>("itemsType");
-            if (new List<string>() { "1", "2" , "3" }.Contains(itemsType))
+            itemsType = parameters.GetValue<ItemsType>(nameof(ItemsType));
+            if (new List<ItemsType>() { ItemsType.DayTypes, ItemsType.Eyes, ItemsType.Distance,ItemsType.DarkTime }.Contains(itemsType))
             {
                 ItemWidth = 200;
                 ItenHeight = 80;
-                if (itemsType == "1")
+                if (itemsType == ItemsType.Eyes)
                 {
                     Title = "眼别";
                     Items = Utils.GetEnumDisplayList<Eye>();
                 }
-                else if (itemsType == "2")
+                else if (itemsType == ItemsType.DayTypes)
                 {
                     Title = "日夜";
                     Items = Utils.GetEnumDisplayList<DayOrNight>();
                 }
-                else if (itemsType == "3")
+                else if (itemsType == ItemsType.Distance)
                 {
                     Title = "检查距离";
-                    Items = Utils.GetEnumDisplayList<CheckDistance>();
+                    Items = EnumExtensions.ToEnumModelList<CheckDistance>().Select(i => new ShowItemsModel() { Name = i.Description, Value = i.Value.ToString() }).ToList();
+                }
+                else if (itemsType == ItemsType.DarkTime)
+                {
+                    Title = "暗环境时长";
+                    Items = EnumExtensions.ToEnumModelList<DCKTime>().Select(i => new ShowItemsModel() { Name = i.Description, Value = i.Value.ToString() }).ToList();
                 }
             }
             else
@@ -104,7 +109,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void Select(ShowItemsModel item)
         {
             var parameters = new DialogParameters {
-                { "itemsType", itemsType },
+                { nameof(ItemsType), itemsType },
         { "selectedOption", item }
             };
             DialogResult dialogResult = new DialogResult(ButtonResult.OK);

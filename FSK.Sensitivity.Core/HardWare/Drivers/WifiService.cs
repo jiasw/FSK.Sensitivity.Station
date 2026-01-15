@@ -1,5 +1,6 @@
 ﻿using FSK.Sensitivity.Core.HardWare.Peripherals;
-using ManagedNativeWifi;
+using FSK.Sensitivity.Core.Infrastructure;
+using SimpleWifi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,32 +12,49 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
 {
     public class WifiService:Iwifi
     {
+       
         public IEnumerable<string> GetAvailableNetworks()
         {
-            return NativeWifi.EnumerateAvailableNetworkSsids()
-        .Select(x => x.ToString());
+            Wifi wifi = new Wifi();
+
+            
+            var apList = wifi.GetAccessPoints()
+                .Where(n => !string.IsNullOrWhiteSpace(n.Name))
+                .Select(n => n.Name);
+            return apList;
         }
 
-        public  async Task<bool> ConnectAsync()
+        public  bool Connect(string name,string password, Action<bool> onConnectComplete)
         {
-            var availableNetwork = NativeWifi.EnumerateAvailableNetworks()
-                .Where(x => !string.IsNullOrWhiteSpace(x.ProfileName))
-                .OrderByDescending(x => x.SignalQuality)
-                .FirstOrDefault();
+            Wifi wifi = new Wifi();
+            // get list of access points
+            IEnumerable<AccessPoint> accessPoints = wifi.GetAccessPoints();
 
-            if (availableNetwork is null)
-                return false;
+            // for each access point from list
+            foreach (AccessPoint ap in accessPoints)
+            {
 
-            return await NativeWifi.ConnectNetworkAsync(
-                interfaceId: availableNetwork.InterfaceInfo.Id,
-                profileName: availableNetwork.ProfileName,
-                bssType: availableNetwork.BssType,
-                timeout: TimeSpan.FromSeconds(10));
+                Console.WriteLine("ap: {0}\r\n", ap.Name);
+                
+                if (ap.Name == name)
+                {
+                    
+                    if (ap.IsConnected)
+                    {
+                        LogHelper.Instance.LogInformation("网络已连接");
+                        return true;
+                    }else
+                    {
+                        LogHelper.Instance.LogInformation("网络未连接");
+                        AuthRequest authRequest = new AuthRequest(ap);
+                        authRequest.Password = password;
+                        ap.ConnectAsync(authRequest, true, onConnectComplete);
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
-        public Task RefreshAsync()
-        {
-            return NativeWifi.ScanNetworksAsync(timeout: TimeSpan.FromSeconds(10));
-        }
     }
 }
