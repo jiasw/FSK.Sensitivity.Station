@@ -4,20 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FSK.Sensitivity.Main.Views"
+             xmlns:lclcv="clr-namespace:FSK.Sensitivity.Main.Converters"
                   xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:hc="https://handyorg.github.io/handycontrol"
 xmlns:enum = "clr-namespace:FSK.Sensitivity.Core.Enums;assembly=FSK.Sensitivity.Core"
          mc:Ignorable="d" 
          xmlns:prism="http://prismlibrary.com/"
     prism:ViewModelLocator.AutoWireViewModel="True"
-             d:DesignHeight="758" d:DesignWidth="1200">
+             d:DesignHeight="600" d:DesignWidth="1200">
     <UserControl.Resources>
         <ResourceDictionary>
             <Style x:Key="ContrastParamStyle" TargetType="Border" BasedOn="{StaticResource ConfigParamBorderStyle}">
                 <Setter Property="Margin" Value="20,0"/>
-                <Setter Property="Height" Value="300"></Setter>
-                <Setter Property="Width" Value="400"></Setter>
+                <Setter Property="Height" Value="250"></Setter>
+                <Setter Property="Width" Value="300"></Setter>
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -26,9 +26,9 @@ xmlns:enum = "clr-namespace:FSK.Sensitivity.Core.Enums;assembly=FSK.Sensitivity.
             <RowDefinition Height="3*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-       
 
-        <Grid  HorizontalAlignment="Center">
+
+        <Grid  HorizontalAlignment="Center" DataContext="{Binding ContrastConfigParam}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="100"/>
@@ -64,7 +64,7 @@ CommandParameter="{x:Static enum:ItemsType.DarkTime}"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <TextBlock Text="{Binding CheckDuration}"  VerticalAlignment="Center" FontSize="60" Foreground="White"></TextBlock>
+                            <TextBlock Text="{Binding CheckDuration,Converter={StaticResource EnumToDescriptionConverter}}"  VerticalAlignment="Center" FontSize="60" Foreground="White"></TextBlock>
                             <TextBlock Text="S"  FontWeight="Bold" Padding="0,0,0,5" VerticalAlignment="Bottom" FontSize="40" Margin="5,0,0,0" Foreground="White"></TextBlock>
                         </StackPanel>
                     </Grid>
@@ -72,6 +72,22 @@ CommandParameter="{x:Static enum:ItemsType.DarkTime}"/>
             </Border>
 
             <Border Style="{DynamicResource ContrastParamStyle}" Grid.Column="2">
+                <i:Interaction.Triggers>
+                    <!-- 处理左键点击 -->
+                    <i:EventTrigger EventName="TouchDown">
+                        <i:InvokeCommandAction 
+                Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl},
+ Path=DataContext.ShowItemsDialogCommand}"
+                CommandParameter="{x:Static enum:ItemsType.PD}"/>
+                    </i:EventTrigger>
+                    <!-- 处理左键点击 -->
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <i:InvokeCommandAction 
+Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl},
+ Path=DataContext.ShowItemsDialogCommand}"
+CommandParameter="{x:Static enum:ItemsType.PD}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -85,8 +101,8 @@ CommandParameter="{x:Static enum:ItemsType.DarkTime}"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <TextBlock Text="{Binding CheckDuration}"  VerticalAlignment="Center" FontSize="60" Foreground="White"></TextBlock>
-                            <TextBlock Text="S"  FontWeight="Bold" Padding="0,0,0,5" VerticalAlignment="Bottom" FontSize="40" Margin="5,0,0,0" Foreground="White"></TextBlock>
+                            <TextBlock Text="{Binding PD}"  VerticalAlignment="Center" FontSize="60" Foreground="White"></TextBlock>
+                            <TextBlock Text="mm"  FontWeight="Bold" Padding="0,0,0,5" VerticalAlignment="Bottom" FontSize="40" Margin="5,0,0,0" Foreground="White"></TextBlock>
                         </StackPanel>
                     </Grid>
                 </Grid>

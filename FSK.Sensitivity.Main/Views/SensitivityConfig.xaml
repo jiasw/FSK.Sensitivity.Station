@@ -88,7 +88,7 @@ CommandParameter="{x:Static enum:ItemsType.Distance}"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                 <TextBlock Text="{Binding CheckDistanceDisplay}"   VerticalAlignment="Center" FontSize="60" Foreground="White"></TextBlock>
-                                <TextBlock Text="米"  FontWeight="Bold" VerticalAlignment="Bottom" FontSize="55" Margin="5,0,0,0" Foreground="White"></TextBlock>
+                                <TextBlock Text="m"  FontWeight="Bold" Padding="0,0,0,5" VerticalAlignment="Bottom" FontSize="40" Margin="5,0,0,0" Foreground="White"></TextBlock>
                             </StackPanel>
                         </Grid>
                     </Grid>
@@ -214,6 +214,7 @@ CommandParameter="{x:Static enum:ItemsType.PD}"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                 <TextBlock Text="{Binding PD}"   VerticalAlignment="Center" FontSize="60" Foreground="White"></TextBlock>
+                                <TextBlock Text="mm"  FontWeight="Bold" Padding="0,0,0,5" VerticalAlignment="Bottom" FontSize="40" Margin="5,0,0,0" Foreground="White"></TextBlock>
                             </StackPanel>
                         </Grid>
                     </Grid>

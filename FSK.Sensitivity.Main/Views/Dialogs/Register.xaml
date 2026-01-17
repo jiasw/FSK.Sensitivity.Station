@@ -11,23 +11,22 @@
              d:DesignHeight="750" d:DesignWidth="500">
     <UserControl.Resources>
         <Style x:Key="textblockTitleStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizelabel}" />
             <Setter Property="Foreground" Value="{StaticResource MainBrush}" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="10,5"></Setter>
         </Style>
         <Style x:Key="textboxStyle" TargetType="TextBox" BasedOn="{StaticResource TextBoxExtend}">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizelabel}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="{StaticResource MainBrush}" />
             <Setter Property="Width" Value="250"></Setter>
-            <Setter Property="Margin" Value="10,10"></Setter>
-            <Setter Property="Height" Value="50"></Setter>
+            <Setter Property="Margin" Value="10,5"></Setter>
         </Style>
         <Style x:Key="comboboxStyle" TargetType="ComboBox" BasedOn="{StaticResource ComboBoxBaseStyle}">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizelabel}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="{StaticResource MainBrush}" />
@@ -43,7 +42,8 @@
             <Setter Property="ShowInTaskbar" Value="False"/>
             <Setter Property="WindowStyle" Value="None"></Setter>
             <Setter Property="AllowsTransparency" Value="True"></Setter>
-            <Setter Property="Width" Value="550"></Setter>
+            <Setter Property="Width" Value="500"></Setter>
+            <Setter Property="Height" Value="580"></Setter>
             <Setter Property="Background" Value="Transparent"></Setter>
         </Style>
     </prism:Dialog.WindowStyle>
@@ -51,10 +51,10 @@
         <StackPanel >
             <Grid >
                 <Button  Width="60" Height="60"  hc:IconElement.Width="30" hc:IconElement.Height="30" Style="{StaticResource ButtonIcon}"  HorizontalAlignment="Right" hc:IconElement.Geometry="{StaticResource CloseGeometry}" Command="{Binding CloseCommand}"/>
-                <TextBlock Grid.ColumnSpan="2" Text="首次登录" Foreground="{StaticResource MainBrush}"  FontSize="{StaticResource FontSizeTitle}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.ColumnSpan="2" Text="首次登录" Foreground="{StaticResource MainBrush}"  FontSize="{StaticResource FontSizeSecondTitle}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
             </Grid>
             
-            <Grid  >
+            <Grid  Margin="0,20,0,0">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1.2*" />
@@ -92,7 +92,7 @@
                 <ComboBox Grid.Column="1" Grid.Row="8" ItemsSource="{Binding GradeList}" SelectedValue="{Binding Grade, Mode=TwoWay}" Style="{StaticResource comboboxStyle}"></ComboBox>
                 <TextBlock Grid.Column="0" Grid.Row="9" Text="班级" Style="{StaticResource textblockTitleStyle}"></TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="9" Text="{Binding ClassName, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
-                <Button Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2" Content="确认登录"  Width="250" Margin="20,10" Style="{StaticResource ConfirmButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RegisterCommand}" />
+                <Button Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2" Content="确认登录"  Width="250" Margin="20,20" Style="{StaticResource ConfirmButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RegisterCommand}" />
 
 
 

@@ -187,8 +187,15 @@ namespace FSK.Sensitivity.Main.ViewModels
         private CSFTrainModel leftCSFTrainModel = new CSFTrainModel();
         private CSFTrainModel rightCSFTrainModel = new CSFTrainModel();
         private CSFTrainModel currentCSFTrainModel = null;
-        private long checkid = -1;
+        private long checkid = -1;//当前检查的ID，
         private CancellationTokenSource _cts;
+        //选择视标的索引
+        private int _signSelectIndex = 0;
+        public int SignSelectIndex
+        {
+            get { return _signSelectIndex; }
+            set { SetProperty(ref _signSelectIndex, value); }
+        }
 
         public SensitivityTrainingViewModel(IRegionManager regionManager,IEventAggregator eventAggregator, CheckResultRepository checkResultRepository, IMotor motor)
         {
@@ -350,6 +357,8 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void SetBtnStyle(ActionArgs actionArgs)
         {
+            SignSelectIndex=actionArgs.Index;
+
             switch (actionArgs.Action.Command)
             {
                 case JoystickStatus.Front:
@@ -425,7 +434,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             checkid=Utils.GenerateSnowID();
             TrainModelsQueue.Clear();
             
-            SensitivityConfigParam? sensitivityConfigParam = navigationContext.Parameters["sensitivityConfigParam"] as SensitivityConfigParam;
+            SensitivityConfigParam? sensitivityConfigParam = navigationContext.Parameters[nameof(SensitivityConfigParam)] as SensitivityConfigParam;
             if (sensitivityConfigParam != null)
             {
                 model.PD = sensitivityConfigParam.PD;

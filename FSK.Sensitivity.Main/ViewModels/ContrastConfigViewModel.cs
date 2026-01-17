@@ -38,11 +38,49 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref contrastConfigParam, value); }
         }
 
-        public DelegateCommand SaveCommand=> new DelegateCommand(Save);
+        public DelegateCommand SaveCommand=> new DelegateCommand(async () => await Save());
 
-        private void Save()
+        private async Task Save()
         {
-            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastTraining,new NavigationParameters() { { "time", SelectedTime } });
+            // 1. 初次判断：如果已经结束，直接跳转
+            if (await IsMotionFinished())
+            {
+                NavigateToNextPage();
+                return;
+            }
+            IsLoading = true;
+            LoadingMessageText = "硬件初始化中，请稍后...";
+
+            using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(AppConst.WaitHardwareMotionTimeout)))
+            {
+                try
+                {
+                    // 3. 后台轮询任务
+                    await Task.Run(async () =>
+                    {
+                        while (!cts.Token.IsCancellationRequested)
+                        {
+                            if (await IsMotionFinished())
+                            {
+                                break; // 下位机运动结束，跳出循环
+                            }
+                            // 轮询间隔，防止占用 CPU 过高
+                            await Task.Delay(100, cts.Token);
+                        }
+                    }, cts.Token);
+                }
+                catch (OperationCanceledException)
+                {
+
+                    Console.WriteLine("等待超时，强制跳转");
+                }
+                finally
+                {
+                    IsLoading = false;
+                    NavigateToNextPage();
+                }
+            }
+
         }
 
         public DelegateCommand BackCommand => new DelegateCommand(Back);
@@ -104,16 +142,21 @@ namespace FSK.Sensitivity.Main.ViewModels
             motor?.SetSlideBlock(pd);
         }
 
-        public DelegateCommand ListResultCommand => new DelegateCommand(ListResult);
-
-        private void ListResult()
-        {
-            // TODO: List the result of the test
-        }
+        
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            ContrastConfigParam = new ContrastConfigParam()
+            {
+                CheckDuration = DCKTime.T05,
+                PD = 50
+            };
+            motor.Initialize();
+            SetHardWarePD();
+            motor.SetLeftDisk(3);
+            motor.SetRightDisk(3);
             
+
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -123,7 +166,18 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            
+            //判断设备是否初始化完成
+        }
+
+        private async Task<bool> IsMotionFinished()
+        {
+            return await motor.IsAllStop();
+        }
+
+        // 界面跳转逻辑
+        private void NavigateToNextPage()
+        {
+            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastTraining, new NavigationParameters() { { nameof(ContrastConfigParam), ContrastConfigParam } });
         }
     }
 }

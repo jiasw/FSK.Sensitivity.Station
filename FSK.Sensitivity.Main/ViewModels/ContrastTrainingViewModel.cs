@@ -3,6 +3,8 @@ using FSK.Sensitivity.Core;
 using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.EventBus;
+using FSK.Sensitivity.Core.HardWare.Peripherals;
+using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Utility;
 using NetTaste;
 using Prism.Events;
@@ -12,6 +14,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -34,70 +37,109 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly SecondaryChangeEvent secondaryChangeEvent;//副屏页面切换事件
         private readonly SensitivitySignChangeEvent contrastSignChangeEvent;//对比度标志位事件
         private readonly IEventAggregator eventAggregator;
+        private readonly ILight light;
         private CheckUserModel _checkUserModel = new CheckUserModel();
+
+        ContrastConfigParam contrastConfigParam;
+        //选择视标的索引
+        private int _signSelectIndex = 0;
+        public int SignSelectIndex
+        {
+            get { return _signSelectIndex; }
+            set { SetProperty(ref _signSelectIndex, value); }
+        }
+
         public CheckUserModel CheckUserModel
         {
             get { return _checkUserModel; }
             set { SetProperty(ref _checkUserModel, value); }
         }
-        //操作界面视标图片
-        private object _backgroundSource;
-        //操作界面视标图片
-        public object BackgroundSource
+        //操作界面视标背景
+        private SolidColorBrush _backgroundSource;
+        //操作界面视标背景
+        public SolidColorBrush BackgroundSource
         {
             get => _backgroundSource;
             set => SetProperty(ref _backgroundSource, value);
         }
-        //检查时长（秒）
+
+        private string _signPath;
+        /// <summary>
+        /// 操作界面显示视标名称
+        /// </summary>
+        public string SignPath
+        {
+            get
+            {
+                return _signPath;
+            }
+            set
+            {
+                SetProperty(ref _signPath, value);
+
+                if (string.IsNullOrWhiteSpace(_signPath))
+                {
+                    ShowSign = Visibility.Collapsed;
+                }
+                else
+                {
+                    ShowSign = Visibility.Visible;
+                }
+                RaisePropertyChanged(nameof(ShowSign));
+            }
+        }
+
+        private Visibility _showSign = Visibility.Collapsed;
+        public Visibility ShowSign
+        {
+            get { return _showSign; }
+            set { SetProperty(ref _showSign, value); }
+        }
+
+
         private int _checkDuration = 5;
+        /// <summary>
+        /// 剩余检查时长
+        /// </summary>
         public int CheckDuration
         {
             get { return _checkDuration; }
             set { SetProperty(ref _checkDuration, value); }
         }
 
-        private int _checkDurationDisplay;
+        private int _checkTotalDuration;
         /// <summary>
-        /// 检查时长显示
+        /// 检查总时长
         /// </summary>
-        public int CheckDurationDisplay { 
-            get { return _checkDurationDisplay; }
-            set { SetProperty(ref _checkDurationDisplay, value); }
+        public int CheckTotalDuration { 
+            get { return _checkTotalDuration; }
+            set { SetProperty(ref _checkTotalDuration, value); }
         }
 
         
-        private int _countdown;
+        private int _waitTotalDuration = AppConst.ContrastWaitDuration;
         /// <summary>
-        /// 倒计时显示
+        /// 等待总时长
         /// </summary>
-        public int CountdownDisplay
+        public int WaitTotalDuration
         {
-            get { return _countdown; }
-            set { SetProperty(ref _countdown, value); }
+            get { return _waitTotalDuration; }
+            set { SetProperty(ref _waitTotalDuration, value); }
         }
 
 
-        //等待时长（秒）
+        
         private int _waitDuration = AppConst.ContrastWaitDuration;
+        /// <summary>
+        /// 剩余等待时长
+        /// </summary>
         public int WaitDuration
         {
             get { return _waitDuration; }
             set { SetProperty(ref _waitDuration, value); }
         }
 
-        private int _at;
-        public int At
-        {
-            get { return _at; }
-            set { SetProperty(ref _at, value); }
-        }
-
-        private int _rt;
-        public int RT
-        {
-            get { return _rt; }
-            set { SetProperty(ref _rt, value); }
-        }
+        
 
         private TrainStatus _trainStatus = TrainStatus.Pending;
 
@@ -134,8 +176,8 @@ namespace FSK.Sensitivity.Main.ViewModels
         //视标图片名称
         private string _signPictureName;
         
-        private DispatcherTimer _waittimer;
-        private DispatcherTimer _checktimer;
+        private System.Timers.Timer _waittimer;
+        private System.Timers.Timer _checktimer;
 
         private int imageIndex = 0;
 
@@ -150,23 +192,23 @@ namespace FSK.Sensitivity.Main.ViewModels
             { TrainStatus.NotTrain,"无需检查" },
         };
 
-        public ContrastTrainingViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
+        public ContrastTrainingViewModel(IRegionManager regionManager, IEventAggregator eventAggregator,ILight light)
         {
             secondaryChangeEvent = eventAggregator.GetEvent<SecondaryChangeEvent>();
             contrastSignChangeEvent = eventAggregator.GetEvent<SensitivitySignChangeEvent>();
             
-            _waittimer = new DispatcherTimer();
-            _waittimer.Interval = TimeSpan.FromSeconds(1);
-            _waittimer.Tick += WaitTimer_Tick;
-            _checktimer = new DispatcherTimer();
-            _checktimer.Interval = TimeSpan.FromSeconds(1);
-            _checktimer.Tick += CheckTimer_Tick;
+            _waittimer = new System.Timers.Timer(1000);
+            _waittimer.Elapsed += WaitTimer_Tick;
+            _checktimer = new System.Timers.Timer(1000);
+            _checktimer.Elapsed += CheckTimer_Tick;
             this.eventAggregator = eventAggregator;
+            this.light = light;
         }
 
         private void JoystickAction(ActionArgs actionArgs)
         {
             SetBtnStyle(actionArgs);
+            SignSelectIndex = actionArgs.Index;
             if (actionArgs.Action.Command == JoystickStatus.Confirm)
             {
                 //记录va值
@@ -260,15 +302,19 @@ namespace FSK.Sensitivity.Main.ViewModels
             string imageName = GetSignName();
             string signName = imageName.Replace("_d", "_t");
             contrastSignChangeEvent.Publish(new SensitivityChangeSignOptions() { PicturePath = signName, BackgroundBrush = SignBackGround.Black });
-            BackgroundSource = imageName;
+            SignPath= imageName;
         }
 
+        /// <summary>
+        /// 刷新视标
+        /// </summary>
+        public DelegateCommand RefreshCommand => new DelegateCommand(RefreshSignImage);
 
         private void StartTrain()
         {
-            
             contrastSignChangeEvent.Publish(new() { PicturePath = "", BackgroundBrush = SignBackGround.White });
-            BackgroundSource = SignBackGround.White;
+            BackgroundSource = Brushes.White;
+            SignPath = "";
             eventAggregator.GetEvent<JoystickEvent>().Subscribe(JoystickAction);
             resetWaitTimer();
         }
@@ -283,8 +329,10 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void StopTrain()
         {
             secondaryChangeEvent.Publish(new() { Action = ChangeAction.Idle });
-            _waittimer.Stop();
-            _checktimer.Stop();
+            _waittimer?.Stop();
+            _waittimer?.Dispose();
+            _checktimer?.Stop();
+            _checktimer?.Dispose();
 
         }
 
@@ -295,9 +343,12 @@ namespace FSK.Sensitivity.Main.ViewModels
             if (CheckDuration == 0)
             {
                 _checktimer.Stop();
-                BackgroundSource = SignBackGround.Black;
+                System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                    BackgroundSource = Brushes.Black;
+                    SignPath = "";
                 //设置对比敏感度视标
                 contrastSignChangeEvent.Publish(new SensitivityChangeSignOptions() { PicturePath = "", BackgroundBrush = SignBackGround.Black });
+                });
             }
         }
         private void WaitTimer_Tick(object? sender, EventArgs e)
@@ -308,8 +359,12 @@ namespace FSK.Sensitivity.Main.ViewModels
                 _waittimer.Stop();
                 _checktimer.Start();
                 //设置对比敏感度视标
-                GetShowPictureName();
-                contrastSignChangeEvent.Publish(new SensitivityChangeSignOptions() { PicturePath = _signPictureName, BackgroundBrush = SignBackGround.Black });
+                System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                    GetShowPictureName();
+                    contrastSignChangeEvent.Publish(new SensitivityChangeSignOptions() { PicturePath = _signPictureName, BackgroundBrush = SignBackGround.Black });
+                });
+                
+                
 
             }
         }
@@ -317,18 +372,10 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             int randomIndex = Utils.GenerateRandomNumber(1, 5, imageIndex);
             imageIndex = randomIndex;
-            BackgroundSource = $"df_d{imageIndex}.jpg";
+            SignPath = $"df_d{imageIndex}.jpg";
             _signPictureName= $"df_t{imageIndex}.jpg";
+            BackgroundSource= Brushes.Black;
         }
-
-
-
-        
-
-        
-
-
-
         
         public ArrowButtonStauts ArrowButtonStauts
         {
@@ -336,32 +383,15 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref _arrowButtonStauts, value); }
         }
 
-        DCKTime GetDckTime(int time)
-        {
-            Dictionary<int,DCKTime> dict= new Dictionary<int, DCKTime>()
-            {
-                {5,DCKTime.T05 },
-                {10,DCKTime.T10 },
-                {15,DCKTime.T15 },
-                {20,DCKTime.T20 },
-                {30,DCKTime.T30 },
-                {50,DCKTime.T50 },
-            };
-            if (dict.ContainsKey(time))
-            {
-                return dict[time];
-            }
-            else
-            {
-                return DCKTime.T05;
-            }
-        }
-
+       
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            CheckDuration = navigationContext.Parameters.GetValue<int>("time");
-            DckTime= GetDckTime(CheckDuration);
+            contrastConfigParam = navigationContext.Parameters.GetValue<ContrastConfigParam>(nameof(ContrastConfigParam));
+           
+            DckTime = contrastConfigParam.CheckDuration;
+            CheckTotalDuration = CheckDuration = int.Parse(DckTime.GetDescription());
+            
             secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Contrast });
             CheckUserModel = new CheckUserModel()
             {
@@ -372,6 +402,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 
             };
             dictResult.Clear();
+            light.TurnOnAll();
             StartTrain();
         }
 
@@ -383,6 +414,8 @@ namespace FSK.Sensitivity.Main.ViewModels
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
             StopTrain();
+             light.TurnOffAll();
+            eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
         }
     }
 }

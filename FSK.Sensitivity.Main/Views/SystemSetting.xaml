@@ -20,11 +20,11 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             <Setter Property="Background" Value="{DynamicResource MainBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="hc:BorderElement.CornerRadius" Value="10"/>
-            <Setter Property="hc:IconElement.Width" Value="30"/>
-            <Setter Property="hc:IconElement.Height" Value="30"/>
+            <Setter Property="hc:IconElement.Width" Value="20"/>
+            <Setter Property="hc:IconElement.Height" Value="20"/>
             <Setter Property="Padding" Value="2,0"></Setter>
-            <Setter Property="Height" Value="200"></Setter>
-            <Setter Property="Width" Value="320"></Setter>
+            <Setter Property="Height" Value="120"></Setter>
+            <Setter Property="Width" Value="240"></Setter>
             <Setter Property="Margin" Value="30,15"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
@@ -60,8 +60,8 @@ prism:ViewModelLocator.AutoWireViewModel="True"
         </Style>
         <Style x:Key="ItemTitle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"></Setter>
-            <Setter Property="FontSize" Value="36"></Setter>
-            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
 
         </Style>
@@ -70,15 +70,9 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             <Setter Property="Height" Value="60" />
         </Style>
     </UserControl.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="20"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-
-        <WrapPanel Grid.Column="1" HorizontalAlignment="Center" >
-
+    
+        
+        <UniformGrid Columns="3" HorizontalAlignment="Center"  >
             <Button  Style="{StaticResource SettingButton}" Command="{Binding StoreSettingCommand}" >
 
                 <Border Style="{StaticResource ItemsBoder}" Background="{DynamicResource MainBrush}" >
@@ -170,8 +164,6 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                 </Border>
             </Button>
 
-
-        </WrapPanel>
-
-    </Grid>
+        </UniformGrid>
+   
 </UserControl>

@@ -15,25 +15,27 @@ namespace FSK.Sensitivity.Main.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is null)
+            if(value is null || string.IsNullOrWhiteSpace( value.ToString() ))
             {
                 return Brushes.White;
             }
             else
             {
-                string currentValue = value.ToString();
-                if (currentValue.Equals(SignBackGround.Black.ToString(), StringComparison.CurrentCultureIgnoreCase) || currentValue.Equals(SignBackGround.White.ToString(), StringComparison.CurrentCultureIgnoreCase))
-                {
-                    return string.Equals(currentValue, SignBackGround.Black.ToString(), StringComparison.OrdinalIgnoreCase) ? Brushes.Black : Brushes.White;
-                }
-                else
-                {
-                    var image = new BitmapImage(new Uri("pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/Sign/" + value.ToString()));
-                    return new ImageBrush(image)
-                    {
-                        Stretch = Stretch.Fill
-                    };
-                }
+                
+                    
+                    
+                // 2. 将字符串转换为 BitmapImage
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+
+                // 处理绝对路径和相对路径（如果是网络图片，UriKind 选 Absolute）
+                image.UriSource = new Uri("pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/Sign/" + value.ToString(), UriKind.RelativeOrAbsolute);
+
+                // 性能优化：在加载时缓存，避免文件被占用
+                image.CacheOption = BitmapCacheOption.OnLoad;
+
+                image.EndInit();
+                return image;
             }
             
         }

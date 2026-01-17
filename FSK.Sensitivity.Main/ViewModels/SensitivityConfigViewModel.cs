@@ -168,7 +168,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         }
 
-        // 模拟下位机状态获取
+        
         private async Task<bool> IsMotionFinished()
         {
             return await motor.IsAllStop();
@@ -178,7 +178,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void NavigateToNextPage()
         {
             regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_SensitivityTraining
-                , new NavigationParameters() { { "sensitivityConfigParam", SensitivityConfigParam } });
+                , new NavigationParameters() { { nameof(SensitivityConfigParam), SensitivityConfigParam } });
         }
 
         public DelegateCommand BackCommand => new DelegateCommand(Back);
