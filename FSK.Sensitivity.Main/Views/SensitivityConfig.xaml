@@ -51,8 +51,8 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding CheckDuration}"  VerticalAlignment="Center" FontSize="60" Foreground="White"></TextBlock>
-                                <TextBlock Text="S"  FontWeight="Bold" Padding="0,0,0,5" VerticalAlignment="Bottom" FontSize="40" Margin="5,0,0,0" Foreground="White"></TextBlock>
+                                <TextBlock Text="{Binding CheckDuration}" Style="{StaticResource ConfigParamValueStyle}"></TextBlock>
+                                <TextBlock Text="S"  Style="{StaticResource ConfigParamMarkerStyle}" ></TextBlock>
                             </StackPanel>
                         </Grid>
                     </Grid>
@@ -87,8 +87,17 @@ CommandParameter="{x:Static enum:ItemsType.Distance}"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding CheckDistanceDisplay}"   VerticalAlignment="Center" FontSize="60" Foreground="White"></TextBlock>
-                                <TextBlock Text="m"  FontWeight="Bold" Padding="0,0,0,5" VerticalAlignment="Bottom" FontSize="40" Margin="5,0,0,0" Foreground="White"></TextBlock>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+
+
+                                    <TextBlock Text="{Binding CheckDistanceDisplay}"  Style="{StaticResource ConfigParamValueStyle}"></TextBlock>
+                                <TextBlock Grid.Column="1" Text="m"  Style="{StaticResource ConfigParamMarkerStyle}"></TextBlock>
+                                </Grid>
                             </StackPanel>
                         </Grid>
                     </Grid>
@@ -107,11 +116,11 @@ CommandParameter="{x:Static enum:ItemsType.Distance}"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" >
-                                <TextBlock Text="关"  VerticalAlignment="Center" FontSize="40" Foreground="White"></TextBlock>
+                                <TextBlock Text="关"  Style="{StaticResource ConfigParamValueStyle}" FontSize="40"></TextBlock>
                                 <ToggleButton IsChecked="{Binding IsLightOn, 
                     Converter={StaticResource LightStatusToBoolConverter},
-                    Mode=TwoWay}" Margin="5,9" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl},Path=DataContext.SwitchLightCommand}"  Height="60"  HorizontalAlignment="Center" Style="{StaticResource MyToggleButtonSwitchBaseStyle}" hc:VisualElement.HighlightBrush="{DynamicResource MainBrush}"/>
-                                <TextBlock Text="开"  VerticalAlignment="Center" FontSize="40" Foreground="White"></TextBlock>
+                    Mode=TwoWay}" Margin="5,9" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl},Path=DataContext.SwitchLightCommand}"  Height="40"  HorizontalAlignment="Center" Style="{StaticResource MyToggleButtonSwitchBaseStyle}" hc:VisualElement.HighlightBrush="{DynamicResource MainBrush}"/>
+                                <TextBlock Text="开"  Style="{StaticResource ConfigParamValueStyle}" FontSize="40"></TextBlock>
                             </StackPanel>
                         </Grid>
                     </Grid>
@@ -145,7 +154,7 @@ CommandParameter="{x:Static enum:ItemsType.Eyes}"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding EyesDisplay}"  VerticalAlignment="Bottom" FontSize="55"   Foreground="White"></TextBlock>
+                                <TextBlock Text="{Binding EyesDisplay}"  Style="{StaticResource ConfigParamValueStyle}"></TextBlock>
                             </StackPanel>
                         </Grid>
                     </Grid>
@@ -179,7 +188,7 @@ CommandParameter="{x:Static enum:ItemsType.DayTypes}"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding DayNightDisplay}"  VerticalAlignment="Bottom" FontSize="55"   Foreground="White"></TextBlock>
+                                <TextBlock Text="{Binding DayNightDisplay}"  Style="{StaticResource ConfigParamValueStyle}"></TextBlock>
                             </StackPanel>
                         </Grid>
                     </Grid>
@@ -213,8 +222,8 @@ CommandParameter="{x:Static enum:ItemsType.PD}"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding PD}"   VerticalAlignment="Center" FontSize="60" Foreground="White"></TextBlock>
-                                <TextBlock Text="mm"  FontWeight="Bold" Padding="0,0,0,5" VerticalAlignment="Bottom" FontSize="40" Margin="5,0,0,0" Foreground="White"></TextBlock>
+                                <TextBlock Text="{Binding PD}"   Style="{StaticResource ConfigParamValueStyle}"></TextBlock>
+                                <TextBlock Text="mm"  Style="{StaticResource ConfigParamMarkerStyle}"></TextBlock>
                             </StackPanel>
                         </Grid>
                     </Grid>
@@ -226,7 +235,7 @@ CommandParameter="{x:Static enum:ItemsType.PD}"/>
 
             </UniformGrid>
         </Grid>
-        <UniformGrid Grid.Row="1" Columns="2" Margin="10"  HorizontalAlignment="Center">
+        <UniformGrid Grid.Row="1" Columns="2" Margin="10"  HorizontalAlignment="Center" VerticalAlignment="Top">
             <Button Content="确认" Style="{DynamicResource SaveButton}"  Command="{Binding SaveCommand}"  Margin="90,5" ></Button>
             <Button Content="取消" Style="{DynamicResource CancleButton}" Command="{Binding BackCommand}" BorderThickness="2" >
                 

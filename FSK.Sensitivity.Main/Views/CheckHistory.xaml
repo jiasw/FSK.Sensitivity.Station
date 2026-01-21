@@ -63,20 +63,24 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                 <ColumnDefinition Width="190"/>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="White" FontSize="35" VerticalAlignment="Bottom" Margin="80,0">
+                <TextBlock Foreground="White" FontSize="35" VerticalAlignment="Bottom" Margin="20,0">
+    <Run Text="ID: "></Run>
+    <Run Text="{Binding Id} "></Run>
+                </TextBlock>
+                <TextBlock Foreground="White" FontSize="35" VerticalAlignment="Bottom" Margin="20,0">
                     <Run Text="姓名: "></Run>
-                    <Run Text="张三 "></Run>
+                    <Run Text="{Binding Name} "></Run>
                 </TextBlock>
-                <TextBlock Foreground="White" FontSize="35" VerticalAlignment="Bottom" Margin="80,0">
+                <TextBlock Foreground="White" FontSize="35" VerticalAlignment="Bottom" Margin="20,0">
     <Run Text="年龄: "></Run>
-    <Run Text="18 "></Run>
+    <Run Text="{Binding Age} "></Run>
                 </TextBlock>
-                <TextBlock Foreground="White" FontSize="35" VerticalAlignment="Bottom" Margin="80,0">
+                <TextBlock Foreground="White" FontSize="35" VerticalAlignment="Bottom" Margin="20,0">
 <Run Text="检查时间: "></Run>
-<Run Text="2021-01-01 "></Run>
+<Run Text="{Binding Date} "></Run>
                 </TextBlock>
             </StackPanel>
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <StackPanel Grid.Column="1" Orientation="Horizontal" >
                 <Button  hc:IconElement.Geometry="{StaticResource LeftGeometry}" hc:IconElement.Width="35" Margin="10,0" Style="{DynamicResource NavButton}" Width="60"></Button>
                 <Button  hc:IconElement.Geometry="{StaticResource RightGeometry}" hc:IconElement.Width="35"  Style="{DynamicResource NavButton}" Width="60"></Button>
             </StackPanel>

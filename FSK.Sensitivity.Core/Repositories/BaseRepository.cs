@@ -55,7 +55,7 @@ namespace FSK.Sensitivity.Core.Repositories
         /// </summary>
         /// <param name="entity">博文实体类</param>
         /// <returns></returns>
-        public async Task<long> Add(TEntity entity)
+        public async Task<int> Add(TEntity entity)
         {
             //var i = await Task.Run(() => sqlSugarClient.Insertable(entity).ExecuteReturnBigIdentity());
             ////返回的i是long类型,这里你可以根据你的业务需要进行处理
@@ -66,7 +66,8 @@ namespace FSK.Sensitivity.Core.Repositories
             //这里你可以返回TEntity，这样的话就可以获取id值，无论主键是什么类型
             //var return3 = await insert.ExecuteReturnEntityAsync();
 
-            return await insert.ExecuteReturnSnowflakeIdAsync();
+            return await insert.ExecuteReturnIdentityAsync();
+            
         }
 
         /// <summary>

@@ -84,6 +84,11 @@ namespace FSK.Sensitivity.Core.Const
         /// </summary>
         public const int ContrastWaitDuration = 30;
 
+        /// <summary>
+        /// 暗环境适应检查时长,单位：秒
+        /// </summary>
+        public const int ContrastDuration = 30;
+
 
 
         /// <summary>

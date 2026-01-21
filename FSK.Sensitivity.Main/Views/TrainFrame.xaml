@@ -11,17 +11,17 @@ prism:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="90"></RowDefinition>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="180"/>
+                <ColumnDefinition Width="160"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="290"/>
             </Grid.ColumnDefinitions>
-            <Button  Command="{Binding BackCommand}" VerticalAlignment="Center" hc:IconElement.Geometry="{StaticResource BackGeometry}" hc:IconElement.Width="55"  Style="{DynamicResource NavButton}"  Width="80" Height="70"></Button>
-            <Button Command="{Binding ListResultCommand}" Visibility="{Binding ShowLogButton}" Height="70" Grid.Column="3"  Content="检查记录" hc:IconElement.Geometry="{StaticResource PageModeGeometry}" hc:IconElement.Width="35" hc:IconElement.Height="35"  Style="{DynamicResource NavButton}"></Button>
+            <Button  Command="{Binding BackCommand}" VerticalAlignment="Center" hc:IconElement.Geometry="{StaticResource BackGeometry}" hc:IconElement.Width="55"  Style="{DynamicResource NavButton}"  Width="80"></Button>
+            <Button Command="{Binding ListResultCommand}" Visibility="{Binding ShowLogButton}"  Grid.Column="3"  Content="检查记录" hc:IconElement.Geometry="{StaticResource PageModeGeometry}" hc:IconElement.Width="35" hc:IconElement.Height="35"  Style="{DynamicResource NavButton}"></Button>
 
         </Grid>
         <ContentControl Grid.Row="1" prism:RegionManager.RegionName="TrainRegion"  ></ContentControl>

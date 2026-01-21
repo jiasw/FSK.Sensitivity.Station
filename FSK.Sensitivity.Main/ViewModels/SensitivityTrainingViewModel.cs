@@ -238,15 +238,61 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref _checkUserModel, value); }
         }
 
-
-        private BitmapImage _signImage;
-        public BitmapImage SignImage
+        //操作界面视标背景
+        private SolidColorBrush _backgroundSource;
+        //操作界面视标背景
+        public SolidColorBrush BackgroundSource
         {
-            get { return _signImage; }
-            set { SetProperty(ref _signImage, value); }
+            get => _backgroundSource;
+            set => SetProperty(ref _backgroundSource, value);
         }
 
-        
+        private bool _isClicked = false;
+        /// <summary>
+        /// 是否点击了确认按钮
+        /// </summary>
+        public bool IsClicked
+        {
+            get { return _isClicked; }
+            set { SetProperty(ref _isClicked, value); }
+        }
+
+
+        private string _signPath;
+        /// <summary>
+        /// 操作界面显示视标名称
+        /// </summary>
+        public string SignPath
+        {
+            get
+            {
+                return _signPath;
+            }
+            set
+            {
+                SetProperty(ref _signPath, value);
+
+                if (string.IsNullOrWhiteSpace(_signPath))
+                {
+                    ShowSign = Visibility.Collapsed;
+                }
+                else
+                {
+                    ShowSign = Visibility.Visible;
+                }
+                RaisePropertyChanged(nameof(ShowSign));
+            }
+        }
+
+        private Visibility _showSign = Visibility.Collapsed;
+        public Visibility ShowSign
+        {
+            get { return _showSign; }
+            set { SetProperty(ref _showSign, value); }
+        }
+
+
+
         private Queue<CSFTrainModel> TrainModelsQueue = new Queue<CSFTrainModel>();
 
 
@@ -278,16 +324,13 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void RefreshSignImage()
         {
             string imageName = GetSignName();
-            string imagePath = "pack://application:,,,/FSK.Sensitivity.Main;component/Resource/Images/Sign/" + imageName;
-            BitmapImage bitmapImage = new BitmapImage(new Uri(imagePath));
-            bitmapImage.Freeze();
             string signName = "t" + imageName.Substring(1);
             SignBackGround signBackGround = CheckUserModel.DayNight==Core.Enums.DayOrNight.Day? SignBackGround.White : SignBackGround.Black;
             
            Application.Current.Dispatcher.Invoke(() =>
             {
                 sensitivitySignChangeEvent.Publish(new SensitivityChangeSignOptions() { PicturePath = signName, BackgroundBrush = signBackGround });
-                SignImage = bitmapImage;
+                SignPath = imageName;
             });
         }
         private string GetSignName()

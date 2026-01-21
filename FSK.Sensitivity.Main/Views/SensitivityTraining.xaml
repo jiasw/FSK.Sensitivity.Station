@@ -4,18 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FSK.Sensitivity.Main.Views"
+              xmlns:cvt="clr-namespace:FSK.Sensitivity.Main.Converters"
             xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:lcext="clr-namespace:FSK.Sensitivity.Main.Controls.Extend"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" 
              mc:Ignorable="d" 
-             d:DesignHeight="768" d:DesignWidth="1280">
+             d:DesignHeight="468" d:DesignWidth="980">
     <UserControl.Resources>
+        <cvt:BackgroundConverter x:Key="BackgroundConverter"/>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <SolidColorBrush Color="#66FFFFFF" x:Key="BordelBackGround"></SolidColorBrush>
         <Style x:Key="txtTitle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="FontSize" Value="18"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="White"></Setter>
@@ -35,25 +37,25 @@
     <Grid>
         <Grid.RowDefinitions>
             
-            <RowDefinition Height="240"/>
             <RowDefinition Height="2*"/>
+            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
         
         <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="240"/>
             </Grid.ColumnDefinitions>
-            <Border Style="{DynamicResource ConfigParamBorderStyle}">
+            <Border Style="{DynamicResource ConfigParamBorderStyle}" >
 
                 <Grid Margin="10" DataContext="{Binding CheckUserModel}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.2*"/>
-                        <ColumnDefinition Width="*" MinWidth="100"/>
-                        <ColumnDefinition Width="1.2*" />
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="1.5*" />
+                        <ColumnDefinition Width="60" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="1.2*"/>
+                        <ColumnDefinition Width="60"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -62,31 +64,20 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Column="0"  Style="{StaticResource txtTitle}">
-                            <Run Text="ID"/>
+                            <Run Text="项目"/>
                             <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Column="1" Text="{Binding Id}" Grid.ColumnSpan="4" Style="{StaticResource txtValue}"/>
-                    <TextBlock  Grid.Row="2"  Style="{StaticResource txtTitle}">
+                    <TextBlock  Grid.Column="1" Text="对比敏感度" Grid.ColumnSpan="4" Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Column="4"  Style="{StaticResource txtTitle}">
         <Run Text="年龄"/>
         <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Row="2"  Grid.Column="1"  Text="{Binding Age}"  Style="{StaticResource txtValue}"/>
-                    <TextBlock  Grid.Row="2" Grid.Column="2"  Style="{StaticResource txtTitle}">
-<Run Text="性别"/>
+                    <TextBlock    Grid.Column="5"  Text="{Binding Age}"  Style="{StaticResource txtValue}"/>
+                    <TextBlock Grid.Column="0"  Grid.Row="1" Style="{StaticResource txtTitle}">
+<Run Text="ID"/>
 <Run Text="："/>
                     </TextBlock>
-                    <TextBlock   Grid.Row="2" Grid.Column="3" Text="{Binding Gender}"  Style="{StaticResource txtValue}"/>
-                    <TextBlock  Grid.Row="2" Grid.Column="4"  Style="{StaticResource txtTitle}">
-<Run Text="日夜"/>
-<Run Text="："/>
-                    </TextBlock>
-                    <TextBlock   Grid.Row="2" Grid.Column="5" Text="{Binding DayNigthDesc}"  Style="{StaticResource txtValue}"/>
-
-                    <TextBlock Grid.Column="0" Grid.Row="1"   Style="{StaticResource txtTitle}">
-<Run Text="姓名"/>
-<Run Text="："/>
-                    </TextBlock>
-                    <TextBlock  Grid.Column="1" Grid.Row="1" Text="{Binding Name}"  TextWrapping="WrapWithOverflow" Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Column="1"  Grid.Row="1" Text="{Binding Id}"  Style="{StaticResource txtValue}"/>
 
                     <TextBlock Grid.Column="2"  Grid.Row="1" Style="{StaticResource txtTitle}">
         <Run Text="瞳距"/>
@@ -98,13 +89,60 @@
 <Run Text="："/>
                     </TextBlock>
                     <TextBlock  Grid.Column="5"  Grid.Row="1" Text="{Binding LightDesc}"  Style="{StaticResource txtValue}"/>
+
+                    <TextBlock Grid.Column="0" Grid.Row="2"   Style="{StaticResource txtTitle}">
+<Run Text="姓名"/>
+<Run Text="："/>
+                    </TextBlock>
+                    <TextBlock  Grid.Column="1" Grid.Row="2" Text="{Binding Name}"  TextWrapping="WrapWithOverflow" Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Row="2" Grid.Column="2"  Style="{StaticResource txtTitle}">
+<Run Text="性别"/>
+<Run Text="："/>
+                    </TextBlock>
+                    <TextBlock   Grid.Row="2" Grid.Column="3" Text="{Binding Gender}"  Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Row="2" Grid.Column="4"  Style="{StaticResource txtTitle}">
+<Run Text="日夜"/>
+<Run Text="："/>
+                    </TextBlock>
+                    <TextBlock   Grid.Row="2" Grid.Column="5" Text="{Binding DayNigthDesc}"  Style="{StaticResource txtValue}"/>
+
                 </Grid>
                 
             </Border>
-            <Border Grid.Column="1" Style="{DynamicResource TrainSignBorderStyle}">
-                <Border.Background>
-                    <ImageBrush RenderOptions.BitmapScalingMode="HighQuality"  Stretch="Fill" ImageSource="{Binding SignImage}"></ImageBrush>
-                </Border.Background>
+            <Border Grid.Column="1" Style="{DynamicResource TrainSignBorderStyle}"  Background="White" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="1.2*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <Border CornerRadius="4" Margin="30,0"  Visibility="{Binding ShowSign}" >
+                        <Border.Background>
+                            <ImageBrush Stretch="Fill"  RenderOptions.BitmapScalingMode="HighQuality" ImageSource="{Binding SignPath,Converter={StaticResource BackgroundConverter}}"></ImageBrush>
+                        </Border.Background>
+                    </Border>
+                    <Grid Grid.Row="1" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <RadioButton lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}"  HorizontalContentAlignment="Center"  VerticalContentAlignment="Top"  GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="1"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=2}" Content="2"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=3}" Content="3"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=4}" Content="4"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=5}" Content="5"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=6}" Content="6"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=7}" Content="7"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=8}" Content="8"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=9}" Content="9"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            
+                        </StackPanel>
+                    </Grid>
+                </Grid>
             </Border>
             <Grid Grid.Column="2" Margin="0,5" DataContext="{Binding ArrowButtonStauts}">
                 <Grid.ColumnDefinitions>
@@ -181,7 +219,7 @@
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
                     <Border BorderThickness="0,0,0,3" BorderBrush="#FF999999">
-                        <TextBlock FontSize="28" Foreground="White" Opacity=".9" VerticalAlignment="Center" >
+                        <TextBlock FontSize="28" Foreground="White" Opacity=".9" HorizontalAlignment="Center" VerticalAlignment="Center" >
                             <Run Text="{Binding TrainStatusText}"></Run>
                             <Run Text="："></Run>
                             <Run Text="左眼检查项目"></Run>
@@ -199,7 +237,7 @@
                         <Border CornerRadius="5"  Margin="0,0,10,0" >
                             <Image gif:AnimationBehavior.SourceUri="/FSK.Sensitivity.Main;component/Resource/Images/leftEye.gif"  />
                         </Border>
-                        <Border CornerRadius="5" Grid.Row="1"  Margin="0,20,10,0" Background="{StaticResource BordelBackGround}" >
+                        <Border CornerRadius="5" Grid.Row="1"  Margin="0,10,10,0" Background="{StaticResource BordelBackGround}" >
                             <UniformGrid Rows="2" Visibility="{Binding IsTraining, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <TextBlock Margin="10,0" VerticalAlignment="Bottom" Foreground="White" FontSize="16">项目执行中...</TextBlock>
                                 <ProgressBar Margin="10,0"  Style="{StaticResource ProgressBarSuccess}"  Foreground="{StaticResource MainBrush}" IsIndeterminate="True" Value="0" Maximum="100" />
@@ -219,12 +257,12 @@
                                 <TextBlock Grid.Row="1" Style="{StaticResource txtParam}"  >
                                     <Run Text="AT:"></Run>
                                     <Run Text="{Binding AT}"></Run>
-                                    <Run Text="S"></Run>
+                                    <Run Text="s"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="2"  Style="{StaticResource txtParam}">
                                     <Run Text="RT:"></Run>
                                     <Run Text="{Binding RT}"></Run>
-                                    <Run Text="S"></Run>
+                                    <Run Text="s"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="3"  Style="{StaticResource txtParam}">
     <Run Text="VA:"></Run>
@@ -233,7 +271,7 @@
                                 <TextBlock Grid.Row="4"  Style="{StaticResource txtParam}">
 <Run Text="距离:"></Run>
 <Run Text="{Binding DistanceText}"></Run>
-<Run Text="M"></Run>
+<Run Text="m"></Run>
                                 </TextBlock>
                             </Grid>
                         </Border>
@@ -250,7 +288,7 @@
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
                     <Border BorderThickness="0,0,0,3" BorderBrush="#FF999999">
-                        <TextBlock FontSize="28" Foreground="White" Opacity=".9" VerticalAlignment="Center" >
+                        <TextBlock FontSize="28" Foreground="White" Opacity=".9"  HorizontalAlignment="Center" VerticalAlignment="Center" >
                             <Run Text="{Binding TrainStatusText}"></Run>
                             <Run Text="："></Run>
                             <Run Text="右眼检查项目"></Run>
@@ -288,12 +326,12 @@
                                 <TextBlock Grid.Row="1" Style="{StaticResource txtParam}">
                                     <Run Text="AT:"></Run>
                                     <Run Text="{Binding AT}"></Run>
-                                    <Run Text="S"></Run>
+                                    <Run Text="s"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="2"  Style="{StaticResource txtParam}">
                                     <Run Text="RT:"></Run>
                                     <Run Text="{Binding RT}"></Run>
-                                    <Run Text="S"></Run>
+                                    <Run Text="s"></Run>
                                 </TextBlock>
                                 <TextBlock Grid.Row="3"  Style="{StaticResource txtParam}">
     <Run Text="VA:"></Run>
@@ -302,7 +340,7 @@
                                 <TextBlock Grid.Row="4"  Style="{StaticResource txtParam}">
 <Run Text="距离:"></Run>
 <Run Text="{Binding DistanceText}"></Run>
-<Run Text="M"></Run>
+<Run Text="m"></Run>
                                 </TextBlock>
                             </Grid>
                         </Border>

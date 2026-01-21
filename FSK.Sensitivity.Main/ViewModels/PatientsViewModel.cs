@@ -2,12 +2,14 @@
 using FSK.Sensitivity.Core.Entity;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Repositories;
+using FSK.Sensitivity.Main.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
@@ -66,15 +68,19 @@ public DelegateCommand NextCmd => new DelegateCommand(async () =>
 
         private async Task<PageModel<Patient>> LoadData(int pageIndex = 1)
         {
-            PageModel<Patient> pageModel = await patientRepository.QueryPage(n => n.Id > 0, pageIndex, pageSize);
+            PageModel<Patient> pageModel = await patientRepository.QueryPage(n => n.IsDeleted == false, pageIndex, pageSize);
             TotalPage = pageModel.pageCount;
             Mangers = new ObservableCollection<Patient>(pageModel.data);
             return pageModel;
         }
         public DelegateCommand<Patient> DeleteMangerCommand => new DelegateCommand<Patient>(async (n) =>
         {
-            await patientRepository.DeleteById(n.Id);
-            await LoadData(PageIndex);
+           if( MessageBoxService.Instance.ShowConfirm("确定删除吗？")== MessageBoxResult.Yes)
+            {
+                n.IsDeleted = true;
+                await patientRepository.Update(n);
+                await LoadData(PageIndex);
+            }
         });
 
         public DelegateCommand<Patient> EditMangerCommand => new DelegateCommand<Patient>(async (n) =>

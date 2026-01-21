@@ -16,7 +16,7 @@
         <cvt:BackgroundConverter x:Key="BackgroundConverter"/>
         <SolidColorBrush Color="#66FFFFFF" x:Key="BordelBackGround"></SolidColorBrush>
         <Style x:Key="txtTitle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeInfo}"/>
+            <Setter Property="FontSize" Value="18"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="White"></Setter>
@@ -27,7 +27,7 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <Style x:Key="txtParam" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="{StaticResource FontSizelabel}"/>
+            <Setter Property="FontSize" Value="16"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="White"></Setter>
@@ -37,19 +37,19 @@
     <Grid>
         <Grid.RowDefinitions>
 
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="1.2*"/>
         </Grid.RowDefinitions>
 
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="240"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1.2*"/>
             </Grid.ColumnDefinitions>
             <Border Style="{DynamicResource ConfigParamBorderStyle}">
 
-                <Grid Margin="10,0">
+                <Grid Margin="10,0"  DataContext="{Binding CheckUserModel}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="2*" />
@@ -72,28 +72,28 @@
 <Run Text="编号"/>
 <Run Text="："/>
                     </TextBlock>
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="0000001" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Id}" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
                     <TextBlock Grid.Row="2" Grid.Column="2"  Style="{StaticResource txtTitle}">
 <Run Text="年龄"/>
 <Run Text="："/>
                     </TextBlock>
-                    <TextBlock Grid.Row="2" Grid.Column="3" Text="30" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding Age}" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
 
                     <TextBlock Grid.Row="3" Grid.Column="0"  Style="{StaticResource txtTitle}">
         <Run Text="姓名"/>
         <Run Text="："/>
                     </TextBlock>
-                    <TextBlock Grid.Row="3" Grid.Column="1" Text="古力娜扎" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Name}" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
                     <TextBlock Grid.Row="3" Grid.Column="2"  Style="{StaticResource txtTitle}">
 <Run Text="性别"/>
 <Run Text="："/>
                     </TextBlock>
-                    <TextBlock Grid.Row="3" Grid.Column="3" Text="男" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding Gender}" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
 
                 </Grid>
 
             </Border>
-            <Border Grid.Column="1" Style="{DynamicResource TrainSignBorderStyle}" Background="{Binding BackgroundSource}">
+            <Border Grid.Column="1" Padding="0" Style="{DynamicResource TrainSignBorderStyle}" Background="{Binding BackgroundSource}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="3*"/>
@@ -101,9 +101,9 @@
                     </Grid.RowDefinitions>
 
 
-                    <Border CornerRadius="4" Margin="30,5" Visibility="{Binding ShowSign}" >
+                    <Border CornerRadius="4" Margin="30,5"  Visibility="{Binding ShowSign}" >
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding SignPath,Converter={StaticResource BackgroundConverter}}"></ImageBrush>
+                            <ImageBrush Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" ImageSource="{Binding SignPath,Converter={StaticResource BackgroundConverter}}"></ImageBrush>
                         </Border.Background>
                     </Border>
                     <Grid Grid.Row="1">
@@ -112,25 +112,25 @@
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <RadioButton HorizontalContentAlignment="Center"  VerticalContentAlignment="Top"  GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="1"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
-                            <RadioButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="2"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
-                            <RadioButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="3"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
-                            <RadioButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="4"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
-                            <RadioButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="5"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}"  HorizontalContentAlignment="Center"  VerticalContentAlignment="Top"  GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="1"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=2}" Content="2"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=3}" Content="3"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=4}" Content="4"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=5}" Content="5"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <RadioButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="1"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
-                            <RadioButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="2"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
-                            <RadioButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="3"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
-                            <RadioButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="4"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
-                            
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=6}" Content="6"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=7}" Content="7"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=8}" Content="8"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=9}" Content="9"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
+                            <RadioButton  lcext:ButtonClickAttach.IsButtonClick="{Binding IsClicked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" GroupName="SelectSign"  IsChecked="{Binding SignSelectIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=10}" Content="10"   Style="{StaticResource SignToggleDisplayButtonBaseStyle}"/>
                         </StackPanel>
                     </Grid>
                 </Grid>
                 
                 
             </Border>
-            <Grid Grid.Column="2" Margin="0,5" DataContext="{Binding ArrowButtonStauts}">
+            <Grid Grid.Column="2" Margin="5,10" DataContext="{Binding ArrowButtonStauts}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -194,6 +194,7 @@
                 <Button  Grid.Row="2"  hc:IconElement.Geometry="{StaticResource RotateLeftGeometry}"  Style="{DynamicResource ArrowButton}" Command="{Binding Path=DataContext.RefreshCommand,RelativeSource={RelativeSource AncestorType=UserControl}}" RenderTransformOrigin="0.5,0.5">
 
                 </Button>
+                
 
             </Grid>
         </Grid>

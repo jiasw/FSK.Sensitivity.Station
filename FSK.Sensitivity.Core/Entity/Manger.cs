@@ -27,7 +27,9 @@ namespace FSK.Sensitivity.Core.Entity
                 }
                 else
                 {
-                    return EnumExtensions.Genders.Where(g => g.Key == gender).FirstOrDefault().Value;
+                    int typecode = int.Parse(gender);
+                    var enumModel = EnumExtensions.ToEnumModelList<Gender>().FirstOrDefault(t => t.Value == typecode);
+                    return enumModel?.Description ?? "";
                 }
             }
         }
@@ -36,7 +38,7 @@ namespace FSK.Sensitivity.Core.Entity
 
         public string phone { get; set; }
 
-        public string password { get; set; }
+        public string password { get; set; } = "112233";
 
         public string type { get; set; }
         [SqlSugar.SugarColumn(IsIgnore = true)]
@@ -52,7 +54,7 @@ namespace FSK.Sensitivity.Core.Entity
                 {
                     int typecode = int.Parse(type);
                     var enumModel = EnumExtensions.ToEnumModelList<UserType>().FirstOrDefault(t => t.Value == typecode);
-                    return enumModel?.Name ?? "";
+                    return enumModel?.Description ?? "";
                 }
             }
         }

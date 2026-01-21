@@ -22,4 +22,17 @@ namespace FSK.Sensitivity.Core.Enums
         [Description("男 ")]
         Male = 1
     }
+
+    /// <summary>
+    /// 检查结果
+    /// </summary>
+    public enum CheckResult
+    {
+
+        [Description("正常")]
+        Normal=0,
+        [Description("异常")]
+        Abnormal
+
+    }
 }

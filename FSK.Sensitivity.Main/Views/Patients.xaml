@@ -19,11 +19,11 @@ prism:ViewModelLocator.AutoWireViewModel="True"
     <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="300"/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-        <Button Content="新增" Style="{StaticResource NavButton}" Width="150" HorizontalAlignment="Right" Margin="50,10" Command="{Binding AddMangerCommand}"></Button>
-        <ListView Grid.Row="1" Style="{StaticResource MyCommonListViewStyle}" ItemsSource="{Binding Mangers}" >
+        <Button Content="新增" Style="{StaticResource NavButton}" Width="120" HorizontalAlignment="Right" Margin="50,10" Command="{Binding AddMangerCommand}"></Button>
+        <ListView Grid.Row="1" Style="{StaticResource MyCommonListViewStyle}" ItemsSource="{Binding Mangers}" Margin="30,0" >
 
 
             <ListView.View>
@@ -35,19 +35,19 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock  FontSize="20"
-    Text="{Binding LoginName}"  
+    Text="{Binding LoginName}"  Style="{StaticResource ListViewTextStyle}"  
 />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="100" >
+                    <GridViewColumn Width="90" >
                         <GridViewColumn.Header>
                             <TextBlock Text="姓名"  HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"
-    Text="{Binding PatientName}"  
+                                <TextBlock  
+    Text="{Binding PatientName}"  Style="{StaticResource ListViewTextStyle}"  
 />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -60,7 +60,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding Phone}"   />
+                                <TextBlock    Text="{Binding Phone}" Style="{StaticResource ListViewTextStyle}"    />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -68,7 +68,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                     <GridViewColumn Width="100" Header="身份证号"  >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding IdCard}"    />
+                                <TextBlock    Text="{Binding IdCard}" Style="{StaticResource ListViewTextStyle}"     />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -76,7 +76,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                     <GridViewColumn Width="80" Header="年龄"  >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding Age}"   />
+                                <TextBlock    Text="{Binding Age}" Style="{StaticResource ListViewTextStyle}"    />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -84,7 +84,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                     <GridViewColumn Width="80" Header="性别" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding Gender}"   />
+                                <TextBlock   Text="{Binding Gender}" Style="{StaticResource ListViewTextStyle}"   />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -92,32 +92,32 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                     <GridViewColumn Width="100" Header="学校" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding School}"   />
+                                <TextBlock    Text="{Binding School}" Style="{StaticResource ListViewTextStyle}"    />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="80" Header="年级" >
+                    <GridViewColumn Width="60" Header="年级" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding Grade}"   />
+                                <TextBlock   Text="{Binding Grade}" Style="{StaticResource ListViewTextStyle}"    />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="80" Header="班级" >
+                    <GridViewColumn Width="60" Header="班级" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock  FontSize="20"  Text="{Binding Class}"   />
+                                <TextBlock    Text="{Binding Class}" Style="{StaticResource ListViewTextStyle}"    />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="操作" Width="190" >
+                    <GridViewColumn Header="操作" Width="180" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel  Orientation="Horizontal">
-                                    <Button Content="编辑" Padding="5,0,5,0" Margin="5,0,15,0" FontSize="20" Height="35" Style="{StaticResource ButtonInfo}" Command="{Binding DataContext.EditMangerCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"  CommandParameter="{Binding}"   />
-                                    <Button Content="删除" Padding="5,0,5,0" Margin="15,0,5,0" FontSize="20" Height="35" Style="{StaticResource ButtonDanger}" Command="{Binding DataContext.DeleteMangerCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
+                                    <Button Content="编辑" Padding="5,0,5,0" Margin="10,0" FontSize="20" Height="35" Style="{StaticResource ButtonInfo}" Command="{Binding DataContext.EditMangerCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"  CommandParameter="{Binding}"   />
+                                    <Button Content="删除" Padding="5,0,5,0" Margin="10,0" FontSize="20" Height="35" Style="{StaticResource ButtonDanger}" Command="{Binding DataContext.DeleteMangerCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -125,7 +125,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                 </GridView>
             </ListView.View>
         </ListView>
-        <ctl:Pagination Grid.Row="2"  Margin="0,20,0,50" TotalPages="{Binding  TotalPage}" CurrentPage="{Binding PageIndex,Mode=TwoWay}" PreviousCommand="{Binding PrevCmd}" NextCommand="{Binding NextCmd}" >
+        <ctl:Pagination Grid.Row="2"  Margin="0,10" TotalPages="{Binding  TotalPage}" CurrentPage="{Binding PageIndex,Mode=TwoWay}" PreviousCommand="{Binding PrevCmd}" NextCommand="{Binding NextCmd}" >
             
         </ctl:Pagination>
     </Grid>

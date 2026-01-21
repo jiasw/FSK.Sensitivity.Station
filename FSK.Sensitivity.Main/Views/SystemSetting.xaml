@@ -70,9 +70,9 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             <Setter Property="Height" Value="60" />
         </Style>
     </UserControl.Resources>
-    
-        
-        <UniformGrid Columns="3" HorizontalAlignment="Center"  >
+
+    <Border Padding="20,20">
+        <UniformGrid Columns="3" HorizontalAlignment="Center"   >
             <Button  Style="{StaticResource SettingButton}" Command="{Binding StoreSettingCommand}" >
 
                 <Border Style="{StaticResource ItemsBoder}" Background="{DynamicResource MainBrush}" >
@@ -165,5 +165,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             </Button>
 
         </UniformGrid>
-   
+
+    </Border>
+       
 </UserControl>

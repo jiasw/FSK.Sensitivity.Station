@@ -73,7 +73,9 @@
         
         
     </Style>
-
+    <Style x:Key="ListViewTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18"></Setter>
+    </Style>
     <Style x:Key="NormalTextStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}"></Setter>
         <Setter Property="Foreground" Value="{StaticResource MainBrush}"></Setter>
@@ -186,24 +188,24 @@
     </Style>
 
     <Style x:Key="ArrowButton" TargetType="Button" BasedOn="{StaticResource NormalButton}">
-        <Setter Property="Width" Value="70" />
-        <Setter Property="Height" Value="70" />
+        <Setter Property="Width" Value="50" />
+        <Setter Property="Height" Value="50" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="hc:BorderElement.CornerRadius" Value="5"/>
-        <Setter Property="hc:IconElement.Width" Value="50" />
-        <Setter Property="hc:IconElement.Height" Value="50" />
+        <Setter Property="hc:IconElement.Width" Value="40" />
+        <Setter Property="hc:IconElement.Height" Value="40" />
         <Setter Property="Padding" Value="3" />
         <Setter Property="Opacity" Value="1" />
        
     </Style>
 
     <Style x:Key="ArrowButtontwinkle" TargetType="Button" BasedOn="{StaticResource NormalButton}">
-        <Setter Property="Width" Value="70" />
-        <Setter Property="Height" Value="70" />
+        <Setter Property="Width" Value="50" />
+        <Setter Property="Height" Value="50" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="hc:BorderElement.CornerRadius" Value="5"/>
-        <Setter Property="hc:IconElement.Width" Value="50" />
-        <Setter Property="hc:IconElement.Height" Value="50" />
+        <Setter Property="hc:IconElement.Width" Value="40" />
+        <Setter Property="hc:IconElement.Height" Value="40" />
         <Setter Property="Padding" Value="3" />
         <Setter Property="Opacity" Value="1" />
         <Style.Triggers>
@@ -312,11 +314,31 @@
 
     <Style x:Key="ConfigParamTitleStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontSize" Value="30" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="Opacity" Value="0.7" />
+        <Setter Property="Opacity" Value="0.8" />
+    </Style>
+    <Style x:Key="ConfigParamValueStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="50" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Opacity" Value="0.8" />
+    </Style>
+    <Style x:Key="ConfigParamMarkerStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontWeight" Value="Bold"></Setter>
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Opacity" Value="0.8" />
+        <Setter Property="LineHeight" Value="40"></Setter>
+        <Setter Property="Margin" Value="5,0,0,0"></Setter>
     </Style>
 
     <Style x:Key="MyToggleButtonSwitchBaseStyle" BasedOn="{StaticResource BaseStyle}" TargetType="ToggleButton">
@@ -640,8 +662,8 @@
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="Margin" Value="0,0,0,4"/>
         <Setter Property="Padding" Value="{StaticResource DefaultControlPadding}"/>
-        <Setter Property="MinHeight" Value="44"/>
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="MinHeight" Value="50"/>
+        <Setter Property="FontSize" Value="12"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
@@ -821,21 +843,116 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="SignToggleButtonBaseStyle" BasedOn="{StaticResource SignButtonBaseStyle}" TargetType="ToggleButton">
-        
+    <Style x:Key="SignToggleButtonBaseStyle"  TargetType="ToggleButton">
+        <Setter Property="BorderThickness" Value="4"/>
         <Setter Property="Width" Value="120"/>
         <Setter Property="Height" Value="120"/>
         <Setter Property="Margin" Value="20,0"/>
         <Setter Property="FontSize" Value="84"></Setter>
-        
-    </Style>
-    <Style x:Key="SignToggleDisplayButtonBaseStyle" BasedOn="{StaticResource SignButtonBaseStyle}" TargetType="ToggleButton">
+        <Setter Property="hc:BorderElement.CornerRadius" Value="4"/>
+        <Setter Property="Foreground" Value="{DynamicResource MainBrush}"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource MainBrush}"></Setter>
 
-        <Setter Property="Width" Value="50"/>
-        <Setter Property="Height" Value="45"/>
-        <Setter Property="Margin" Value="10,2"/>
-        <Setter Property="FontSize" Value="30"></Setter>
-        
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <hc:SimplePanel>
+                        <Border Background="{TemplateBinding Background}" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}"/>
+                        <Border BorderThickness="4" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}">
+                            <ContentPresenter x:Name="ContentPresenterMain" HorizontalAlignment="Center" RecognizesAccessKey="True" VerticalAlignment="Center" Margin="0,0,0,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+
+                        </Border>
+                        <Border Margin="-1" Visibility="Collapsed" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}" x:Name="BorderChecked" BorderThickness="4" BorderBrush="{DynamicResource MainBrush}"/>
+                    </hc:SimplePanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter TargetName="BorderChecked" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="Content" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="ContentPresenterMain"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value=".9"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Opacity" Value=".6"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Foreground" Value="White"></Setter>
+                <Setter Property="Background" Value="{DynamicResource MainBrush}"></Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="SignToggleDisplayButtonBaseStyle" BasedOn="{StaticResource ButtonBaseBaseStyle}" TargetType="ToggleButton">
+
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Margin" Value="10,1"/>
+        <Setter Property="FontSize" Value="16"></Setter>
+        <Setter Property="BorderThickness" Value="2"/>
+
+        <Setter Property="hc:BorderElement.CornerRadius" Value="2"/>
+        <Setter Property="Foreground" Value="{DynamicResource MainBrush}"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource MainBrush}"></Setter>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <hc:SimplePanel>
+                        <Border Background="{TemplateBinding Background}" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}"/>
+                        <Border BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}">
+                            <ContentPresenter x:Name="ContentPresenterMain" HorizontalAlignment="Center" RecognizesAccessKey="True" VerticalAlignment="Center" Margin="0,0,0,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+
+                        </Border>
+                        <Border Margin="-1" Visibility="Collapsed" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}" x:Name="BorderChecked" BorderThickness="4" BorderBrush="{DynamicResource MainBrush}"/>
+                    </hc:SimplePanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter TargetName="BorderChecked" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="Content" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="ContentPresenterMain"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value=".9"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Opacity" Value=".6"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Foreground" Value="White"></Setter>
+                <Setter Property="Background" Value="{DynamicResource MainBrush}"></Setter>
+            </Trigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Path=IsChecked, RelativeSource={RelativeSource Self}}" Value="True"/>
+                    <Condition Binding="{Binding Path=(lcext:ButtonClickAttach.IsButtonClick), RelativeSource={RelativeSource Self}}" Value="True"/>
+                </MultiDataTrigger.Conditions>
+               
+                <MultiDataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+Storyboard.TargetProperty="Opacity" From="1"
+To=".6" Duration="0:0:0.1" AutoReverse="True" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </MultiDataTrigger.EnterActions>
+            </MultiDataTrigger>
+           
+        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>

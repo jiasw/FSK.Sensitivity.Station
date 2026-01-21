@@ -19,8 +19,8 @@
             <Setter Property="WindowStyle" Value="None"></Setter>
             <Setter Property="AllowsTransparency" Value="True"></Setter>
             <Setter Property="Background" Value="Transparent"></Setter>
-            <Setter Property="Width" Value="1000"></Setter>
-            <Setter Property="Height" Value="700"></Setter>
+            <Setter Property="Width" Value="800"></Setter>
+            <Setter Property="Height" Value="550"></Setter>
             <Setter Property="Focusable" Value="True"></Setter>
         </Style>
     </prism:Dialog.WindowStyle>
@@ -41,7 +41,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button  Content="{Binding Name}"  FontSize="30" Margin="10,10" hc:BorderElement.CornerRadius="8" BorderThickness="2"  Width="{Binding RelativeSource={RelativeSource AncestorType=UserControl},
+                        <Button  Content="{Binding Name}"  FontSize="30" Margin="5" hc:BorderElement.CornerRadius="8" BorderThickness="2"  Width="{Binding RelativeSource={RelativeSource AncestorType=UserControl},
  Path=DataContext.ItemWidth}" Height="{Binding RelativeSource={RelativeSource AncestorType=UserControl},
  Path=DataContext.ItenHeight}"  Foreground="White"   Background="{DynamicResource MainBrush}">
 

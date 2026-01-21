@@ -3,6 +3,7 @@ using FSK.Sensitivity.Core;
 using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.EventBus;
+using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Utility;
@@ -63,6 +64,17 @@ namespace FSK.Sensitivity.Main.ViewModels
             set => SetProperty(ref _backgroundSource, value);
         }
 
+        private bool _isClicked = false;
+        /// <summary>
+        /// 是否点击了确认按钮
+        /// </summary>
+        public bool IsClicked
+        {
+            get { return _isClicked; }
+            set { SetProperty(ref _isClicked, value); }
+        }
+
+
         private string _signPath;
         /// <summary>
         /// 操作界面显示视标名称
@@ -97,7 +109,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
 
-        private int _checkDuration = 5;
+        private int _checkDuration = AppConst.ContrastDuration;
         /// <summary>
         /// 剩余检查时长
         /// </summary>
@@ -272,8 +284,10 @@ namespace FSK.Sensitivity.Main.ViewModels
                     _ = Task.Run(async () =>
                     {
                         ArrowButtonStauts.SaveButtonStatus = true;
+                        IsClicked = true;
                         await Task.Delay(50);
                         ArrowButtonStauts.SaveButtonStatus = false;
+                        IsClicked = false;
 
                     });
                     break;
@@ -286,10 +300,48 @@ namespace FSK.Sensitivity.Main.ViewModels
 
                     });
                     break;
-
             }
         }
         
+        public DelegateCommand TestCommand => new DelegateCommand(Test);
+
+        void Test()
+        {
+            
+            JoystickStatus[] statuses = new JoystickStatus[]
+            {
+                JoystickStatus.Front,
+                JoystickStatus.Back,
+                JoystickStatus.Left,
+                JoystickStatus.Right,
+                JoystickStatus.Trigger,
+                JoystickStatus.Confirm
+            };
+            JoystickStatus nextstatus = statuses[Utils.GenerateRandomNumber(0, statuses.Length - 1, imageIndex)];
+            JoystickEventArgs args = new JoystickEventArgs(nextstatus);
+
+           
+            JoystickAction(new ActionArgs()
+            {
+                Action = new JoystickEventArgs(JoystickStatus.Right),
+                Index = 5,
+
+            });
+            JoystickAction(new ActionArgs()
+            {
+                Action = new JoystickEventArgs(JoystickStatus.Right),
+                Index = 6,
+
+            });
+
+            JoystickAction(new ActionArgs()
+            {
+                Action = new JoystickEventArgs(JoystickStatus.Confirm),
+                Index = 6,
+
+            });
+        }
+
 
         private string GetSignName()
         {
@@ -317,6 +369,17 @@ namespace FSK.Sensitivity.Main.ViewModels
             SignPath = "";
             eventAggregator.GetEvent<JoystickEvent>().Subscribe(JoystickAction);
             resetWaitTimer();
+        }
+
+
+        public DelegateCommand<object> SelectedCommand => new DelegateCommand<object>(selected);
+
+        void selected(object index)
+        {
+            if (index != null && int.TryParse(index.ToString(), out int idx))
+            {
+                
+            }
         }
 
         //重置timer

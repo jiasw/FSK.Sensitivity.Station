@@ -23,7 +23,7 @@ xmlns:enum = "clr-namespace:FSK.Sensitivity.Core.Enums;assembly=FSK.Sensitivity.
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -109,7 +109,7 @@ CommandParameter="{x:Static enum:ItemsType.PD}"/>
             </Border>
         </Grid>
         <UniformGrid Grid.Row="1" Columns="2" Margin="10"  HorizontalAlignment="Center">
-            <Button Content="确认" Style="{DynamicResource btnOprateStyle}" Command="{Binding SaveCommand}" Background="{DynamicResource MainBrush}"   Margin="50,5"   ></Button>
+            <Button Content="确认" Style="{DynamicResource btnOprateStyle}" Command="{Binding SaveCommand}" Background="{DynamicResource MainBrush}"     ></Button>
             <Button Content="取消" Style="{DynamicResource btnOprateStyle}" Command="{Binding BackCommand}" BorderThickness="2" Background="{DynamicResource SecondBackGroundBrush}"   Margin="50,5"  ></Button>
         </UniformGrid>
     </Grid>

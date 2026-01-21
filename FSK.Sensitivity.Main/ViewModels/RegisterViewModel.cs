@@ -162,7 +162,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 Grade = Grade,
                 Class=ClassName
             };
-            long id= await patientRepository.Add(addPatient);
+            int id= await patientRepository.Add(addPatient);
             if (id > 0)
             {
                 MessageBoxService.Instance.Show("注册成功！");

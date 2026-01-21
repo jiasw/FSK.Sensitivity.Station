@@ -90,8 +90,8 @@ namespace FSK.Sensitivity.Main.ViewModels
             else
             {
                 Title = "瞳距";
-                ItemWidth = 130;
-                ItenHeight = 60;
+                ItemWidth = 100;
+                ItenHeight = 50;
                 Items = Enumerable.Range(50, 31).Select(i => new ShowItemsModel() { Name = i.ToString(), Value = i.ToString() }).ToList();
             }
         }

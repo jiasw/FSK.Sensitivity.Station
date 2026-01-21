@@ -93,7 +93,7 @@ namespace FSK.Sensitivity.Main.Controls
             // 如果总页数小于等于1，不显示控件
             if (TotalPages <= 1)
             {
-                Visibility = Visibility.Collapsed;
+                Visibility = Visibility.Hidden;
                 return;
             }
             else if (ShowControl)
@@ -102,7 +102,7 @@ namespace FSK.Sensitivity.Main.Controls
             }
             else
             {
-                Visibility = Visibility.Collapsed;
+                Visibility = Visibility.Hidden;
                 return;
             }
             // 更新按钮状态

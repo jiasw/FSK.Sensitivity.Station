@@ -10,7 +10,7 @@ namespace FSK.Sensitivity.Core.Model
     public class CheckInfo
     {
         public long UserId { get; set; }
-        public string Item {
+        public string ItemName {
             get
             {
                 if (Type == CheckItem.CSF)
@@ -33,4 +33,6 @@ namespace FSK.Sensitivity.Core.Model
 
         public DateTime CheckTime { get; set; }
     }
+
+
 }

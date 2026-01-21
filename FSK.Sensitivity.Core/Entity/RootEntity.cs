@@ -13,8 +13,8 @@ namespace FSK.Sensitivity.Core.Entity
         /// ID
         /// 泛型主键Tkey
         /// </summary>
-        [SugarColumn(IsNullable = false, IsPrimaryKey = true)]
-        public long Id { get; set; }
+        [SugarColumn(IsNullable = false, IsPrimaryKey = true,IsIdentity =true)]
+        public int Id { get; set; }
 
         [SugarColumn(InsertServerTime = true)]
         public DateTime CreateTime { get; set; }

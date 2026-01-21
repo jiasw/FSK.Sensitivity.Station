@@ -27,9 +27,9 @@ namespace FSK.Sensitivity.Main.ViewModels
             get { return name; }
             set { SetProperty(ref name, value); }
         }
-        private string gender;
+        private int gender = 0;
 
-        public string Gender
+        public int Gender
         {
             get { return gender; }
             set { SetProperty(ref gender, value); }
@@ -48,8 +48,8 @@ namespace FSK.Sensitivity.Main.ViewModels
             get { return phone; }
             set { SetProperty(ref phone, value); }
         }
-        private string usertype;
-        public string UserType
+        private int usertype=0;
+        public int UserType
         {
             get { return usertype; }
             set { SetProperty(ref usertype, value); }
@@ -64,7 +64,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.mangerRepository = mangerRepository;
         }
 
-        private long id=0;
+        private int id=0;
 
         public DelegateCommand SaveCommand => new DelegateCommand(async () => await Save());
 
@@ -75,10 +75,10 @@ namespace FSK.Sensitivity.Main.ViewModels
                 Manger manger = new Manger()
                 {
                     name = Name,
-                    gender = Gender,
+                    gender = Gender.ToString(),
                     age = age,
                     phone = Phone,
-                    type = UserType,
+                    type = UserType.ToString(),
                 };
                 if (id == 0)
                 {
@@ -140,10 +140,10 @@ namespace FSK.Sensitivity.Main.ViewModels
                     return;
                 }
                 Name = manger.name;
-                Gender = manger.gender;
+                Gender = int.Parse(manger.gender);
                 Age = manger.age;
                 Phone = manger.phone;
-                UserType = manger.type;
+                UserType = int.Parse(manger.type);
             }
         }
     }
