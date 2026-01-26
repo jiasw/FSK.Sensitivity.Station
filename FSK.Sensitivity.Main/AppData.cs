@@ -47,5 +47,8 @@ namespace FSK.Sensitivity.Main
         /// </summary>
         public IDialogService DialogService { get; set; }
 
+
+        public Window MainWindow { get; set; }
+
     }
 }

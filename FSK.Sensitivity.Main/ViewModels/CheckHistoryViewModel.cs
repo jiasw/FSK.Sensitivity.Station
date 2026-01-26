@@ -1,18 +1,22 @@
 ﻿using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.Model;
+using FSK.Sensitivity.Core.Repositories;
+using HandyControl.Controls;
 using Prism.Navigation.Regions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
-    public class CheckHistoryViewModel : BaseViewModel
+    public class CheckHistoryViewModel : BaseViewModel, INavigationAware
     {
         private readonly IRegionManager regionManager;
+        private readonly CheckResultRepository checkResultRepository;
         private List<CheckInfo> _checkInfos;
 
         public List<CheckInfo> CheckInfos
@@ -21,7 +25,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref _checkInfos, value); }
         }
 
-        private List<CheckDateItem> _checkDateItems;
+        private List<CheckDateItem> _checkDateItems=new List<CheckDateItem>();
 
         public List<CheckDateItem> CheckDateItems
         {
@@ -57,27 +61,115 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref _date, value); }
         }
 
+        private int pagesize=10;
 
+        private int page=1;
 
-        public CheckHistoryViewModel(IRegionManager regionManager)
+        private int totalpage=1;
+
+        private int total=0;
+
+        
+        private bool prepageenable=false;
+        public bool Prepageenable
         {
-            this.regionManager = regionManager;
-            List<CheckInfo> lists = new List<CheckInfo>();
-            lists.Add(new CheckInfo() { Type = CheckItem.CSF, Result = "不合格", Status = "查看" });
-            lists.Add(new CheckInfo() { Type = CheckItem.DCK, Result = "不合格", Status = "查看" });
-            lists.Add(new CheckInfo() { Type = CheckItem.CSF, Result = "不合格", Status = "查看" });
-            lists.Add(new CheckInfo() { Type = CheckItem.DCK, Result = "不合格", Status = "查看" });
-            CheckInfos = lists;
-List<CheckDateItem> dateItems = new List<CheckDateItem>();
-            dateItems.Add(new CheckDateItem() { Date = "2021-01-01" });
-            dateItems.Add(new CheckDateItem() { Date = "2021-01-02" });
-            dateItems.Add(new CheckDateItem() { Date = "2021-01-03" });
-            CheckDateItems = dateItems;
+            get
+            {
+                if (page == 1)
+                {
+                    prepageenable = false;
+                }
+                else
+                {
+                    prepageenable = true;
+                }
+                return prepageenable;
+            }
+            set { SetProperty(ref prepageenable, value); }
         }
 
-        void BindDateList()
+        private bool nextpageenable=false;
+        public bool Nextpageenable
         {
+            get
+            {
+                if (page == totalpage)
+                {
+                    nextpageenable = false;
+                }
+                else
+                {
+                    nextpageenable = true;
+                }
+                return nextpageenable;
+            }
+            set { SetProperty(ref nextpageenable, value); }
 
+        }
+
+
+        public CheckHistoryViewModel(IRegionManager regionManager, CheckResultRepository checkResultRepository)
+        {
+            this.regionManager = regionManager;
+            this.checkResultRepository = checkResultRepository;
+            
+        }
+
+        async Task BindDateList()
+        {
+            CheckDateItems.Clear();
+            List<string> query = await checkResultRepository.GetCheckDatesAsync(page, pagesize, AppData.Instance.CurrentPatient.Id);
+            if (query != null)
+            {
+                CheckDateItems =query.Select(x => new CheckDateItem() { Date = x }).ToList();
+            }
+            total = await checkResultRepository.GetTotalCountAsync(AppData.Instance.CurrentPatient.Id);
+            totalpage=(int)Math.Ceiling((double)total/pagesize);
+            RaisePropertyChanged(nameof(Nextpageenable));
+            RaisePropertyChanged(nameof(Prepageenable));
+        }
+
+        public DelegateCommand PrePageCommand => new DelegateCommand(async () => await PrePage());
+
+        private async Task PrePage()
+        {
+            if (page > 1)
+            {
+                page-=1;
+            }
+            await BindDateList();
+            
+        }
+
+        public DelegateCommand NextPageCommand => new DelegateCommand(async () => await NextPage());
+
+        private async Task NextPage()
+        {
+            if (page < totalpage)
+            {
+                page+=1;
+            }
+            await BindDateList();
+        }
+
+        public DelegateCommand<string> ItemClickCommand=>new DelegateCommand<string>(async (date) => await ItemClick(date));
+
+        private async Task ItemClick(string date)
+        {
+            Date = date;
+            CheckInfos = await checkResultRepository.GetCheckInfosAsync(date, AppData.Instance.CurrentPatient.Id);
+        }
+
+        public DelegateCommand<CheckInfo> ShowDetailCommand => new DelegateCommand<CheckInfo>(ShowDetail);
+        private void ShowDetail(CheckInfo info)
+        {
+            ReportRequest request = new ReportRequest();
+            
+            request.DataID = info.DataId;
+            request.DataType = info.Type;
+            request.Date = Date;
+            
+            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_Report,new NavigationParameters() { { "request", request } });
         }
 
 
@@ -86,6 +178,26 @@ List<CheckDateItem> dateItems = new List<CheckDateItem>();
         private void Back()
         {
             regionManager.Regions[AppConst.MainRegion].NavigationService.Journal.GoBack();
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            page = 1;
+            totalpage = 1;
+            Name = AppData.Instance.CurrentPatient.PatientName;
+            Age= AppData.Instance.CurrentPatient.Age.ToString();
+            Id=AppData.Instance.CurrentPatient.Id.ToString();
+            _ = Task.Run(BindDateList);
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            
         }
     }
 }

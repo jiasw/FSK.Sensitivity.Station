@@ -34,7 +34,8 @@ namespace FSK.Sensitivity.Core.Const
         public const string Main_Page_ContrastSetting = "ContrastConfig";
         public const string Main_Page_ContrastTraining = "ContrastTraining";
         public const string Main_Page_SerialPortConfig = "SerialPortConfig";
-        
+        public const string Main_Page_Report = "PrintReport";
+
 
         public const string Main_Page_Setting = "SystemSetting";
 

@@ -49,7 +49,7 @@ namespace FSK.Sensitivity.Core.Enums
         [Description("无")]
         None=0,
         [Description("1")]
-        CS001,
+        CS001=1,
         [Description("6")]
         CS006,
         [Description("9")]

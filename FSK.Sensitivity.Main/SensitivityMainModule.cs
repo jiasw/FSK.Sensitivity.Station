@@ -37,6 +37,7 @@ namespace FSK.Sensitivity.Main
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SensitivityTraining));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(CheckHistory));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SystemSetting));
+            regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(PrintReport));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SerialPortConfig));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(Store));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(NetWork));
@@ -117,6 +118,7 @@ namespace FSK.Sensitivity.Main
             containerRegistry.RegisterSingleton<IJoystick, JoystickController>();
             containerRegistry.RegisterSingleton<IMotor, MotorController>();
             containerRegistry.RegisterSingleton<Iwifi, WifiService>();
+            containerRegistry.RegisterSingleton<IScanner, UsbQrCodeTools>();
             #endregion
 
 

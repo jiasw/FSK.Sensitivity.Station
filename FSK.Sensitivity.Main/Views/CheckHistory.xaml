@@ -65,24 +65,24 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             <StackPanel Orientation="Horizontal">
                 <TextBlock Foreground="White" FontSize="35" VerticalAlignment="Bottom" Margin="20,0">
     <Run Text="ID: "></Run>
-    <Run Text="{Binding Id} "></Run>
+    <Run Text="{Binding Id }"></Run>
                 </TextBlock>
                 <TextBlock Foreground="White" FontSize="35" VerticalAlignment="Bottom" Margin="20,0">
                     <Run Text="姓名: "></Run>
-                    <Run Text="{Binding Name} "></Run>
+                    <Run Text="{Binding Name}"></Run>
                 </TextBlock>
                 <TextBlock Foreground="White" FontSize="35" VerticalAlignment="Bottom" Margin="20,0">
     <Run Text="年龄: "></Run>
-    <Run Text="{Binding Age} "></Run>
+    <Run Text="{Binding Age}"></Run>
                 </TextBlock>
                 <TextBlock Foreground="White" FontSize="35" VerticalAlignment="Bottom" Margin="20,0">
 <Run Text="检查时间: "></Run>
-<Run Text="{Binding Date} "></Run>
+<Run Text="{Binding Date}"></Run>
                 </TextBlock>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" >
-                <Button  hc:IconElement.Geometry="{StaticResource LeftGeometry}" hc:IconElement.Width="35" Margin="10,0" Style="{DynamicResource NavButton}" Width="60"></Button>
-                <Button  hc:IconElement.Geometry="{StaticResource RightGeometry}" hc:IconElement.Width="35"  Style="{DynamicResource NavButton}" Width="60"></Button>
+                <Button Command="{Binding PrePageCommand}"  hc:IconElement.Geometry="{StaticResource LeftGeometry}" IsEnabled="{Binding Prepageenable}" hc:IconElement.Width="35" Margin="10,0" Style="{DynamicResource NavButton}" Width="60"></Button>
+                <Button Command="{Binding NextPageCommand}"  hc:IconElement.Geometry="{StaticResource RightGeometry}" IsEnabled="{Binding Nextpageenable}"  hc:IconElement.Width="35"  Style="{DynamicResource NavButton}" Width="60"></Button>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
@@ -103,6 +103,12 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border Height="70" BorderThickness="1,0,1,1"   BorderBrush="White" >
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                <i:InvokeCommandAction Command="{Binding DataContext.ItemClickCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                             CommandParameter="{Binding Date}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
                                         <Border.Style>
                                             <Style TargetType="Border">
                                                 <Style.Triggers>
@@ -126,7 +132,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                 <DataGrid  Grid.Column="2" SelectionMode="Single" Style="{StaticResource datagridstyle}" RowStyle="{StaticResource datagridrowstyle}"  HeadersVisibility="Column" CanUserAddRows="False" Background="Transparent"  CanUserSortColumns="False"   GridLinesVisibility="All" ItemsSource="{Binding CheckInfos}"  AutoGenerateColumns="False" >
                     
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="检查项目" Binding="{Binding Item}" Width="*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}" ElementStyle="{StaticResource DataTextStyle}" HeaderStyle="{StaticResource ColumnHeaderStyle}">
+                        <DataGridTextColumn Header="检查项目" Binding="{Binding ItemName}" Width="*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}" ElementStyle="{StaticResource DataTextStyle}" HeaderStyle="{StaticResource ColumnHeaderStyle}">
 
                         </DataGridTextColumn>
                         <DataGridTextColumn Header="检查结果" Binding="{Binding Result}" Width="4*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}" ElementStyle="{StaticResource DataTextStyle}" HeaderStyle="{StaticResource ColumnHeaderStyle}">
@@ -135,7 +141,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                         <DataGridTemplateColumn Header="状态"  Width="*" IsReadOnly="True" CellStyle="{StaticResource DataGridCellStyle}"  HeaderStyle="{StaticResource ColumnHeaderStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="查看" Style="{StaticResource viewBtn}"></Button>
+                                    <Button Content="查看" Style="{StaticResource viewBtn}" Command="{Binding DataContext.ShowDetailCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding }"></Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

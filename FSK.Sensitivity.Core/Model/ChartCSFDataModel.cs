@@ -13,7 +13,7 @@ namespace FSK.Sensitivity.Core.Model
 
         public LightStatus DazzleLight { get; set; }
 
-        public bool IsDay { get; set; }
+        public DayOrNight IsDay { get; set; }
 
 
         private List<CSFPointModel> _microspurPoints = new List<CSFPointModel>();

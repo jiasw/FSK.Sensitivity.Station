@@ -26,7 +26,7 @@ namespace FSK.Sensitivity.Core.Enums
     /// <summary>
     /// 检查结果
     /// </summary>
-    public enum CheckResult
+    public enum CheckResultEnums
     {
 
         [Description("正常")]

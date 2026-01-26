@@ -169,19 +169,35 @@ namespace FSK.Sensitivity.Main.ViewModels
         public TrainStatus TrainStatus
         {
             get { return _trainStatus; }
-            set { SetProperty(ref _trainStatus, value); }
+            set { SetProperty(ref _trainStatus, value);
+                RaisePropertyChanged(nameof(IsTraining));
+                RaisePropertyChanged(nameof(TrainStatusText));
+            }
         }
 
-        private string _trainStatusDisplay;
 
-        public string TrainStatusDisplay
+        private bool _isTraining;
+        public bool IsTraining
         {
             get
             {
-                _trainStatusDisplay = dictTrainDisplay[TrainStatus];
-                return _trainStatusDisplay;
+                _isTraining = TrainStatus == TrainStatus.Training;
+                return _isTraining;
             }
-            set { SetProperty(ref _trainStatusDisplay, value); }
+            set { SetProperty(ref _isTraining, value); }
+        }
+
+
+        private string _trainStatusText;
+
+        public string TrainStatusText
+        {
+            get
+            {
+                _trainStatusText = TrainStatus.GetDescription();
+                return _trainStatusText;
+            }
+            set { SetProperty(ref _trainStatusText, value); }
         }
 
 
@@ -196,13 +212,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private ArrowButtonStauts _arrowButtonStauts = new ArrowButtonStauts();
 
         public Dictionary<DCKTime, int> dictResult = new Dictionary<DCKTime, int>();
-        public Dictionary<TrainStatus,string> dictTrainDisplay= new Dictionary<TrainStatus, string>()
-        {
-            { TrainStatus.Pending,"等待检查" },
-            { TrainStatus.Training,"正在检查" },
-            { TrainStatus.Trained,"检查完成" },
-            { TrainStatus.NotTrain,"无需检查" },
-        };
+        
 
         public ContrastTrainingViewModel(IRegionManager regionManager, IEventAggregator eventAggregator,ILight light)
         {
@@ -364,6 +374,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void StartTrain()
         {
+            TrainStatus=TrainStatus.Training;
             contrastSignChangeEvent.Publish(new() { PicturePath = "", BackgroundBrush = SignBackGround.White });
             BackgroundSource = Brushes.White;
             SignPath = "";
@@ -391,6 +402,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void StopTrain()
         {
+            TrainStatus = TrainStatus.Trained;
             secondaryChangeEvent.Publish(new() { Action = ChangeAction.Idle });
             _waittimer?.Stop();
             _waittimer?.Dispose();

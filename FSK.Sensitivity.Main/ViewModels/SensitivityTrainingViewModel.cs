@@ -55,20 +55,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
             get
             {
-                switch (TrainStatus)
-                {
-                    case TrainStatus.Pending:
-                        _trainStatusText= "等待检查";
-                        break;
-                    case TrainStatus.Training:
-                        _trainStatusText= "正在检查";break;
-                    case TrainStatus.Trained:
-                        _trainStatusText= "检查完成";break;
-                    case TrainStatus.NotTrain:
-                        _trainStatusText= "无需检查"; break;
-                    default:
-                        _trainStatusText= ""; break;
-                }
+                _trainStatusText= TrainStatus.GetDescription();
                 return _trainStatusText;
             }
             set { SetProperty(ref _trainStatusText, value); }

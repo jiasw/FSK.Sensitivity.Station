@@ -4,9 +4,90 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FSK.Sensitivity.Main.Controls"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+             mc:Ignorable="d" Background="Transparent" Loaded="UserControl_Loaded" SizeChanged="UserControl_SizeChanged"
+             d:DesignHeight="420" d:DesignWidth="350">
+    <Viewbox>
+        <Border Width="300"  CornerRadius="10" Background="White" BorderBrush="{StaticResource ListViewHeaderBrush}" >
+            <Grid Margin="0,0,0,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+
+                    <RowDefinition Height="290"/>
+                </Grid.RowDefinitions>
+                <Border CornerRadius="10,10,0,0" Background="{StaticResource MenuSelectedBrush}" BorderBrush="{StaticResource MainBrush}">
+                    <TextBlock Text="{Binding ChartsTitle,RelativeSource = {RelativeSource Mode=FindAncestor, AncestorType=local:ChartsCSF}}" FontSize="20" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <Border Grid.Row="1" BorderBrush="{StaticResource MainBrush}"  BorderThickness="1,0,1,1" CornerRadius="0,0,4,4">
+
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="250"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
+                            <StackPanel Name="sp1" Orientation="Horizontal" Margin="5,0,10,0">
+                                <TextBlock Text="0.4米" VerticalAlignment="Center" />
+                                <Rectangle Fill="#FFAA00"  Width="15" Height="15"/>
+                            </StackPanel>
+                            <StackPanel Name="sp2" Orientation="Horizontal" Margin="5,0,10,0">
+                                <TextBlock Text="0.8米" VerticalAlignment="Center"/>
+                                <Rectangle Fill="#16CE72" Width="15" Height="15"/>
+                            </StackPanel>
+                            <StackPanel Name="sp3" Orientation="Horizontal" Margin="5,0,10,0">
+                                <TextBlock Text="1.5米" VerticalAlignment="Center" />
+                                <Rectangle Fill="#FF0900" Width="15" Height="15"/>
+                            </StackPanel>
+                            <StackPanel Name="sp4" Orientation="Horizontal" Margin="5,0,10,0">
+                                <TextBlock Text="5米" VerticalAlignment="Center"/>
+                                <Rectangle Fill="#2394EB" Width="15" Height="15"/>
+                            </StackPanel>
+
+                        </StackPanel>
+
+                        <Grid Grid.Row="1" Name="datagrid">
+
+                            <Canvas>
+                                <Path
+	Fill="#FFADD8E6"
+	Stroke="#FFD3D3D3"
+                 Height="210" Width="217" Stretch="Fill" VerticalAlignment="Center" Canvas.Left="72">
+                                    <Path.Data>
+                                        <PathGeometry>
+                                            <PathGeometry.Figures>
+                                                <PathFigureCollection>
+                                                    <PathFigure IsClosed="True" StartPoint="0,21">
+                                                        <PathFigure.Segments>
+                                                            <PathSegmentCollection>
+                                                                <LineSegment Point="25,13" />
+                                                                <LineSegment Point="49.5,10" />
+                                                                <LineSegment Point="75,13" />
+                                                                <LineSegment Point="126,34" />
+                                                                <LineSegment Point="126,53" />
+                                                                <LineSegment Point="75,30" />
+                                                                <LineSegment Point="49.5,26" />
+                                                                <LineSegment Point="25,30" />
+                                                                <LineSegment Point="0,37" />
+                                                            </PathSegmentCollection>
+                                                        </PathFigure.Segments>
+                                                    </PathFigure>
+                                                </PathFigureCollection>
+                                            </PathGeometry.Figures>
+                                        </PathGeometry>
+                                    </Path.Data>
+                                </Path>
+                            </Canvas>
+
+
+                            <Canvas x:Name="myCanvas"  />
+                        </Grid>
+                    </Grid>
+
+                </Border>
+
+
+
+            </Grid>
+        </Border>
+    </Viewbox>
 </UserControl>

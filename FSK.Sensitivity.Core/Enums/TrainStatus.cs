@@ -12,22 +12,22 @@ namespace FSK.Sensitivity.Core.Enums
         /// <summary>
         /// 待训练
         /// </summary>
-        [Description("待训练")]
+        [Description("待检查")]
         Pending,
         /// <summary>
         /// 训练中
         /// </summary>
-        [Description("训练中")]
+        [Description("检查中")]
         Training,
         /// <summary>
         /// 已完成
         /// </summary>
-        [Description("已完成")]
+        [Description("已检查")]
         Trained,
         /// <summary>
         /// 不需训练
         /// </summary>
-        [Description("不需训练")]
+        [Description("不需检查")]
         NotTrain
 
     }

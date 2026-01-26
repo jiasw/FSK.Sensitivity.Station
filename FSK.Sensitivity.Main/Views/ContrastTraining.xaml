@@ -14,6 +14,7 @@
              d:DesignHeight="600" d:DesignWidth="1200">
     <UserControl.Resources>
         <cvt:BackgroundConverter x:Key="BackgroundConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <SolidColorBrush Color="#66FFFFFF" x:Key="BordelBackGround"></SolidColorBrush>
         <Style x:Key="txtTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"/>
@@ -206,7 +207,11 @@
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
                     
-                        <TextBlock FontSize="28" Foreground="White" Opacity=".9" HorizontalAlignment="Center" VerticalAlignment="Center" Text="正在执行：左眼检查项目"></TextBlock>
+                        <TextBlock FontSize="28" Foreground="White" Opacity=".9" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <Run Text="{Binding TrainStatusText}"></Run>
+                            <Run Text="："></Run>
+                            <Run Text="左眼检查项目"></Run>
+                        </TextBlock>
                     
                     <Grid Grid.Row="1" Margin="0,15,0,0">
                         <Grid.ColumnDefinitions>
@@ -272,7 +277,11 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock FontSize="28" Foreground="White" Opacity=".9" HorizontalAlignment="Center" VerticalAlignment="Center" Text="正在执行：右眼检查项目"></TextBlock>
+                    <TextBlock FontSize="28" Foreground="White" Opacity=".9" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                        <Run Text="{Binding TrainStatusText}"></Run>
+                        <Run Text="："></Run>
+                        <Run Text="左眼检查项目"></Run>
+                    </TextBlock>
                     <Grid Grid.Row="1" Margin="0,15,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
@@ -287,7 +296,7 @@
                             <Image  gif:AnimationBehavior.SourceUri="/FSK.Sensitivity.Main;component/Resource/Images/rightEye.gif"  />
                         </Border>
                         <Border CornerRadius="5" Grid.Row="1"  Margin="0,20,10,0" Background="{StaticResource BordelBackGround}" >
-                            <UniformGrid Rows="2">
+                            <UniformGrid Rows="2" Visibility="{Binding IsTraining, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <TextBlock Margin="10,0" VerticalAlignment="Bottom" Foreground="White" FontSize="16">项目执行中...</TextBlock>
                                 <ProgressBar Margin="10,0" Style="{StaticResource ProgressBarSuccess}"  Foreground="{StaticResource MainBrush}" Value="0" Maximum="100" IsIndeterminate="True"/>
                             </UniformGrid>
