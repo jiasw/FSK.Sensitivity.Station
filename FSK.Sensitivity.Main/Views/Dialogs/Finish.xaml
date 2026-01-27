@@ -64,11 +64,11 @@
                     HorizontalAlignment="Center" 
                     VerticalAlignment="Center">
                 <Button x:Name="OkButton" 
-                    Content="打印结果" 
+                    Content="查看" 
                     Style="{StaticResource btnStyle}"
                     />
                 <Button x:Name="CancelButton" 
-                    Content="返回" 
+                    Content="打印" 
                     Style="{StaticResource btnStyle}"
                      />
 

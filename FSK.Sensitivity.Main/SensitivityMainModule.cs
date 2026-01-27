@@ -110,8 +110,10 @@ namespace FSK.Sensitivity.Main
             containerRegistry.RegisterDialog<Scan, ScanViewModel>();
             containerRegistry.RegisterDialog<UserInfoAdd, UserInfoAddViewModel>();
             containerRegistry.RegisterDialog<HardWareTest, HardWareTestViewModel>();
+            containerRegistry.RegisterDialog<Finish, FinishViewModel>();
+
             #endregion
-            
+
             #region 注册硬件操作类
             containerRegistry.RegisterSingleton<IModbusService, ModbusService>();
             containerRegistry.RegisterSingleton<ILight, LightController>();
@@ -119,6 +121,7 @@ namespace FSK.Sensitivity.Main
             containerRegistry.RegisterSingleton<IMotor, MotorController>();
             containerRegistry.RegisterSingleton<Iwifi, WifiService>();
             containerRegistry.RegisterSingleton<IScanner, UsbQrCodeTools>();
+            containerRegistry.RegisterSingleton<ISpeechService, SpeechService>();
             #endregion
 
 

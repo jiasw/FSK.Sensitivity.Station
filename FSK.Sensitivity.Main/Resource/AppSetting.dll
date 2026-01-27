@@ -3,7 +3,14 @@
   "AdminPassword": "19450902",
   "RemoteSupportPath": "C:\\Program Files\\Oray\\SunLogin\\SunloginClient\\SunloginClient.exe",
   "ModbusPortName": "COM2",
-  "ComfirmPassword": "19450902"
- 
+  "ComfirmPassword": "19450902",
+  "DeviceInfo": {
+    "MainProgramExeName": "",
+    "DeviceModel": "",
+    "DeviceNo": "",
+    "ProductVersion": "",
+    "UpdateTime": "",
+    "UpdateWaitTime": 10
+  }
 
 }

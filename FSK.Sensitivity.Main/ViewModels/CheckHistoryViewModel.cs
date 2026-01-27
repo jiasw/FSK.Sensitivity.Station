@@ -122,6 +122,12 @@ namespace FSK.Sensitivity.Main.ViewModels
             if (query != null)
             {
                 CheckDateItems =query.Select(x => new CheckDateItem() { Date = x }).ToList();
+                if (CheckDateItems.Count > 0)
+                {
+                    Date= CheckDateItems.First().Date;
+                    CheckInfos = await checkResultRepository.GetCheckInfosAsync(CheckDateItems.First().Date, AppData.Instance.CurrentPatient.Id);
+                }
+
             }
             total = await checkResultRepository.GetTotalCountAsync(AppData.Instance.CurrentPatient.Id);
             totalpage=(int)Math.Ceiling((double)total/pagesize);

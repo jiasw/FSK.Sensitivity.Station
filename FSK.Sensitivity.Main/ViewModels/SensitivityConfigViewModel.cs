@@ -1,5 +1,6 @@
 ﻿using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
+using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Main.Controls;
@@ -21,17 +22,19 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IDialogService dialogService;
         private readonly ILight light;
         private readonly IMotor motor;
+        private readonly ISpeechService speechService;
         private SensitivityConfigParam sensitivityConfigParam;
         //检查距离和孔洞的对应关系
         private Dictionary<CheckDistance, short> distanceDict = new Dictionary<CheckDistance, short>();
 
 
-        public SensitivityConfigViewModel(IRegionManager regionManager, IDialogService dialogService,ILight light, IMotor motor )
+        public SensitivityConfigViewModel(IRegionManager regionManager, IDialogService dialogService,ILight light, IMotor motor, ISpeechService speechService)
         {
             this.regionManager = regionManager;
             this.dialogService = dialogService;
             this.light = light;
             this.motor = motor;
+            this.speechService = speechService;
             distanceDict = new Dictionary<CheckDistance, short>() { 
                 { CheckDistance.Short, 4 }, 
                 { CheckDistance.Medium, 3 }, 
@@ -177,6 +180,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         // 界面跳转逻辑
         private void NavigateToNextPage()
         {
+            speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
             regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_SensitivityTraining
                 , new NavigationParameters() { { nameof(SensitivityConfigParam), SensitivityConfigParam } });
         }

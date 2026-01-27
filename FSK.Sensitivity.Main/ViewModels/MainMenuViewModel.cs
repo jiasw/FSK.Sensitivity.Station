@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.Const;
+using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
@@ -161,7 +162,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 return;
             }
 
-            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", "CSF" } });
+            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", MenuType.CSF } });
         }
         public DelegateCommand DEACommand => new DelegateCommand(DEA);
         private void DEA()
@@ -176,13 +177,13 @@ namespace FSK.Sensitivity.Main.ViewModels
                 MessageBoxService.Instance.Show("硬件设备未连接，请连接后重试！");
                 return;
             }
-            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", "DEA" } });
+            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", MenuType.DEA } });
         }
 
         public DelegateCommand ConfigCommand => new DelegateCommand(Config);
         private void Config()
         {
-            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", "Setting" } });
+            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", MenuType.Setting } });
         }
 
         public DelegateCommand ScanCommand => new DelegateCommand(Scan);

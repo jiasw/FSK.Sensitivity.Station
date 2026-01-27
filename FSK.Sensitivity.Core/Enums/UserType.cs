@@ -35,4 +35,15 @@ namespace FSK.Sensitivity.Core.Enums
         Abnormal
 
     }
+
+    public enum MenuType
+    {
+        [Description("对比敏感度")]
+        CSF=0,
+        [Description("暗环境适应")]
+        DEA,
+        [Description("设置")]
+        Setting
+
+    }
 }

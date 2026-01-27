@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.Const;
+using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.Utility;
 using Prism.Navigation.Regions;
 using System;
@@ -64,17 +65,17 @@ namespace FSK.Sensitivity.Main.ViewModels
             // 通过Parameters属性访问
             if (navigationContext.Parameters.TryGetValue("type", out object? value))
             {
-                string? data = value as string;
-                if (data != null)
+                MenuType menu = (MenuType)value;
+                if (menu != null)
                 {
-                    if (data == "CSF")
+                    if (menu == MenuType.CSF)
                     {
                         regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_SensitivitySetting);
                     }
-                    else if (data == "DEA")
+                    else if (menu == MenuType.DEA)
                     {
                         regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastSetting);
-                    }else if (data == "Setting")
+                    }else if (menu == MenuType.Setting)
                     {
                         ShowLogButton=Visibility.Collapsed;
                         regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_Setting);

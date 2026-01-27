@@ -2,6 +2,7 @@
 using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.EventBus;
+using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Model;
 using Prism.Dialogs;
@@ -21,13 +22,16 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IEventAggregator eventAggregator;
         private readonly IDialogService dialogService;
         private readonly IMotor motor;
+        private readonly ISpeechService speechService;
 
-        public ContrastConfigViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IDialogService dialogService, IMotor motor)
+        public ContrastConfigViewModel(IRegionManager regionManager, IEventAggregator eventAggregator
+            , IDialogService dialogService, IMotor motor, ISpeechService speechService)
         {
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
             this.dialogService = dialogService;
             this.motor = motor;
+            this.speechService = speechService;
         }
 
         private ContrastConfigParam contrastConfigParam;
@@ -177,6 +181,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         // 界面跳转逻辑
         private void NavigateToNextPage()
         {
+            speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
             regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastTraining, new NavigationParameters() { { nameof(ContrastConfigParam), ContrastConfigParam } });
         }
     }
