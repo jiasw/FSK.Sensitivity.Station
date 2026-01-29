@@ -1,5 +1,6 @@
 ﻿using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
+using Microsoft.Extensions.Logging;
 using SimpleWifi;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,13 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
 {
     public class WifiService:Iwifi
     {
-       
+        private readonly ILogger<WifiService> logger;
+
+        public WifiService(ILogger<WifiService> logger)
+        {
+            this.logger = logger;
+        }
+
         public IEnumerable<string> GetAvailableNetworks()
         {
             Wifi wifi = new Wifi();
@@ -41,11 +48,11 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
                     
                     if (ap.IsConnected)
                     {
-                        LogHelper.Instance.LogInformation("网络已连接");
+                        logger.LogInformation("网络已连接");
                         return true;
                     }else
                     {
-                        LogHelper.Instance.LogInformation("网络未连接");
+                        logger.LogInformation("网络未连接");
                         AuthRequest authRequest = new AuthRequest(ap);
                         authRequest.Password = password;
                         ap.ConnectAsync(authRequest, true, onConnectComplete);

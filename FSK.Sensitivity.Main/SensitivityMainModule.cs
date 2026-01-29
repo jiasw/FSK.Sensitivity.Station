@@ -8,9 +8,11 @@ using FSK.Sensitivity.Main.ViewModels;
 using FSK.Sensitivity.Main.Views;
 using FSK.Sensitivity.Main.Views.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 using Prism.Ioc;
 using Prism.Navigation.Regions;
+
 using SqlSugar;
 using System.IO;
 using System.Threading.Tasks;
@@ -114,13 +116,18 @@ namespace FSK.Sensitivity.Main
 
             #endregion
 
+            #region 注册工具类
+            containerRegistry.RegisterSingleton<ISecureRegistrationService, SecureRegistrationService>();
+            containerRegistry.RegisterSingleton<ICloudSyncService, CloudSyncService>();
+            #endregion
+
             #region 注册硬件操作类
             containerRegistry.RegisterSingleton<IModbusService, ModbusService>();
             containerRegistry.RegisterSingleton<ILight, LightController>();
             containerRegistry.RegisterSingleton<IJoystick, JoystickController>();
             containerRegistry.RegisterSingleton<IMotor, MotorController>();
             containerRegistry.RegisterSingleton<Iwifi, WifiService>();
-            containerRegistry.RegisterSingleton<IScanner, UsbQrCodeTools>();
+            containerRegistry.RegisterSingleton<IBarcodeScannerService, BarcodeScannerService>();
             containerRegistry.RegisterSingleton<ISpeechService, SpeechService>();
             #endregion
 

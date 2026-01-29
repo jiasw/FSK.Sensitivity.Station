@@ -69,22 +69,26 @@
                             <Run Text="："/>
                     </TextBlock>
                     <TextBlock Grid.Row="1" Grid.Column="1" Text="暗环境适应" Grid.ColumnSpan="2" Style="{StaticResource txtValue}"/>
+
                     <TextBlock Grid.Row="2" Grid.Column="0"  Style="{StaticResource txtTitle}">
-<Run Text="编号"/>
+<Run Text="姓名"/>
 <Run Text="："/>
                     </TextBlock>
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Id}" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Name}" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0"  Style="{StaticResource txtTitle}">
+<Run Text="瞳距"/>
+<Run Text="："/>
+                    </TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding PD}" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
+                    
                     <TextBlock Grid.Row="2" Grid.Column="2"  Style="{StaticResource txtTitle}">
 <Run Text="年龄"/>
 <Run Text="："/>
                     </TextBlock>
                     <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding Age}" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
 
-                    <TextBlock Grid.Row="3" Grid.Column="0"  Style="{StaticResource txtTitle}">
-        <Run Text="姓名"/>
-        <Run Text="："/>
-                    </TextBlock>
-                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Name}" TextWrapping="Wrap"  Style="{StaticResource txtValue}"/>
+                    
                     <TextBlock Grid.Row="3" Grid.Column="2"  Style="{StaticResource txtTitle}">
 <Run Text="性别"/>
 <Run Text="："/>

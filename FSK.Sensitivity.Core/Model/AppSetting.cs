@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,6 +29,11 @@ namespace FSK.Sensitivity.Core.Model
         public string ComfirmPassword { get; set; }
 
         /// <summary>
+        /// 后台接口
+        /// </summary>
+        public string RegisterDomain { get; set; }
+
+        /// <summary>
         /// 设备信息
         /// </summary>
         public DeviceInfo DeviceInfo { get; set; }
@@ -40,6 +46,17 @@ namespace FSK.Sensitivity.Core.Model
         /// 主程序名称
         /// </summary>
         public string MainProgramExeName { get; set; }
+
+        /// <summary>
+        /// 产品名称
+        /// </summary>
+        public string ProductName { get; set; }
+
+        /// <summary>
+        /// 设备类型
+        /// </summary>
+        public string DeviceType {  get; set; }
+
         /// <summary>
         /// 设备型号
         /// </summary>
@@ -60,6 +77,16 @@ namespace FSK.Sensitivity.Core.Model
         /// 更新等待时间
         /// </summary>
         public int UpdateWaitTime { get; set; } = 10;
+
+        /// <summary>
+        /// 工厂名称
+        /// </summary>
+        public string FactoryName {  get; set; }
+
+        /// <summary>
+        /// 工厂电话
+        /// </summary>
+        public string FactoryPhone { get; set; }
 
     }
 

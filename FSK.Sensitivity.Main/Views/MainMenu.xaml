@@ -232,7 +232,7 @@
                
                 <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding LoginVisibility}">
 
-                    <Button Margin="20,0" FontSize="{StaticResource FontSizeTitle}" Height="60" Visibility="{Binding LoginVisibility}"  hc:IconElement.Geometry="{StaticResource ScanCodeGeometry}" hc:IconElement.Width="35"  Style="{DynamicResource NavButton}" Command="{Binding ScanCommand}" Content="扫码登录"   Width="230"  ></Button>
+                    <Button Margin="20,0" FontSize="{StaticResource FontSizeTitle}" Height="60" Visibility="{Binding LoginVisibility}"  hc:IconElement.Geometry="{StaticResource ScanCodeGeometry}" hc:IconElement.Width="35"  Style="{DynamicResource NavButton}" Command="{Binding ScanCommand}" Content="扫码"   Width="230"  ></Button>
                     <Button Margin="20,0" FontSize="{StaticResource FontSizeTitle}" Height="60"  Visibility="{Binding LoginVisibility}" Style="{DynamicResource NavButton}" Command="{Binding LoginCommand}" Content="登录"  Width="120"  ></Button>
                     <Button Margin="20,0" FontSize="{StaticResource FontSizeTitle}" Height="60" Style="{DynamicResource NavButton}" Command="{Binding RegisterCommand}" Content="注册"  Width="120"  ></Button>
                 </StackPanel>

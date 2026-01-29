@@ -1,6 +1,7 @@
 ﻿using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +14,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
     public class JoystickController : IJoystick, IDisposable
     {
         private readonly IModbusService _modbusService;
+        private readonly ILogger<JoystickController> logger;
         private readonly Dictionary<JoystickStatus, bool> _lastState = new();
 
         // 控制监听任务的核心
@@ -22,9 +24,10 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
 
         public event EventHandler<JoystickEventArgs> Pressed;
 
-        public JoystickController(IModbusService modbusService)
+        public JoystickController(IModbusService modbusService,ILogger<JoystickController> logger)
         {
             _modbusService = modbusService;
+            this.logger = logger;
             foreach (JoystickStatus status in Enum.GetValues(typeof(JoystickStatus)))
                 _lastState[status] = false;
         }
@@ -70,14 +73,11 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
                     short[] registers = await _modbusService.ReadHoldingRegistersAsync(startAddress, numberOfPoints);
                     if (registers != null)
                     {
-                        LogHelper.Instance.LogDebug($"摇杆状态返回: {string.Join(",", registers)}");
+                        
                         //判断数组中是否有1
                         if (registers.Any(r => r == 1))
                         {
-                            string logstr = $@"摇杆按下=======================
-                                                    摇杆状态返回: {string.Join(",", registers)}
-                                                摇杆按下=======================";
-                            LogHelper.Instance.LogDebug(logstr);
+                            
                             if (registers != null && registers.Length >= numberOfPoints)
                             {
                                
@@ -93,14 +93,14 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
                     }
                     else
                     {
-                        LogHelper.Instance.LogDebug("读取摇杆状态失败,registers为null");
+                        logger.LogDebug("读取摇杆状态失败,registers为null");
                     }
                     
                 }
                 catch (OperationCanceledException) { /* 正常退出 */ }
                 catch (Exception ex)
                 {
-                    LogHelper.Instance.LogError("读取摇杆状态出错", ex);
+                    logger.LogError("读取摇杆状态出错", ex);
                     // 这里建议增加日志记录
                     Debug.WriteLine($"Joystick Error: {ex.Message}");
                 }

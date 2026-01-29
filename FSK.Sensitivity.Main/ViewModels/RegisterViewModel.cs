@@ -4,7 +4,9 @@ using FSK.Sensitivity.Core.Repositories;
 using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -30,8 +32,12 @@ namespace FSK.Sensitivity.Main.ViewModels
         public string LoginAccount
         {
             get { return _loginAccount; }
-            set { SetProperty(ref _loginAccount, value); }
+            set
+            {
+                SetProperty(ref _loginAccount, value);
+            }
         }
+
 
         private string _name;
         public string Name
@@ -106,6 +112,9 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
         }
         private long id = 0;
+
+        
+
         public async void OnDialogOpened(IDialogParameters parameters)
         {
             parameters.TryGetValue("id", out id);
@@ -137,6 +146,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public DelegateCommand RegisterCommand => new DelegateCommand(async () => await Register());
 
+        
         private async Task Register()
         {
             if (string.IsNullOrEmpty(LoginAccount))
@@ -177,6 +187,6 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         }
 
-
+        
     }
 }

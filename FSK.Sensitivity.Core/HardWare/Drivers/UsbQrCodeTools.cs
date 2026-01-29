@@ -7,329 +7,208 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Interop;
 
 namespace FSK.Sensitivity.Core.HardWare.Drivers
 {
-    public class UsbQrCodeTools:IScanner
+    
+
+    /// <summary>
+    /// 扫码器输入服务 - 基于时间间隔判断扫码结束
+    /// </summary>
+    public interface IBarcodeScannerService
     {
-        public delegate void ScanerDelegate(string result);
-        public event ScanerDelegate ScanCompleted;
-        delegate int HookProc(int nCode, Int32 wParam, IntPtr lParam);
-        private int hKeyboardHook = 0;
-        private ScanerCodes codes = new ScanerCodes();
-        private HookProc hookproc;
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        private static extern int SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        private static extern bool UnhookWindowsHookEx(int idHook);
-        [DllImport("user32", EntryPoint = "GetKeyNameText")]
-        private static extern int GetKeyNameText(int IParam, StringBuilder lpBuffer, int nSize);
-        [DllImport("user32", EntryPoint = "GetKeyboardState")]
-        private static extern int GetKeyboardState(byte[] pbKeyState);
-        [DllImport("user32", EntryPoint = "ToAscii")]
-        private static extern bool ToAscii(int VirtualKey, int ScanCode, byte[] lpKeySate, ref uint lpChar, int uFlags);
-        [DllImport("kernel32.dll")]
-        public static extern IntPtr GetModuleHandle(string name);
+        event EventHandler<BarcodeScannedEventArgs> BarcodeScanned;
+        void StartListening();
+        void StopListening();
+        bool IsListening { get; }
+    }
+    public class BarcodeScannedEventArgs : EventArgs
+    {
+        public string Barcode { get; set; }
+        public DateTime ScanTime { get; set; }
+    }
+    public class BarcodeScannerService : IBarcodeScannerService
+    {
+        private const int WH_KEYBOARD_LL = 13;
+        private const int WM_KEYDOWN = 0x0100;
+        private IntPtr _hookHandle = IntPtr.Zero;
+        private LowLevelKeyboardProc _proc;
+        private bool _isListening = false;
+        // 扫码缓冲区
+        private string _currentInput = "";
 
-        private Thread timer;
-        private bool IsRun = false;
-        public UsbQrCodeTools()
+        // 扫码结束判断配置
+        private readonly int _scanEndTimeoutMs = 100;  // 100ms无输入则判定为扫码结束
+        private readonly int _antiRepeatIntervalMs = 500; // 防重复时间间隔
+
+        // 防重复记录
+        private string _lastBarcode = "";
+        private DateTime _lastScanTime = DateTime.MinValue;
+        // 扫码结束计时器
+        private System.Timers.Timer _scanEndTimer;
+        public event EventHandler<BarcodeScannedEventArgs> BarcodeScanned;
+        public bool IsListening => _isListening;
+        public BarcodeScannerService()
         {
+            _proc = HookCallback;
+
+            // 初始化扫码结束检测计时器
+            _scanEndTimer = new System.Timers.Timer(_scanEndTimeoutMs);
+            _scanEndTimer.Elapsed += ScanEndTimer_Elapsed;
+            _scanEndTimer.AutoReset = false; // 只触发一次，需要手动重启
         }
-        public static class Imm
+        public void StartListening()
         {
-            [DllImport("imm32.dll")]
-            public static extern IntPtr ImmGetContext(IntPtr hwnd);
-            [DllImport("imm32.dll")]
-            public static extern int ImmAssociateContext(IntPtr hwnd, IntPtr hImc);
-
-
+            if (_isListening)
+                return;
+            _hookHandle = SetHook(_proc);
+            _isListening = true;
+            _currentInput = "";
+            _lastBarcode = "";
+            Debug.WriteLine("扫码器开始监听");
         }
-        public void Start()
+        public void StopListening()
         {
-            if (hKeyboardHook == 0)
-            {
-                hookproc = new HookProc(KeyboardHookProc);
-
-                IntPtr modulePtr = GetModuleHandle(Process.GetCurrentProcess().MainModule.ModuleName);
-                hKeyboardHook = SetWindowsHookEx(13, hookproc, modulePtr, 0);
-                if (hKeyboardHook != 0)
-                {
-                    IsRun = true;
-                }
-            }
-            if (hKeyboardHook != 0)
-            {
-                IntPtr hwnd = new WindowInteropHelper(Application.Current.MainWindow).Handle;
-                Imm.ImmGetContext(hwnd);
-                Imm.ImmAssociateContext(hwnd, IntPtr.Zero);
-            }
-            
+            if (!_isListening)
+                return;
+            UnhookWindowsHookEx(_hookHandle);
+            _isListening = false;
+            _currentInput = "";
+            _scanEndTimer.Stop();
+            Debug.WriteLine("扫码器停止监听");
         }
-        public void Stop()
+        private IntPtr SetHook(LowLevelKeyboardProc proc)
         {
-            IsRun = false;
-            if (threadStop != null)
+            using (Process curProcess = Process.GetCurrentProcess())
+            using (ProcessModule curModule = curProcess.MainModule)
             {
-                threadStop?.Invoke();
-            }
-            if (hKeyboardHook != 0)
-            {
-                UnhookWindowsHookEx(hKeyboardHook);
-                if (hKeyboardHook != 0)
-                {
-                    IntPtr hwnd = new WindowInteropHelper(Application.Current.MainWindow).Handle;
-
-                    // 启用输入法
-                    IntPtr hImc = Imm.ImmGetContext(hwnd);
-                    Imm.ImmAssociateContext(hwnd, hImc);
-                }
+                return SetWindowsHookEx(WH_KEYBOARD_LL, proc,
+                    GetModuleHandle(curModule.ModuleName), 0);
             }
         }
-        private DateTime timeFlag;
-        public delegate void ThreadStop();
-        private ThreadStop threadStop;
-
-        public bool RunState => throw new NotImplementedException();
-
-        public bool IsAvailable => throw new NotImplementedException();
-
-        private void StopTimeThread()
+        private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            Thread.Sleep(50);
-            timer.Abort();
-            timer.DisableComObjectEagerCleanup();
-            timer = null;
-        }
-        private void StartTimer()
-        {
-            while (IsRun)
+            if (nCode < 0)
+                return CallNextHookEx(_hookHandle, nCode, wParam, lParam);
+            if (wParam == (IntPtr)WM_KEYDOWN)
             {
-                Thread.Sleep(50);
-                if ((DateTime.Now - timeFlag).TotalMilliseconds > 300)
+                int vkCode = Marshal.ReadInt32(lParam);
+                char keyChar = '\0';
+                bool isValidInput = false;
+                // 数字 0-9
+                if (vkCode >= 48 && vkCode <= 57)
                 {
-                    string result = codes.Result;
-                    if (ScanCompleted != null && !string.IsNullOrEmpty(result))
-                    {
-                      ScanCompleted.BeginInvoke(result, null, null);
-                        Log.Information($"二维码扫描仪,扫描结果：{result}");
-                        codes.Clear();
-                    }
+                    keyChar = (char)vkCode;
+                    isValidInput = true;
                 }
-            }
-        }
-
-        private int KeyboardHookProc(int nCode, Int32 wParam, IntPtr lParam)
-        {
-            if (timer == null)
-            {
-                timer = new Thread(new ThreadStart(StartTimer));
-                timer.Start();
-                threadStop = new ThreadStop(StopTimeThread);
-            }
-            EventMsg msg = (EventMsg)Marshal.PtrToStructure(lParam, typeof(EventMsg));
-            codes.Add(msg);
-            timeFlag = DateTime.Now;
-            return 0;
-        }
-
-        public class ScanerCodes
-        {
-            private int ts = 300; // 指定输入间隔为300毫秒以内时为连续输入
-            private List<List<EventMsg>> _keys = new List<List<EventMsg>>();
-            private List<int> _keydown = new List<int>();   // 保存组合键状态
-            private List<string> _result = new List<string>();  // 返回结果集
-            private DateTime _last = DateTime.Now;
-            private byte[] _state = new byte[256];
-            private string _key = string.Empty;
-            private string _cur = string.Empty;
-            public EventMsg Event
-            {
-                get
+                // 字母 A-Z
+                else if (vkCode >= 65 && vkCode <= 90)
                 {
-                    if (_keys.Count == 0)
-                    {
-                        return new EventMsg();
-                    }
-                    else
-                    {
-                        return _keys[_keys.Count - 1][_keys[_keys.Count - 1].Count - 1];
-                    }
+                    bool isShift = (GetKeyState(160) & 0x8000) != 0;
+                    bool isCapsLock = (GetKeyState(20) & 1) != 0;
+                    keyChar = (char)vkCode;
+                    if (!isShift && !isCapsLock)
+                        keyChar = char.ToLower(keyChar);
+                    isValidInput = true;
                 }
-            }
-            public List<int> KeyDowns
-            {
-                get
-                {
-                    return _keydown;
-                }
-            }
-            public DateTime LastInput
-            {
-                get
-                {
-                    return _last;
-                }
-            }
-            public byte[] KeyboardState
-            {
-                get
-                {
-                    return _state;
-                }
-            }
-            public int KeyDownCount
-            {
-                get
-                {
-                    return _keydown.Count;
-                }
-            }
-            public string Result
-            {
-                get
-                {
-                    if (_result.Count > 0)
-                    {
-                        return string.Join("", _result.Select(r => r.Trim()).ToList());
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            }
-            public void Clear()
-            {
-                _result.Clear();
-            }
-            public string CurrentKey
-            {
-                get
-                {
-                    return _key;
-                }
-            }
-            public string CurrentChar
-            {
-                get
-                {
-                    return _cur;
-                }
-            }
-            public bool isShift
-            {
-                get
-                {
-                    return _keydown.Contains(160);
-                }
-            }
-
-            public List<string> sList = new List<string>();
-            public void Add(EventMsg msg)
-            {
-                #region 记录按键信息
-                // 首次按下按键
-                if (_keys.Count == 0)
-                {
-                    _keys.Add(new List<EventMsg>());
-                    _keys[0].Add(msg);
-                    _result.Add(string.Empty);
-                }
-                // 未释放其他按键时按下按键
-                else if (_keydown.Count > 0)
-                {
-                    _keys[_keys.Count - 1].Add(msg);
-                }
-                // 单位时间内按下按键
-                else if (((TimeSpan)(DateTime.Now - _last)).TotalMilliseconds < ts)
-                {
-                    _keys[_keys.Count - 1].Add(msg);
-                }
-                // 从新记录输入内容
+                // 特殊字符
                 else
                 {
-                    _keys.Add(new List<EventMsg>());
-                    _keys[_keys.Count - 1].Add(msg);
-                    _result.Add(string.Empty);
+                    if (TryGetCharFromVKey(vkCode, out char specialChar))
+                    {
+                        keyChar = specialChar;
+                        isValidInput = true;
+                    }
                 }
-                #endregion
-                _last = DateTime.Now;
-                #region 获取键盘状态
-                // 记录正在按下的按键
-                if (msg.paramH == 0 && !_keydown.Contains(msg.message))
+                if (isValidInput)
                 {
-                    _keydown.Add(msg.message);
-                }
-                // 清除已松开的按键
-                if (msg.paramH > 0 && _keydown.Contains(msg.message))
-                {
-                    _keydown.Remove(msg.message);
-                }
-                #endregion
-                #region 计算按键信息
-                int v = msg.message & 0xff;
-                int c = msg.paramL & 0xff;
-                StringBuilder strKeyName = new StringBuilder(500);
-                if (GetKeyNameText(c * 65536, strKeyName, 255) > 0)
-                {
-                    sList.Add(strKeyName.ToString());
-                    _key = strKeyName.ToString().Trim(new char[] { ' ', '\0' });
+                    // 追加字符到缓冲区
+                    _currentInput += keyChar;
 
-                    GetKeyboardState(_state);
-                    if (_key.Length == 1 && msg.paramH == 0)
-                    {
-                        // 根据键盘状态和shift缓存判断输出字符
-                        _cur = ShiftChar(_key, isShift, _state).ToString();
-                        _result[_result.Count - 1] += _cur;
-                    }
-                    else
-                    {
-                        _cur = string.Empty;
-                    }
+                    Debug.WriteLine($"扫码输入: {keyChar}, 当前缓冲: {_currentInput}");
+                    // 重置扫码结束计时器
+                    _scanEndTimer.Stop();
+                    _scanEndTimer.Start();
+                    // 拦截键盘输入，防止扫码内容传递给应用
+                    return (IntPtr)1;
                 }
-                #endregion
             }
-            private char ShiftChar(string k, bool isShiftDown, byte[] state)
-            {
-                bool capslock = state[0x14] == 1;
-                bool numlock = state[0x90] == 1;
-                bool scrolllock = state[0x91] == 1;
-                bool shiftdown = state[0xa0] == 1;
-                char chr = (capslock ? k.ToUpper() : k.ToLower()).ToCharArray()[0];
-                if (isShiftDown)
-                {
-                    if (chr >= 'a' && chr <= 'z')
-                    {
-                        chr = (char)((int)chr - 32);
-                    }
-                    else if (chr >= 'A' && chr <= 'Z')
-                    {
-                        chr = (char)((int)chr + 32);
-                    }
-                    else
-                    {
-                        string s = "`1234567890-=[];',./";
-                        string u = "~!@#$%^&*()_+{}:\"<>?";
-                        if (s.IndexOf(chr) >= 0)
-                        {
-                            return (u.ToCharArray())[s.IndexOf(chr)];
-                        }
-                    }
-                }
-                return chr;
-            }
+            return CallNextHookEx(_hookHandle, nCode, wParam, lParam);
         }
-        public struct EventMsg
+        /// <summary>
+        /// 扫码结束计时器事件处理
+        /// </summary>
+        private void ScanEndTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            public int message;
-            public int paramL;
-            public int paramH;
-            public int Time;
-            public int hwnd;
+            if (_currentInput.Length > 0)
+            {
+                ProcessBarcode(_currentInput.Trim());
+                _currentInput = "";
+            }
         }
+        /// <summary>
+        /// 处理扫码数据
+        /// </summary>
+        private void ProcessBarcode(string barcode)
+        {
+            // 防重复检查
+            if (barcode == _lastBarcode &&
+                DateTime.Now.Subtract(_lastScanTime).TotalMilliseconds < _antiRepeatIntervalMs)
+            {
+                Debug.WriteLine($"扫码重复检测：忽略 {barcode}");
+                return;
+            }
+            _lastBarcode = barcode;
+            _lastScanTime = DateTime.Now;
+            Debug.WriteLine($"扫码完成: {barcode}");
+            BarcodeScanned?.Invoke(this, new BarcodeScannedEventArgs
+            {
+                Barcode = barcode,
+                ScanTime = DateTime.Now
+            });
+        }
+        /// <summary>
+        /// 尝试从虚拟键码获取特殊字符
+        /// </summary>
+        private bool TryGetCharFromVKey(int vkCode, out char result)
+        {
+            result = '\0';
+            var symbolMap = new Dictionary<int, char>
+            {
+                { 189, '-' },   // 减号
+                { 187, '=' },   // 等号
+                { 219, '[' },   // 左方括号
+                { 221, ']' },   // 右方括号
+                { 186, ';' },   // 分号
+                { 222, '\'' },  // 单引号
+                { 188, ',' },   // 逗号
+                { 190, '.' },   // 句号
+                { 191, '/' },   // 斜杠
+                { 220, '\\' },  // 反斜杠
+                { 192, '`' },   // 反引号
+            };
+            return symbolMap.TryGetValue(vkCode, out result);
+        }
+        #region Win32 API
+        private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn,
+            IntPtr hMod, uint dwThreadId);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool UnhookWindowsHookEx(IntPtr hhk);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode,
+            IntPtr wParam, IntPtr lParam);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr GetModuleHandle(string lpModuleName);
+        [DllImport("kernel32.dll")]
+        private static extern uint GetCurrentThreadId();
+        [DllImport("user32.dll")]
+        private static extern short GetKeyState(int nVirtKey);
+        #endregion
     }
-
 }

@@ -118,7 +118,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 p.IsSelected = false;
             }
             patient.IsSelected = true;
-            Username = patient.Name;
+            Username = patient.LoginName;
             _seleedPatientId = patient.Id;
         }
 

@@ -33,6 +33,7 @@
             <Setter Property="Margin" Value="10,5"></Setter>
             <Setter Property="Width" Value="250"></Setter>
         </Style>
+       
     </UserControl.Resources>
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
@@ -74,13 +75,13 @@
                 </Grid.RowDefinitions>
                 
                 <TextBlock Grid.Column="0" Grid.Row="1" Text="登录账号"  hc:InfoElement.Placeholder="请输入账号"  Style="{StaticResource textblockTitleStyle}"></TextBlock>
-                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding LoginAccount, Mode=TwoWay}"   Style="{StaticResource textboxStyle}" MaxLength="20"></TextBox>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding LoginAccount, Mode=TwoWay}" MaxLength="20"  Style="{StaticResource textboxStyle}"></TextBox>
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="姓名" Style="{StaticResource textblockTitleStyle}"></TextBlock>
-                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Name, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Name, Mode=TwoWay}" MaxLength="20" Style="{StaticResource textboxStyle}"></TextBox>
                 <TextBlock Grid.Column="0" Grid.Row="3" Text="联系电话" Style="{StaticResource textblockTitleStyle}"></TextBlock>
-                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Phone, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
+                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Phone, Mode=TwoWay}" MaxLength="20" Style="{StaticResource textboxStyle}"></TextBox>
                 <TextBlock Grid.Column="0" Grid.Row="4" Text="身份证号" Style="{StaticResource textblockTitleStyle}"></TextBlock>
-                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding IdCard, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
+                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding IdCard, Mode=TwoWay}" MaxLength="20" Style="{StaticResource textboxStyle}"></TextBox>
                 <TextBlock Grid.Column="0" Grid.Row="5" Text="年龄" Style="{StaticResource textblockTitleStyle}"></TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Age, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
                 <TextBlock Grid.Column="0" Grid.Row="6" Text="性别" Style="{StaticResource textblockTitleStyle}"></TextBlock>
@@ -91,7 +92,7 @@
                 <ComboBox Grid.Column="1" Grid.Row="8" ItemsSource="{Binding GradeList}" SelectedValue="{Binding Grade, Mode=TwoWay}" Style="{StaticResource comboboxStyle}"></ComboBox>
                 <TextBlock Grid.Column="0" Grid.Row="9" Text="班级" Style="{StaticResource textblockTitleStyle}"></TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="9" Text="{Binding ClassName, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
-                <Button Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2" Content="确认登录"  Width="250" Margin="20,20" Style="{StaticResource ConfirmButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RegisterCommand}" />
+                <Button Grid.Column="0" Grid.Row="10" IsEnabled="False" Grid.ColumnSpan="2" Content="确认登录"  Width="250" Margin="20,20" Style="{StaticResource ConfirmButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RegisterCommand}" />
 
 
 

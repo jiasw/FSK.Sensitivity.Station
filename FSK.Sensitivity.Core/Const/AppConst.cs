@@ -110,10 +110,6 @@ namespace FSK.Sensitivity.Core.Const
         /// </summary>
         public const string Dict_Key_MotorPort = "02";
 
-        /// <summary>
-        /// 字典键值：扫描仪串口
-        /// </summary>
-        public const string Dict_Key_ScannerPort = "04";
         #endregion
 
     }

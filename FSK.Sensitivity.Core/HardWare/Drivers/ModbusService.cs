@@ -15,7 +15,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
     {
         // 锁对象，确保 RTU 这种半双工通讯在并发调用时不会冲突
         private readonly SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
-        
+        private readonly ILogger<ModbusService> logger;
         private ModbusRtuClient _client;
         
         private bool _isConnected;
@@ -27,7 +27,10 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         private string _portName;
         private byte _deviceId = 1; // 默认设备ID，可根据需要修改
 
-       
+        public ModbusService(ILogger<ModbusService> logger)
+        {
+            this.logger = logger;
+        }
 
         public void Initialize(string portName)
         {
@@ -61,7 +64,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             }
             catch (Exception ex)
             {
-                LogHelper.Instance.LogError($"串口打开失败", ex);
+                logger.LogError($"串口打开失败", ex);
                 return false;
             }
         }
@@ -88,7 +91,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             }
             catch (Exception ex)
             {
-                LogHelper.Instance.LogError($"串口读取失败", ex);
+                logger.LogError($"串口读取失败", ex);
                 return null;
             }
             finally
@@ -112,7 +115,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             }
             catch (Exception ex)
             {
-                LogHelper.Instance.LogError($"串口写入失败",ex);
+                logger.LogError($"串口写入失败",ex);
                 return false;
             }
             finally
@@ -134,7 +137,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             }
             catch (Exception ex)
             {
-                LogHelper.Instance.LogError($"串口写入失败", ex);
+                logger.LogError($"串口写入失败", ex);
                 return false;
             }
             finally

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static FSK.Sensitivity.Core.HardWare.Drivers.UsbQrCodeTools;
+
 
 namespace FSK.Sensitivity.Core.HardWare.Peripherals
 {
@@ -13,7 +13,7 @@ namespace FSK.Sensitivity.Core.HardWare.Peripherals
     public interface IScanner
     {
 
-        public event ScanerDelegate ScanCompleted;
+       // public event ScanerDelegate ScanCompleted;
 
         /// <summary>
         /// 是否可用

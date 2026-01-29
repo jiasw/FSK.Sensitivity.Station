@@ -1,22 +1,93 @@
-﻿using FSK.Sensitivity.Core.HardWare.Peripherals;
+﻿using FSK.Sensitivity.Core.HardWare.Drivers;
+using FSK.Sensitivity.Core.HardWare.Peripherals;
+using FSK.Sensitivity.Core.Infrastructure;
 using NetTaste;
 using Serilog;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
     public class ScanViewModel : BaseViewModel, IDialogAware
     {
         private string title="扫描登录";
-
-        public ScanViewModel(IScanner scanner)
+        private readonly IBarcodeScannerService _scannerService;
+        private ObservableCollection<string> _scanHistory;
+        private string _scannedBarcode;
+        public string ScannedBarcode
         {
-            Scanner = scanner;
+            get => _scannedBarcode;
+            set => SetProperty(ref _scannedBarcode, value);
+        }
+        private string _scannerStatus;
+        public string ScannerStatus
+        {
+            get => _scannerStatus;
+            set => SetProperty(ref _scannerStatus, value);
+        }
+        private bool _isScannerActive;
+        public bool IsScannerActive
+        {
+            get => _isScannerActive;
+            set => SetProperty(ref _isScannerActive, value);
+        }
+        public ObservableCollection<string> ScanHistory
+        {
+            get => _scanHistory;
+            set => SetProperty(ref _scanHistory, value);
+        }
+        
+        public ICommand ClearCommand { get; }
+        public ScanViewModel(IBarcodeScannerService scanner)
+        {
+            this._scannerService = scanner;
+            _scanHistory = new ObservableCollection<string>();
             
+            ClearCommand = new DelegateCommand(() => ScannedBarcode = "");
+            _scannerService.BarcodeScanned += OnBarcodeScanned;
+            UpdateStatus();
+        }
+
+
+        private void StartScanning()
+        {
+            _scannerService.StartListening();
+            UpdateStatus();
+        }
+        private void StopScanning()
+        {
+            _scannerService.StopListening();
+            UpdateStatus();
+        }
+        private void OnBarcodeScanned(object sender, BarcodeScannedEventArgs e)
+        {
+            ScannedBarcode = e.Barcode;
+            //LogHelper.Instance.LogDebug($"扫描结果:{ScannedBarcode}");
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Close();
+            });
+            
+            //// 添加到历史记录
+            //Application.Current.Dispatcher.Invoke(() =>
+            //{
+            //    ScanHistory.Insert(0, $"{e.ScanTime:HH:mm:ss.fff} - {e.Barcode}");
+            //    if (ScanHistory.Count > 100) // 只保留最近100条
+            //        ScanHistory.RemoveAt(ScanHistory.Count - 1);
+            //});
+        }
+        private void UpdateStatus()
+        {
+            IsScannerActive = _scannerService.IsListening;
+            ScannerStatus = IsScannerActive ? "监听中..." : "已停止";
         }
 
         private void Scanner_ScanCompleted(string result)
@@ -38,24 +109,23 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnDialogClosed()
         {
-            Scanner.Stop();
-            Scanner.ScanCompleted -= Scanner_ScanCompleted;
+            StopScanning();
+
 
         }
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            Scanner.Start();
-            Scanner.ScanCompleted += Scanner_ScanCompleted;
-
+            StartScanning();
         }
 
         public DelegateCommand CloseCommand => new DelegateCommand(Close);
 
-        public IScanner Scanner { get; }
+
 
         private void Close()
         {
+            StopScanning();
             RequestClose.Invoke();
         }
 

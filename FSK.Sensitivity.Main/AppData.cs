@@ -39,7 +39,13 @@ namespace FSK.Sensitivity.Main
         /// <summary>
         /// 是否登录
         /// </summary>
-        public bool IsLogin { get; set; }
+        public bool IsLogin { get; set; }=false;
+
+
+        /// <summary>
+        /// 当前设备是否注册
+        /// </summary>
+        public bool IsRegister { get; set; }=false;
 
         
         /// <summary>

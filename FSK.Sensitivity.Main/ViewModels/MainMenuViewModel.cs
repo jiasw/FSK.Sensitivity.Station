@@ -6,6 +6,7 @@ using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Utility;
 using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
+using Microsoft.Extensions.Logging;
 using Prism.Dialogs;
 using Prism.Navigation.Regions;
 using System;
@@ -26,16 +27,23 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IDialogService dialogService;
         private readonly IModbusService modbusService;
         private readonly IConfigurationService configurationService;
+        private readonly ISecureRegistrationService secureRegistrationService;
+        private readonly ICloudSyncService cloudSyncService;
+        private readonly ILogger<MainMenuViewModel> logger;
         private readonly AppSetting appSetting;
         private System.Timers.Timer checkNetWorkTimer;
 
         public MainMenuViewModel(IRegionManager regionManager, IDialogService dialogService
-            , IModbusService modbusService, IConfigurationService configurationService)
+            , IModbusService modbusService, IConfigurationService configurationService
+            , ISecureRegistrationService secureRegistrationService, ICloudSyncService cloudSyncService,ILogger<MainMenuViewModel> logger)
         {
             this.regionManager = regionManager;
             this.dialogService = dialogService;
             this.modbusService = modbusService;
             this.configurationService = configurationService;
+            this.secureRegistrationService = secureRegistrationService;
+            this.cloudSyncService = cloudSyncService;
+            this.logger = logger;
             this.appSetting = configurationService.LoadSetting();
             AppData.Instance.DialogService = dialogService;
             checkNetWorkTimer = new System.Timers.Timer(10000); // 设置定时器间隔为5秒
@@ -110,11 +118,20 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
 
-        public DelegateCommand LoadedCommand => new DelegateCommand(Loaded);
+        public DelegateCommand LoadedCommand => new DelegateCommand( async () => await Loaded());
 
-        private void Loaded()
+        private async Task Loaded()
         {
-             CheckHardware();
+            logger.LogInformation("开始注册");
+
+            DeviceActiveResult result = await cloudSyncService.GetActiveResultAsync("FSK20260129003");
+            //scanner.Stop();
+            //DeviceRegistResult RE = await cloudSyncService.RegisterDevice<DeviceRegistResult>();
+            if (!secureRegistrationService.IsRegistered())
+            {
+                
+            }
+            CheckHardware();
 
         }
         public DelegateCommand ExitCommand=> new DelegateCommand(ExitLogin);
@@ -127,10 +144,30 @@ namespace FSK.Sensitivity.Main.ViewModels
             LoginVisibility = Visibility.Visible;
         }
 
-        
+        /// <summary>
+        /// 设备注册
+        /// </summary>
+        private void RegisterHardware()
+        {
+            if (string.IsNullOrWhiteSpace(appSetting.DeviceInfo.DeviceNo))
+            {
+                MessageBoxResult messageBoxResult = MessageBoxService.Instance.ShowConfirm("是否初始化系统？");
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    
+                }
+                else
+                {
+                    AppData.Instance.IsRegister = false;
+                }
+            }
+            
+
+        }
 
         private void CheckHardware()
         {
+            RegisterHardware();
             IsLoading = true;
             if (!modbusService.IsConnected)
             {
@@ -156,6 +193,11 @@ namespace FSK.Sensitivity.Main.ViewModels
                 MessageBoxService.Instance.Show("请先登录！");
                 return;
             }
+            if (!AppData.Instance.IsRegister)
+            {
+                MessageBoxService.Instance.Show("请先注册设备！");
+                return;
+            }
             if (!modbusService.IsConnected)
             {
                 MessageBoxService.Instance.Show("硬件设备未连接，请连接后重试！");
@@ -170,6 +212,11 @@ namespace FSK.Sensitivity.Main.ViewModels
             if (!AppData.Instance.IsLogin)
             {
                 MessageBoxService.Instance.Show("请先登录！");
+                return;
+            }
+            if (!AppData.Instance.IsRegister)
+            {
+                MessageBoxService.Instance.Show("请先注册设备！");
                 return;
             }
             if (!modbusService.IsConnected)

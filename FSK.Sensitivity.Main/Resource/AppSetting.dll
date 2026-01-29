@@ -4,13 +4,18 @@
   "RemoteSupportPath": "C:\\Program Files\\Oray\\SunLogin\\SunloginClient\\SunloginClient.exe",
   "ModbusPortName": "COM2",
   "ComfirmPassword": "19450902",
+  "RegisterDomain": "http://139.155.181.9:10057",
   "DeviceInfo": {
+    "ProductName": "对比敏感度系统",
     "MainProgramExeName": "",
-    "DeviceModel": "",
+    "DeviceType": "睫状肌锻炼仪",
+    "DeviceModel": "FSK4005",
     "DeviceNo": "",
-    "ProductVersion": "",
+    "ProductVersion": "2025.01.01",
     "UpdateTime": "",
-    "UpdateWaitTime": 10
+    "UpdateWaitTime": 10,
+    "FactoryName": "中国一汽",
+    "FactoryPhone": "110119"
   }
 
 }

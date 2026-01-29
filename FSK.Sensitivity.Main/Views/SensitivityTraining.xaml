@@ -68,16 +68,12 @@
                             <Run Text="："/>
                     </TextBlock>
                     <TextBlock  Grid.Column="1" Text="对比敏感度" Grid.ColumnSpan="4" Style="{StaticResource txtValue}"/>
-                    <TextBlock  Grid.Column="4"  Style="{StaticResource txtTitle}">
-        <Run Text="年龄"/>
-        <Run Text="："/>
-                    </TextBlock>
-                    <TextBlock    Grid.Column="5"  Text="{Binding Age}"  Style="{StaticResource txtValue}"/>
-                    <TextBlock Grid.Column="0"  Grid.Row="1" Style="{StaticResource txtTitle}">
-<Run Text="ID"/>
+                    
+                    <TextBlock Grid.Column="0" Grid.Row="1"   Style="{StaticResource txtTitle}">
+<Run Text="姓名"/>
 <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Column="1"  Grid.Row="1" Text="{Binding Id}"  Style="{StaticResource txtValue}"/>
+                    <TextBlock  Grid.Column="1" Grid.Row="1" Text="{Binding Name}"  TextWrapping="WrapWithOverflow" Style="{StaticResource txtValue}"/>
 
                     <TextBlock Grid.Column="2"  Grid.Row="1" Style="{StaticResource txtTitle}">
         <Run Text="瞳距"/>
@@ -89,12 +85,12 @@
 <Run Text="："/>
                     </TextBlock>
                     <TextBlock  Grid.Column="5"  Grid.Row="1" Text="{Binding LightDesc}"  Style="{StaticResource txtValue}"/>
-
-                    <TextBlock Grid.Column="0" Grid.Row="2"   Style="{StaticResource txtTitle}">
-<Run Text="姓名"/>
+                    <TextBlock  Grid.Column="0" Grid.Row="2"  Style="{StaticResource txtTitle}">
+<Run Text="年龄"/>
 <Run Text="："/>
                     </TextBlock>
-                    <TextBlock  Grid.Column="1" Grid.Row="2" Text="{Binding Name}"  TextWrapping="WrapWithOverflow" Style="{StaticResource txtValue}"/>
+                    <TextBlock    Grid.Column="1"  Grid.Row="2"  Text="{Binding Age}"  Style="{StaticResource txtValue}"/>
+
                     <TextBlock  Grid.Row="2" Grid.Column="2"  Style="{StaticResource txtTitle}">
 <Run Text="性别"/>
 <Run Text="："/>

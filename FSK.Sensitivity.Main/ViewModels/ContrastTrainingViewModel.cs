@@ -474,7 +474,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 Name = AppData.Instance.CurrentPatient.PatientName,
                 Gender = AppData.Instance.CurrentPatient.Gender,
                 Age = AppData.Instance.CurrentPatient.Age.ToString(),
-                
+                PD= contrastConfigParam.PD,
             };
             dictResult.Clear();
             light.TurnOnAll();
