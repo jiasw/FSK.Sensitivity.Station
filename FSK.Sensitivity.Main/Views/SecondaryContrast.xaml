@@ -9,16 +9,18 @@
 prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" Name="对比度视标"
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-       
-    </UserControl.Resources>
+    
     <Grid Background="{Binding BackColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="0.8*"/>
             <RowDefinition Height="5*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-        <TextBlock FontSize="44" Foreground="{Binding TitleColor}" Text="请选择您能看清的编号最大的视标，并选择下方的按钮。"  VerticalAlignment="Bottom" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+        <TextBlock  Foreground="{Binding TitleColor}" FontSize="{StaticResource subScreenhintFontSize}" Margin="80,0" TextAlignment="Center"  VerticalAlignment="Bottom" TextWrapping="Wrap" HorizontalAlignment="Center">
+            <Run>请选择您能看清的编号最大的视标</Run>
+            <LineBreak></LineBreak>
+            <Run>并选择下方的按钮</Run>
+        </TextBlock>
 
         <Border Grid.Row="1">
             <Border.Background>
@@ -27,18 +29,25 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                 </ImageBrush>
             </Border.Background>
         </Border>
-
-        <UniformGrid Grid.Row="2" Rows="2" HorizontalAlignment="Center" >
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="1"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=2}" Content="2"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=3}" Content="3"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=4}" Content="4"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=5}" Content="5"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=6}" Content="6"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=7}" Content="7"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=8}" Content="8"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=9}" Content="9"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=10}" Content="10"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-        </UniformGrid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="5*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <UniformGrid  Grid.Column="1" Rows="2"  Background="Red" >
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Content="1"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=2}" Content="2"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=3}" Content="3"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=4}" Content="4"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=5}" Content="5"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=6}" Content="6"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=7}" Content="7"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=8}" Content="8"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=9}" Content="9"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=10}" Content="10"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+            </UniformGrid>
+        </Grid>
+        
     </Grid>
 </UserControl>

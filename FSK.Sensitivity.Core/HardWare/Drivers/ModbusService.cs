@@ -54,6 +54,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         {
             try
             {
+                
                 if (!IsConnected)
                 {
                     // 参数：端口号, 波特率, 校验位, 数据位, 停止位

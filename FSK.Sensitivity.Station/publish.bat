@@ -1,25 +1,25 @@
 @echo off
 SETLOCAL
 
-:: 1. å®šä¹‰å‘å¸ƒè·¯å¾„ï¼ˆå½“å‰ç›®å½•ä¸‹çš„ PublishOutput æ–‡ä»¶å¤¹ï¼‰
+:: 1. ¶¨Òå·¢²¼Â·¾¶£¨µ±Ç°Ä¿Â¼ÏÂµÄ PublishOutput ÎÄ¼ş¼Ğ£©
 SET OUTPUT_DIR=%~dp0PublishOutput
 
-echo å¼€å§‹å‘å¸ƒ WPF åº”ç”¨åˆ°: %OUTPUT_DIR%
-echo æ¨¡å¼: ç‹¬ç«‹å‘å¸ƒ (Self-contained), ä¸æ‰“åŒ…å•æ–‡ä»¶
+echo ¿ªÊ¼·¢²¼ WPF Ó¦ÓÃµ½: %OUTPUT_DIR%
+echo Ä£Ê½: ¶ÀÁ¢·¢²¼ (Self-contained), ²»´ò°üµ¥ÎÄ¼ş
 
-:: 2. æ‰§è¡Œå‘å¸ƒå‘½ä»¤
-:: -r æŒ‡å®šè¿è¡Œæ—¶ï¼Œ--self-contained æŒ‡å®šåŒ…å«è¿è¡Œæ—¶
-:: -p:PublishSingleFile=false æ˜¾å¼ç¦ç”¨å•æ–‡ä»¶æ‰“åŒ…
+:: 2. Ö´ĞĞ·¢²¼ÃüÁî
+:: -r Ö¸¶¨ÔËĞĞÊ±£¬--self-contained Ö¸¶¨°üº¬ÔËĞĞÊ±
+:: -p:PublishSingleFile=false ÏÔÊ½½ûÓÃµ¥ÎÄ¼ş´ò°ü
 dotnet publish -c Release -r win-x64 --self-contained true -o "%OUTPUT_DIR%" -p:PublishSingleFile=false -p:PublishReadyToRun=true
 
 if %ERRORLEVEL% EQU 0 (
     echo.
     echo ==========================================
-    echo å‘å¸ƒæˆåŠŸï¼è¯·æŸ¥çœ‹ç›®å½•: %OUTPUT_DIR%
+    echo ·¢²¼³É¹¦£¡Çë²é¿´Ä¿Â¼: %OUTPUT_DIR%
     echo ==========================================
 ) else (
     echo.
-    echo [é”™è¯¯] å‘å¸ƒå¤±è´¥ï¼Œè¯·æ£€æŸ¥é”™è¯¯æ—¥å¿—ã€‚
+    echo [´íÎó] ·¢²¼Ê§°Ü£¬Çë¼ì²é´íÎóÈÕÖ¾¡£
 )
 
 pause

@@ -148,9 +148,16 @@
                                             <ControlTemplate TargetType="Button">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image  Height="30" Width="30"  x:Name="BtnImage" Stretch="Uniform" Source="/FSK.Sensitivity.Main;component/Resource/Images/shutdown.png" />
-                                                    <TextBlock Text="关机" Margin="5,1" FontSize="20" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                                                    <TextBlock Text="关机" Name="Btntxt" Margin="5,1" FontSize="20" VerticalAlignment="Center" Foreground="White"></TextBlock>
                                                 </StackPanel>
-                                            </ControlTemplate>
+                                            <ControlTemplate.Triggers>
+                                                <!-- 按钮按下时 -->
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="BtnImage" Property="Opacity" Value="0.6"/>
+                                                    <Setter TargetName="Btntxt" Property="Opacity" Value="0.6"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
                                 </Style>
@@ -165,9 +172,16 @@
                                             <ControlTemplate TargetType="Button">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image  Height="30" Width="30"  x:Name="BtnImage" Stretch="Uniform" Source="/FSK.Sensitivity.Main;component/Resource/Images/restart.png" />
-                                                    <TextBlock Text="重启" Margin="5,1" FontSize="20" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                                                <TextBlock Text="重启" Margin="5,1" Name="Btntxt" FontSize="20" VerticalAlignment="Center" Foreground="White"></TextBlock>
                                                 </StackPanel>
-                                            </ControlTemplate>
+                                            <ControlTemplate.Triggers>
+                                                <!-- 按钮按下时 -->
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="BtnImage" Property="Opacity" Value="0.6"/>
+                                                    <Setter TargetName="Btntxt" Property="Opacity" Value="0.6"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
                                 </Style>
@@ -183,7 +197,7 @@
 
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image Height="30" Width="30" x:Name="BtnImage" Stretch="Uniform"  />
-                                                    <TextBlock Text="网络" Margin="5,1" FontSize="20" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                                                <TextBlock Text="网络" Margin="5,1" Name="Btntxt" FontSize="20" VerticalAlignment="Center" Foreground="White"></TextBlock>
                                                 </StackPanel>
                                                 <ControlTemplate.Triggers>
                                                     <DataTrigger Binding="{Binding NetWorkActive}" Value="True">
@@ -193,8 +207,15 @@
                                                     <DataTrigger Binding="{Binding NetWorkActive}" Value="False">
                                                         <Setter TargetName="BtnImage" Property="Source" Value="/FSK.Sensitivity.Main;component/Resource/Images/wifibreak.png" />
                                                     </DataTrigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
+                                                <!-- 按钮按下时 -->
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="BtnImage" Property="Opacity" Value="0.6"/>
+                                                    <Setter TargetName="Btntxt" Property="Opacity" Value="0.6"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+
+                                            
+                                        </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
                                 </Style>
@@ -209,7 +230,7 @@
                                             <ControlTemplate TargetType="Button">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image  Height="30" Width="30"  x:Name="BtnImage" Stretch="Uniform"  />
-                                                    <TextBlock Text="工作台" Margin="5,1" FontSize="20" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                                                <TextBlock Text="工作台" Name="Btntxt" Margin="5,1" FontSize="20" VerticalAlignment="Center" Foreground="White"></TextBlock>
                                                 </StackPanel>
                                                 <ControlTemplate.Triggers>
                                                     <DataTrigger Binding="{Binding PlatformActive}" Value="True">
@@ -219,7 +240,13 @@
                                                     <DataTrigger Binding="{Binding PlatformActive}" Value="False">
                                                         <Setter TargetName="BtnImage" Property="Source" Value="/FSK.Sensitivity.Main;component/Resource/Images/platform_offline.png" />
                                                     </DataTrigger>
-                                                </ControlTemplate.Triggers>
+
+                                                <!-- 按钮按下时 -->
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="BtnImage" Property="Opacity" Value="0.6"/>
+                                                    <Setter TargetName="Btntxt" Property="Opacity" Value="0.6"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>

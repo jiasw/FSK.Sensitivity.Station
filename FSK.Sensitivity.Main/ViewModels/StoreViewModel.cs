@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.Const;
+using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Repositories;
 using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
@@ -14,13 +15,16 @@ namespace FSK.Sensitivity.Main.ViewModels
 {
     public class StoreViewModel : BaseViewModel
     {
-        public StoreViewModel(DictRepository dictRepository)
+        public StoreViewModel(DictRepository dictRepository, IConfigurationService configurationService)
         {
             this.dictRepository = dictRepository;
+            this.configurationService = configurationService;
+            
         }
 
         private string _name;
         private readonly DictRepository dictRepository;
+        private readonly IConfigurationService configurationService;
 
         public string Name
         {
@@ -66,13 +70,14 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private async Task Load()
         {
+            Code = configurationService.LoadSetting().DeviceInfo.DeviceNo;
+
             string[] dictcodes=new string[] { AppConst.Dict_TypeCode_StoreName, AppConst.Dict_TypeCode_StoreCode, AppConst.Dict_TypeCode_StoreLogo };
 
             var storeDict = await dictRepository.Query(n => dictcodes.Contains(n.TypeCode));
             if (storeDict!= null && storeDict.Count > 0)
             {
                 Name = GetDictNameByTypeCode(AppConst.Dict_TypeCode_StoreName, storeDict);
-                Code = GetDictNameByTypeCode(AppConst.Dict_TypeCode_StoreCode, storeDict);
                 Image = GetDictNameByTypeCode(AppConst.Dict_TypeCode_StoreLogo, storeDict);
             }
         }
@@ -133,29 +138,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 });
             }
         }
-        private async Task SaveCode()
-        {
-            if (string.IsNullOrEmpty(Code))
-            {
-                return;
-            }
-            var storeDict = await dictRepository.Query(n => n.TypeCode == AppConst.Dict_TypeCode_StoreCode);
-            if (storeDict != null && storeDict.Count > 0)
-            {
-                storeDict[0].Name = Code;
-                await dictRepository.Update(storeDict[0]);
-            }
-            else
-            {
-                await dictRepository.Add(new Core.Entity.Dict()
-                {
-                    Code = "01",
-                    Name = Code,
-                    TypeCode = AppConst.Dict_TypeCode_StoreCode,
-                    IsDeleted = false
-                });
-            }
-        }
+        
 
         private async Task SaveLogo()
         {
@@ -184,7 +167,6 @@ namespace FSK.Sensitivity.Main.ViewModels
         private async Task Save()
         {
             _ = saveName();
-            _ = SaveCode();
             _ = SaveLogo();
 
 

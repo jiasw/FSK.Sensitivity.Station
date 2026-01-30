@@ -8,7 +8,7 @@
              xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="750" d:DesignWidth="500">
+             d:DesignHeight="550" d:DesignWidth="500">
     <UserControl.Resources>
         <Style x:Key="textblockTitleStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="{StaticResource FontSizelabel}" />
@@ -92,7 +92,7 @@
                 <ComboBox Grid.Column="1" Grid.Row="8" ItemsSource="{Binding GradeList}" SelectedValue="{Binding Grade, Mode=TwoWay}" Style="{StaticResource comboboxStyle}"></ComboBox>
                 <TextBlock Grid.Column="0" Grid.Row="9" Text="班级" Style="{StaticResource textblockTitleStyle}"></TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="9" Text="{Binding ClassName, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
-                <Button Grid.Column="0" Grid.Row="10" IsEnabled="False" Grid.ColumnSpan="2" Content="确认登录"  Width="250" Margin="20,20" Style="{StaticResource ConfirmButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RegisterCommand}" />
+                <Button Grid.Column="0" Grid.Row="10"  Grid.ColumnSpan="2" Content="确认登录"  Width="250" Margin="20,20" Style="{StaticResource ConfirmButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RegisterCommand}" />
 
 
 

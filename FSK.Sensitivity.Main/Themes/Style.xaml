@@ -9,6 +9,9 @@
     <system:Double x:Key="FontSizeSecondTitle">28</system:Double>
     <system:Double x:Key="FontSizeInfo">24</system:Double>
     <system:Double x:Key="FontSizelabel">20</system:Double>
+
+    <system:Double x:Key="subScreenTitleFontSize">130</system:Double>
+    <system:Double x:Key="subScreenhintFontSize">100</system:Double>
     <lclcv:EnumConverter x:Key="EnumConverter" />
     <lclcv:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
     <lclcv:LightStatusToBoolConverter x:Key="LightStatusToBoolConverter" />
@@ -843,24 +846,25 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="SignToggleButtonBaseStyle"  TargetType="ToggleButton">
+    <Style x:Key="SignToggleButtonBaseStyle" BasedOn="{StaticResource ButtonBaseBaseStyle}" TargetType="ToggleButton">
         <Setter Property="BorderThickness" Value="4"/>
-        <Setter Property="Width" Value="120"/>
-        <Setter Property="Height" Value="120"/>
-        <Setter Property="Margin" Value="20,0"/>
-        <Setter Property="FontSize" Value="84"></Setter>
-        <Setter Property="hc:BorderElement.CornerRadius" Value="4"/>
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="Height" Value="200"/>
+        <Setter Property="Margin" Value="50,0"/>
+        <Setter Property="hc:BorderElement.CornerRadius" Value="10"/>
         <Setter Property="Foreground" Value="{DynamicResource MainBrush}"></Setter>
         <Setter Property="BorderBrush" Value="{DynamicResource MainBrush}"></Setter>
-
+        <Setter Property="FontSize" Value="130"></Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
                     <hc:SimplePanel>
                         <Border Background="{TemplateBinding Background}" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}"/>
-                        <Border BorderThickness="4" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}">
-                            <ContentPresenter x:Name="ContentPresenterMain" HorizontalAlignment="Center" RecognizesAccessKey="True" VerticalAlignment="Center" Margin="0,0,0,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-
+                        <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}">
+                                <Path x:Name="PathMain" Width="{TemplateBinding hc:IconElement.Width}" Height="{TemplateBinding hc:IconElement.Height}" Fill="{TemplateBinding Foreground}" SnapsToDevicePixels="True" Stretch="Uniform" Data="{TemplateBinding hc:IconElement.Geometry}"/>
+                                <ContentPresenter x:Name="ContentPresenterMain" RecognizesAccessKey="True" VerticalAlignment="Center" Margin="0,0,0,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </StackPanel>
                         </Border>
                         <Border Margin="-1" Visibility="Collapsed" CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}" x:Name="BorderChecked" BorderThickness="4" BorderBrush="{DynamicResource MainBrush}"/>
                     </hc:SimplePanel>
@@ -871,7 +875,10 @@
                         <Trigger Property="Content" Value="{x:Null}">
                             <Setter Property="Visibility" Value="Collapsed" TargetName="ContentPresenterMain"/>
                         </Trigger>
-
+                        <Trigger Property="hc:IconElement.Geometry" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="PathMain"/>
+                            <Setter Property="Margin" Value="0" TargetName="ContentPresenterMain"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

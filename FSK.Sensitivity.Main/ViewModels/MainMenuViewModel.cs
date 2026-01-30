@@ -122,18 +122,40 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private async Task Loaded()
         {
-            logger.LogInformation("开始注册");
-
-            DeviceActiveResult result = await cloudSyncService.GetActiveResultAsync("FSK20260129003");
-            //scanner.Stop();
-            //DeviceRegistResult RE = await cloudSyncService.RegisterDevice<DeviceRegistResult>();
-            if (!secureRegistrationService.IsRegistered())
-            {
-                
-            }
-            CheckHardware();
-
+            await CheckDeviceStatus();
         }
+
+        // 检查设备状态
+        private async Task<bool> CheckDeviceStatus()
+        {
+            IsLoading = true;
+            //检查设备硬件状态
+            if (!modbusService.IsConnected)
+            {
+                if (string.IsNullOrWhiteSpace(appSetting.ModbusPortName))
+                {
+                    IsLoading = false;
+                    MessageBoxService.Instance.Show("请先设置硬件设备连接端口！", "设备未连接", MessageBoxButton.OK);
+                    return false;
+                }
+                modbusService.Initialize(appSetting.ModbusPortName);
+                if (!modbusService.Connect())
+                {
+                    IsLoading = false;
+                    MessageBoxService.Instance.Show("硬件设备未连接，请连接后重试！", "设备未连接", MessageBoxButton.OK);
+                    return false;
+                }
+            }
+            
+            if (!await InitializeDeviceStatusAsync())
+            {
+                IsLoading = false;
+                return false;
+            }
+            IsLoading = false;
+            return true;
+        }
+
         public DelegateCommand ExitCommand=> new DelegateCommand(ExitLogin);
 
         private void ExitLogin()
@@ -144,86 +166,141 @@ namespace FSK.Sensitivity.Main.ViewModels
             LoginVisibility = Visibility.Visible;
         }
 
-        /// <summary>
-        /// 设备注册
-        /// </summary>
-        private void RegisterHardware()
+       
+
+        private async Task<bool> InitializeDeviceStatusAsync()
         {
-            if (string.IsNullOrWhiteSpace(appSetting.DeviceInfo.DeviceNo))
+            /*
+             1.判断设备能否连上服务器
+            2.判断设备是否注册
+            3.判断设备是否激活
+            4.判断硬件设备是否连接
+             
+             */
+            
+            if (!AppData.Instance.IsConnectCloud)
             {
-                MessageBoxResult messageBoxResult = MessageBoxService.Instance.ShowConfirm("是否初始化系统？");
-                if (messageBoxResult == MessageBoxResult.Yes)
+                LoadingMessageText = "正在连接服务器...";
+                bool connectCloud= await cloudSyncService.IsCanConnect();
+                if (!connectCloud)
                 {
-                    
+                    MessageBoxService.Instance.Show("无法连接服务器，请稍后重试", "连接服务器失败", MessageBoxButton.OK);
+                    return false;
                 }
                 else
                 {
-                    AppData.Instance.IsRegister = false;
+                    AppData.Instance.IsConnectCloud = true;
                 }
             }
-            
+            PlatformActive = AppData.Instance.IsConnectCloud;
 
+            if (!AppData.Instance.IsRegister)
+            {
+                LoadingMessageText = "正在检查设备注册信息...";
+                /*
+                 判断本机是否有注册信息
+                 */
+                DeviceRegisterModel? deviceRegisterModel = secureRegistrationService.LoadRegistration();
+                if (deviceRegisterModel == null) {
+                    //判断是否有设备类型
+                    if(string.IsNullOrWhiteSpace(appSetting.DeviceInfo.DeviceType))
+                    {
+                        MessageBoxService.Instance.Show("请联系工程师配置设备类型信息！", "注册", MessageBoxButton.OK);
+                        return false;
+                    }
+                    if (string.IsNullOrWhiteSpace(appSetting.DeviceInfo.DeviceModel))
+                    {
+                        MessageBoxService.Instance.Show("请联系工程师配置设备型号信息！", "注册", MessageBoxButton.OK);
+                        return false;
+                    }
+                    //弹窗提示是否注册设备
+                    if (MessageBoxService.Instance.ShowConfirm("请确认是否注册设备？", "注册") == MessageBoxResult.No)
+                    {
+                        return false;
+                    }
+
+                    //执行注册逻辑
+                    DeviceRegistResult registResult= await cloudSyncService.RegisterDevice();
+                    if (!registResult.Result)
+                    {
+                        MessageBoxService.Instance.Show("设备注册失败,请稍候重试", "注册", MessageBoxButton.OK);
+                        return false;
+                    }
+                    else
+                    {
+                        if (appSetting.DeviceInfo.DeviceNo != registResult.DeviceNum)
+                        {
+                            appSetting.DeviceInfo.DeviceNo=registResult.DeviceNum;
+                            configurationService.SaveSetting(appSetting);
+                        }
+                        secureRegistrationService.SaveRegistration(new DeviceRegisterModel() { 
+                            DeviceNo=registResult.DeviceNum,
+                        });
+                        AppData.Instance.IsRegister = true;
+                    }
+                }
+                else
+                {
+                    if (appSetting.DeviceInfo.DeviceNo != deviceRegisterModel.DeviceNo)
+                    {
+                        appSetting.DeviceInfo.DeviceNo = deviceRegisterModel.DeviceNo;
+                        configurationService.SaveSetting(appSetting);
+                    }
+                    AppData.Instance.IsRegister = true;
+                }
+            }
+
+            if (!AppData.Instance.IsActivate)
+            {
+                LoadingMessageText = "正在检查设备激活信息...";
+                DeviceActiveResult deviceActiveResult= await cloudSyncService.GetActiveResultAsync(appSetting.DeviceInfo.DeviceNo);
+                if (!deviceActiveResult.Result)
+                {
+                    MessageBoxService.Instance.Show("设备未激活，请联系供应商进行激活！", "设备未激活", MessageBoxButton.OK);
+                    return false;
+                }
+                else
+                {
+                    AppData.Instance.DeviceActiveResult= deviceActiveResult;
+                    AppData.Instance.IsActivate = true;
+                }
+            }
+            LoadingMessageText = "正在检查硬件设备连接...";
+            return true;
         }
 
-        private void CheckHardware()
+
+        public DelegateCommand CSFCommand => new DelegateCommand(async () => await CSF());
+        private async Task CSF()
         {
-            RegisterHardware();
-            IsLoading = true;
-            if (!modbusService.IsConnected)
+            if (!await CheckDeviceStatus())
             {
-                modbusService.Initialize(appSetting.ModbusPortName);
-                 modbusService.Connect();
-            }
-           
-            if (!modbusService.IsConnected)
-            {
-                MessageBoxService.Instance.Show("硬件设备未连接，请连接后重试！", "设备未连接", MessageBoxButton.OK);
+                return;
             }
 
-
-            IsLoading = false;
-        }
-
-
-        public DelegateCommand CSFCommand => new DelegateCommand(CSF);
-        private void CSF()
-        {
             if (!AppData.Instance.IsLogin)
             {
                 MessageBoxService.Instance.Show("请先登录！");
                 return;
             }
-            if (!AppData.Instance.IsRegister)
-            {
-                MessageBoxService.Instance.Show("请先注册设备！");
-                return;
-            }
-            if (!modbusService.IsConnected)
-            {
-                MessageBoxService.Instance.Show("硬件设备未连接，请连接后重试！");
-                return;
-            }
+            
+            
 
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", MenuType.CSF } });
         }
-        public DelegateCommand DEACommand => new DelegateCommand(DEA);
-        private void DEA()
+        public DelegateCommand DEACommand => new DelegateCommand(async () => await DEA());
+        private async Task DEA()
         {
+            if (!await CheckDeviceStatus())
+            {
+                return;
+            }
             if (!AppData.Instance.IsLogin)
             {
                 MessageBoxService.Instance.Show("请先登录！");
                 return;
             }
-            if (!AppData.Instance.IsRegister)
-            {
-                MessageBoxService.Instance.Show("请先注册设备！");
-                return;
-            }
-            if (!modbusService.IsConnected)
-            {
-                MessageBoxService.Instance.Show("硬件设备未连接，请连接后重试！");
-                return;
-            }
+            
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", MenuType.DEA } });
         }
 

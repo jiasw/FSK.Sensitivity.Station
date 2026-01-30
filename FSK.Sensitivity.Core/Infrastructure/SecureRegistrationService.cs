@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FSK.Sensitivity.Core.Model;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,9 +13,9 @@ namespace FSK.Sensitivity.Core.Infrastructure
 
     public interface ISecureRegistrationService
     {
-        void SaveRegistration();
+        void SaveRegistration(DeviceRegisterModel model);
 
-        string LoadRegistration();
+        DeviceRegisterModel? LoadRegistration();
 
         bool IsRegistered();
 
@@ -34,9 +36,9 @@ namespace FSK.Sensitivity.Core.Infrastructure
                 "FSK.Sensitivity",
                 "registration.bin");
         }
-        public void SaveRegistration()
+        public void SaveRegistration(DeviceRegisterModel model)
         {
-            string licenseKey="FSK.Sensitivity.Core.Infrastructure.SecureRegistrationService";
+            string licenseKey= JsonConvert.SerializeObject(model);
             Directory.CreateDirectory(Path.GetDirectoryName(_registrationPath));
 
             byte[] dataToEncrypt = Encoding.UTF8.GetBytes(licenseKey);
@@ -47,7 +49,7 @@ namespace FSK.Sensitivity.Core.Infrastructure
 
             File.WriteAllBytes(_registrationPath, encryptedData);
         }
-        public string LoadRegistration()
+        public DeviceRegisterModel? LoadRegistration()
         {
             if (!File.Exists(_registrationPath))
                 return null;
@@ -59,7 +61,8 @@ namespace FSK.Sensitivity.Core.Infrastructure
                     null,
                     _scope);
 
-                return Encoding.UTF8.GetString(decryptedData);
+                string jsonData = Encoding.UTF8.GetString(decryptedData);
+                return JsonConvert.DeserializeObject<DeviceRegisterModel>(jsonData);
             }
             catch
             {
@@ -67,9 +70,11 @@ namespace FSK.Sensitivity.Core.Infrastructure
             }
         }
 
-        public bool IsRegistered() {
-            return !string.IsNullOrEmpty(LoadRegistration());
-        
+        public bool IsRegistered()
+        {
+            DeviceRegisterModel? registration = LoadRegistration();
+            if (registration == null) return false;
+            return true;
         }
 
     }

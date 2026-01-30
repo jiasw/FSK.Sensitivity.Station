@@ -35,6 +35,8 @@ namespace FSK.Sensitivity.Core.Infrastructure
 
 
         Task<DeviceActiveResult> GetActiveResultAsync(string devicenum);
+
+        Task HeartBeatAsync();
     }
 
     public class CloudSyncService : ICloudSyncService
@@ -86,7 +88,7 @@ namespace FSK.Sensitivity.Core.Infrastructure
                 {
                     try
                     {
-                        var reply = await pingSender.SendPingAsync(_appSetting.RegisterDomain);
+                        var reply = await pingSender.SendPingAsync(ip);
                         flag = reply != null && reply.Status == IPStatus.Success;
                     }
                     catch { }
@@ -235,7 +237,32 @@ namespace FSK.Sensitivity.Core.Infrastructure
         /// <returns></returns>
         public async Task HeartBeatAsync()
         {
-
+            try
+            {
+                string url = $"/api/v1/datasync/devicereport";
+                string code = WebData.GetAESEncrypt(WebAction.CheckActive, new
+                {
+                    
+                }).ToString();
+                Dictionary<string, string> dict = new Dictionary<string, string>()
+                {
+                    {"code",code}
+                };
+                HttpContent httpcontent = new FormUrlEncodedContent(dict);
+                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                var request = new HttpRequestMessage(HttpMethod.Post, url)
+                {
+                    Content = httpcontent
+                };
+                var response = await SendWithRetryAsync(request);
+                var content = await response.Content.ReadAsStringAsync();
+                
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"设备心跳请求失败: 错误: {ex.Message}");
+            }
+            
         }
 
 

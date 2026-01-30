@@ -1,5 +1,6 @@
 ﻿using FSK.Sensitivity.Core.Entity;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
+using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Main.Controls;
 using System;
 using System.Collections.Generic;
@@ -47,11 +48,32 @@ namespace FSK.Sensitivity.Main
         /// </summary>
         public bool IsRegister { get; set; }=false;
 
-        
+        /// <summary>
+        /// 当前设备是否激活
+        /// </summary>
+        public bool IsActivate { get; set; }= false;
+
+        /// <summary>
+        /// 硬件是否可用
+        /// </summary>
+        public bool HardwareAvailable { get; set; }=false;
+
+        /// <summary>
+        /// 是否连接云端
+        /// </summary>
+        public bool IsConnectCloud { get; set; }= false;
+
+
         /// <summary>
         /// 弹窗服务
         /// </summary>
         public IDialogService DialogService { get; set; }
+
+
+        /// <summary>
+        /// 设备激活信息
+        /// </summary>
+        public DeviceActiveResult DeviceActiveResult { get; set; }
 
 
         public Window MainWindow { get; set; }
