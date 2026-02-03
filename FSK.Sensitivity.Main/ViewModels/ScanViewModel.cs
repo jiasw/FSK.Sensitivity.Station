@@ -1,6 +1,7 @@
 ﻿using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
+using Microsoft.Extensions.Logging;
 using NetTaste;
 using Serilog;
 using SqlSugar;
@@ -19,6 +20,7 @@ namespace FSK.Sensitivity.Main.ViewModels
     {
         private string title="扫描登录";
         private readonly IBarcodeScannerService _scannerService;
+        private readonly ILogger<ScanViewModel> logger;
         private ObservableCollection<string> _scanHistory;
         private string _scannedBarcode;
         public string ScannedBarcode
@@ -45,13 +47,14 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
         
         public ICommand ClearCommand { get; }
-        public ScanViewModel(IBarcodeScannerService scanner)
+        public ScanViewModel(IBarcodeScannerService scanner,ILogger<ScanViewModel> logger)
         {
             this._scannerService = scanner;
+            this.logger = logger;
             _scanHistory = new ObservableCollection<string>();
             
             ClearCommand = new DelegateCommand(() => ScannedBarcode = "");
-            _scannerService.BarcodeScanned += OnBarcodeScanned;
+            
             UpdateStatus();
         }
 
@@ -59,18 +62,24 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void StartScanning()
         {
             _scannerService.StartListening();
+            _scannerService.BarcodeScanned += OnBarcodeScanned;
             UpdateStatus();
         }
         private void StopScanning()
         {
             _scannerService.StopListening();
+            _scannerService.BarcodeScanned -= OnBarcodeScanned;
             UpdateStatus();
         }
         private void OnBarcodeScanned(object sender, BarcodeScannedEventArgs e)
         {
+            logger.LogDebug("============================");
+
+            logger.LogDebug($"扫描时间:{e.ScanTime:HH:mm:ss.fff}, 条码:{e.Barcode}");
+            logger.LogDebug("============================");
             ScannedBarcode = e.Barcode;
             //LogHelper.Instance.LogDebug($"扫描结果:{ScannedBarcode}");
-
+            _scannerService.StopListening();
             Application.Current.Dispatcher.Invoke(() =>
             {
                 Close();

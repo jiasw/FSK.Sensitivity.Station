@@ -178,7 +178,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 MessageBoxService.Instance.Show("注册成功！");
                 addPatient.Id = id;
                 AppData.Instance.CurrentPatient = addPatient;
-                Close();
+                RequestClose.Invoke(new DialogResult(ButtonResult.OK));
             }
             else
             {

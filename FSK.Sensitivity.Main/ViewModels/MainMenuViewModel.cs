@@ -1,5 +1,6 @@
 ﻿using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
+using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
@@ -356,6 +357,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 {
                     AppData.Instance.IsLogin = true;
                     UserName = AppData.Instance.CurrentPatient.PatientName;
+                    UserVisibility = Visibility.Visible;
                 }
             });
         }
@@ -392,6 +394,24 @@ namespace FSK.Sensitivity.Main.ViewModels
                 Console.WriteLine("IsActive changed to " + value);
 
             }
+        }
+
+        /// <summary>
+        /// 直接跳转到检查页面
+        /// </summary>
+        private void JumpToCheck()
+        {
+            ContrastConfigParam contrastConfigParam = new ContrastConfigParam();
+            contrastConfigParam.PD = 62;
+            contrastConfigParam.CheckDuration = DCKTime.T05;
+            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastTraining, new NavigationParameters() { { nameof(ContrastConfigParam), contrastConfigParam } });
+
+
+            //speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
+            SensitivityConfigParam sensitivityConfigParam= new SensitivityConfigParam();
+
+            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_SensitivityTraining
+                , new NavigationParameters() { { nameof(SensitivityConfigParam), sensitivityConfigParam } });
         }
 
         

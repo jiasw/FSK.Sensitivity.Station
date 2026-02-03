@@ -8,6 +8,7 @@ using Serilog;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Windows;
 
@@ -18,7 +19,7 @@ namespace FSK.Sensitivity.Station
     /// </summary>
     public partial class App 
     {
-
+       
         protected override void OnStartup(StartupEventArgs e)
         {
             Log.Logger = new LoggerConfiguration()
@@ -28,11 +29,21 @@ namespace FSK.Sensitivity.Station
                     rollingInterval: RollingInterval.Day,
                     outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
+            // 捕获 UI 线程异常
+            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+
+            // 捕获非 UI 线程异常
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
+            // 捕获异步异常
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
             base.OnStartup(e);
             Log.Information("Application started");
         }
         protected override Window CreateShell()
         {
+            
+
             return Container.Resolve<MainWindow>();
         }
         protected override void OnInitialized()
@@ -45,7 +56,7 @@ namespace FSK.Sensitivity.Station
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             base.ConfigureModuleCatalog(moduleCatalog);
-
+            Log.Debug("添加模块");
             //添加模块
             moduleCatalog.AddModule<SensitivityMainModule>();
         }
@@ -61,6 +72,25 @@ namespace FSK.Sensitivity.Station
             containerRegistry.RegisterSingleton(
                 typeof(ILogger<>),
                 typeof(Logger<>));
+        }
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            LogException("DispatcherUnhandled", e.Exception);
+            e.Handled = true; // 防止程序闪退
+        }
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            LogException("AppDomain", e.ExceptionObject as Exception);
+        }
+        private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            LogException("TaskScheduler", e.Exception);
+            e.SetObserved();
+        }
+        private void LogException(string source, Exception ex)
+        {
+            Log.Fatal(ex, "Unhandled exception in {Source}: {ExceptionType} - {Message}", source, ex.GetType().Name, ex.Message);
         }
     }
 

@@ -10,6 +10,10 @@ namespace FSK.Sensitivity.Core.Entity
 
     public class CheckResult: RootEntity
     {
+        /// <summary>
+        /// 云端检查ID
+        /// </summary>
+        public long CloudId { get; set; }
 
         public long CheckId { get; set; }
 

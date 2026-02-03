@@ -22,14 +22,17 @@ namespace FSK.Sensitivity.Main
     public class SensitivityMainModule : IModule
     {
         private readonly IRegionManager regionManager;
+        private readonly ILogger<SensitivityMainModule> logger;
 
-        public SensitivityMainModule(IRegionManager regionManager)
+        public SensitivityMainModule(IRegionManager regionManager,ILogger<SensitivityMainModule> logger)
         {
             this.regionManager = regionManager;
+            this.logger = logger;
         }
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
+            logger.LogDebug("开始加载模块");
             regionManager.RegisterViewWithRegion(AppConst.MainRegion, typeof(MainMenu));
             regionManager.RegisterViewWithRegion(AppConst.MainRegion, typeof(HardWareTest));
             regionManager.RegisterViewWithRegion(AppConst.MainRegion, typeof(TrainFrame));
@@ -51,7 +54,7 @@ namespace FSK.Sensitivity.Main
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+            logger.LogDebug("开始注册类型");
             containerRegistry.RegisterSingleton<IConfigurationService, ConfigurationService>();
             containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
 

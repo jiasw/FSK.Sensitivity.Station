@@ -9,9 +9,9 @@
     <system:Double x:Key="FontSizeSecondTitle">28</system:Double>
     <system:Double x:Key="FontSizeInfo">24</system:Double>
     <system:Double x:Key="FontSizelabel">20</system:Double>
-
-    <system:Double x:Key="subScreenTitleFontSize">130</system:Double>
-    <system:Double x:Key="subScreenhintFontSize">100</system:Double>
+    <!--视标界面字体-->
+    <system:Double x:Key="subScreenTitleFontSize">90</system:Double>
+    <system:Double x:Key="subScreenhintFontSize">70</system:Double>
     <lclcv:EnumConverter x:Key="EnumConverter" />
     <lclcv:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
     <lclcv:LightStatusToBoolConverter x:Key="LightStatusToBoolConverter" />
@@ -848,9 +848,9 @@
 
     <Style x:Key="SignToggleButtonBaseStyle" BasedOn="{StaticResource ButtonBaseBaseStyle}" TargetType="ToggleButton">
         <Setter Property="BorderThickness" Value="4"/>
-        <Setter Property="Width" Value="200"/>
-        <Setter Property="Height" Value="200"/>
-        <Setter Property="Margin" Value="50,0"/>
+        <Setter Property="Width" Value="150"/>
+        <Setter Property="Height" Value="150"/>
+        <Setter Property="Margin" Value="30,0"/>
         <Setter Property="hc:BorderElement.CornerRadius" Value="10"/>
         <Setter Property="Foreground" Value="{DynamicResource MainBrush}"></Setter>
         <Setter Property="BorderBrush" Value="{DynamicResource MainBrush}"></Setter>

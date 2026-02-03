@@ -9,6 +9,10 @@ namespace FSK.Sensitivity.Core.Entity
     public class FitLog: RootEntity
     {
         /// <summary>
+        /// 云端检查ID
+        /// </summary>
+        public long CloudId { get; set; }
+        /// <summary>
         /// 用户ID
         /// </summary>
         public long UserId { get; set; }
