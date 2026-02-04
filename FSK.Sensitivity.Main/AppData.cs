@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.Entity;
+using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Main.Controls;
@@ -77,6 +78,13 @@ namespace FSK.Sensitivity.Main
 
 
         public Window MainWindow { get; set; }
+
+        /// <summary>
+        /// 当前设备运行模式
+        /// </summary>
+        public DeviceRunMode DeviceRunMode { get; set; }=DeviceRunMode.NETWORKED;
+
+        
 
     }
 }

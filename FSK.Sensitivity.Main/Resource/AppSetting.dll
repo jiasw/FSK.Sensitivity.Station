@@ -5,16 +5,17 @@
   "ModbusPortName": "COM2",
   "ComfirmPassword": "19450902",
   "RegisterDomain": "http://139.155.181.9:10057",
+  "DeviceRunMode": "NETWORKED",
   "DeviceInfo": {
-    "ProductName": "对比敏感度系统",
-    "MainProgramExeName": "",
-    "DeviceType": "睫状肌锻炼仪",
-    "DeviceModel": "FSK4005",
-    "DeviceNo": "",
+    "ProductName": "对比敏感度",
+    "MainProgramExeName": "FSK.Sensitivity.Station.exe",
+    "DeviceType": "对比敏感度",
+    "DeviceModel": "FSK-3002",
+    "DeviceNo": "FSK20260204001",
     "ProductVersion": "2025.01.01",
     "UpdateTime": "",
     "UpdateWaitTime": 10,
-    "FactoryName": "中国一汽",
+    "FactoryName": "郑州福盛康视光科技有限公司",
     "FactoryPhone": "110119"
   }
 

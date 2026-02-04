@@ -1,6 +1,7 @@
 ﻿using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Main.Controls;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,11 +39,11 @@ namespace FSK.Sensitivity.Main.ViewModels
             backMenu=parameters.GetValue<CheckItem>("BackMenu");
         }
 
-        public DelegateCommand PrintCommand =>new DelegateCommand(Print);
+        public DelegateCommand ResultCommand =>new DelegateCommand(Result);
 
-        private void Print()
+        private void Result()
         {
-            MessageBoxService.Instance.Show("打印成功");
+            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_CheckHistory);
         }
 
         public DelegateCommand BackCommand => new DelegateCommand(Back);

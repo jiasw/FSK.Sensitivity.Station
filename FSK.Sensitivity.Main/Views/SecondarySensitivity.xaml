@@ -39,17 +39,17 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}"  Content="1"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=2}"  Content="2"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=3}"  Content="3"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=4}"  Content="4"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=5}"  Content="5"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=1}" Command="{Binding SelectCommand}"  Content="1"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=2}" Command="{Binding SelectCommand}" Content="2"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=3}" Command="{Binding SelectCommand}" Content="3"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=4}" Command="{Binding SelectCommand}" Content="4"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=5}" Command="{Binding SelectCommand}" Content="5"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=6}"  Content="6"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=7}"  Content="7"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=8}"  Content="8"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
-            <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=9}"  Content="9"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=6}" Command="{Binding SelectCommand}" Content="6"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=7}" Command="{Binding SelectCommand}" Content="7"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=8}" Command="{Binding SelectCommand}" Content="8"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
+                <RadioButton GroupName="SelectSign" IsChecked="{Binding SelectedIndex,Converter={StaticResource RadioButonCheckedConverter},ConverterParameter=9}" Command="{Binding SelectCommand}" Content="9"   Style="{StaticResource SignToggleButtonBaseStyle}"/>
             </StackPanel>
         </Grid>
     </Grid>

@@ -1,4 +1,5 @@
-﻿using FSK.Sensitivity.Core.Enums;
+﻿using DryIoc;
+using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.EventBus;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using HandyControl.Controls;
@@ -87,7 +88,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            selectedIndex = 1;
+            SelectedIndex = 1;
             BackColor= new SolidColorBrush(Colors.White);
             joystick.StartMonitoring();
             joystick.Pressed += Joystick_Pressed;
@@ -153,7 +154,8 @@ namespace FSK.Sensitivity.Main.ViewModels
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
             joystick.Pressed -= Joystick_Pressed;
-            joystick.StartMonitoring();
+            joystick.StopMonitoring();
+            
         }
 
         private BitmapImage _signImage;
@@ -165,6 +167,20 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             get { return _signImage; }
             set { SetProperty(ref _signImage, value); }
+        }
+
+
+        public DelegateCommand SelectCommand => new DelegateCommand(Select);
+
+        private void Select()
+        {
+            ActionArgs args = new ActionArgs()
+            {
+                Index = selectedIndex,
+                Action = new Core.HardWare.Drivers.JoystickEventArgs(JoystickStatus.Confirm)
+            };
+            joystickEvent.Publish(args);
+            Growl.Info("选择成功");
         }
 
     }

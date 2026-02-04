@@ -7,8 +7,10 @@ using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Utility;
+using FSK.Sensitivity.Main.Controls;
 using NetTaste;
 using Prism.Events;
+using Prism.Navigation.Regions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,13 +34,15 @@ namespace FSK.Sensitivity.Main.ViewModels
 
      
      */
-    [RegionMemberLifetime(KeepAlive = false)]
+    
     public class ContrastTrainingViewModel : BaseViewModel, INavigationAware
     {
         private readonly SecondaryChangeEvent secondaryChangeEvent;//副屏页面切换事件
         private readonly SensitivitySignChangeEvent contrastSignChangeEvent;//对比度标志位事件
+        private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
         private readonly ILight light;
+        private readonly ISpeechService speechService;
         private CheckUserModel _checkUserModel = new CheckUserModel();
 
         ContrastConfigParam contrastConfigParam;
@@ -214,7 +218,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         public Dictionary<DCKTime, int> dictResult = new Dictionary<DCKTime, int>();
         
 
-        public ContrastTrainingViewModel(IRegionManager regionManager, IEventAggregator eventAggregator,ILight light)
+        public ContrastTrainingViewModel(IRegionManager regionManager, IEventAggregator eventAggregator,ILight light, ISpeechService speechService)
         {
             secondaryChangeEvent = eventAggregator.GetEvent<SecondaryChangeEvent>();
             contrastSignChangeEvent = eventAggregator.GetEvent<SensitivitySignChangeEvent>();
@@ -223,8 +227,10 @@ namespace FSK.Sensitivity.Main.ViewModels
             _waittimer.Elapsed += WaitTimer_Tick;
             _checktimer = new System.Timers.Timer(1000);
             _checktimer.Elapsed += CheckTimer_Tick;
+            this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
             this.light = light;
+            this.speechService = speechService;
         }
 
         private void JoystickAction(ActionArgs actionArgs)
@@ -233,20 +239,10 @@ namespace FSK.Sensitivity.Main.ViewModels
             SignSelectIndex = actionArgs.Index;
             if (actionArgs.Action.Command == JoystickStatus.Confirm)
             {
-                //记录va值
-                if (DckTime == DCKTime.T50)
-                {
-                    StopTrain();
-                }
-                else
-                {
-                    dictResult.Add(DckTime, actionArgs.Index);
-                    DckTime = DckTime.Next();
-                    RefreshSignImage();
-                    StartTrain();
-                }
 
-                
+                dictResult.Add(DckTime, actionArgs.Index);
+                StopTrain();
+
             }
 
         }
@@ -313,45 +309,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
         }
         
-        public DelegateCommand TestCommand => new DelegateCommand(Test);
-
-        void Test()
-        {
-            
-            JoystickStatus[] statuses = new JoystickStatus[]
-            {
-                JoystickStatus.Front,
-                JoystickStatus.Back,
-                JoystickStatus.Left,
-                JoystickStatus.Right,
-                JoystickStatus.Trigger,
-                JoystickStatus.Confirm
-            };
-            JoystickStatus nextstatus = statuses[Utils.GenerateRandomNumber(0, statuses.Length - 1, imageIndex)];
-            JoystickEventArgs args = new JoystickEventArgs(nextstatus);
-
-           
-            JoystickAction(new ActionArgs()
-            {
-                Action = new JoystickEventArgs(JoystickStatus.Right),
-                Index = 5,
-
-            });
-            JoystickAction(new ActionArgs()
-            {
-                Action = new JoystickEventArgs(JoystickStatus.Right),
-                Index = 6,
-
-            });
-
-            JoystickAction(new ActionArgs()
-            {
-                Action = new JoystickEventArgs(JoystickStatus.Confirm),
-                Index = 6,
-
-            });
-        }
-
+       
 
         private string GetSignName()
         {
@@ -383,16 +341,6 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
 
-        public DelegateCommand<object> SelectedCommand => new DelegateCommand<object>(selected);
-
-        void selected(object index)
-        {
-            if (index != null && int.TryParse(index.ToString(), out int idx))
-            {
-                
-            }
-        }
-
         //重置timer
         void resetWaitTimer()
         {
@@ -404,11 +352,24 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             TrainStatus = TrainStatus.Trained;
             secondaryChangeEvent.Publish(new() { Action = ChangeAction.Idle });
+            eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
             _waittimer?.Stop();
             _waittimer?.Dispose();
             _checktimer?.Stop();
             _checktimer?.Dispose();
-
+            _ = speechService.SpeakAsync("检查结束");
+            if (AppData.Instance.DeviceRunMode == DeviceRunMode.NETWORKED)
+            {
+                MessageBoxResult messageBoxResult = MessageBoxService.Instance.ShowInfoWithCountDown("检查结束", 10, "提示");
+                if (messageBoxResult == MessageBoxResult.OK)
+                {
+                    regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
+                }
+            }
+            else
+            {
+                MessageBoxService.Instance.ShowFinishWindow();
+            }
         }
 
 

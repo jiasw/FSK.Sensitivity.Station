@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 
 namespace FSK.Sensitivity.Station
@@ -19,9 +20,19 @@ namespace FSK.Sensitivity.Station
     /// </summary>
     public partial class App 
     {
-       
+        private static Mutex _mutex;
+        private const string MutexName = "FSK.Sensitivity.Station_Mutex_20260203";
         protected override void OnStartup(StartupEventArgs e)
         {
+            // 判断程序是否已经启动
+            bool isNew;
+            _mutex = new Mutex(true, MutexName, out isNew);
+            if (!isNew)
+            {
+                MessageBox.Show("应用程序已经运行！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                this.Shutdown();
+                return;
+            }
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.File(
@@ -45,6 +56,16 @@ namespace FSK.Sensitivity.Station
             
 
             return Container.Resolve<MainWindow>();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            if (_mutex != null)
+            {
+                _mutex.ReleaseMutex();
+                _mutex.Dispose();
+            }
+            base.OnExit(e);
         }
         protected override void OnInitialized()
         {

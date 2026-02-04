@@ -13,10 +13,12 @@
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         WindowStyle="None"
+        Topmost="True"
         AllowsTransparency="True"
         Background="Transparent">
     <Window.Resources>
-        
+        <!-- 定义转换器 -->
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         
     </Window.Resources>
     <Border Background="#F7F9FA" CornerRadius="10" BorderBrush="{StaticResource MenuSelectedBrush}" BorderThickness="1">
@@ -69,9 +71,18 @@
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Center">
                 <Button x:Name="OkButton" 
-                        Content="确定" Width="150"
+                        Width="170"
                         Style="{StaticResource NavButton}"
-                        Click="OkButton_Click"/>
+                        Click="OkButton_Click">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="确定" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding CountDownText}" 
+                                   Visibility="{Binding IsShowCountDown, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   Margin="5,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Foreground="White"/>
+                    </StackPanel>
+                </Button>
                 <Button x:Name="CancelButton" 
                         Content="取消" 
                         Style="{StaticResource NavButton}"

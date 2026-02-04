@@ -62,49 +62,48 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
 
         private async Task MonitorLoopAsync(CancellationToken token)
         {
-            // 建议配置为可配置项
             ushort startAddress = 0x10;
             ushort numberOfPoints = 6;
 
-            while (!token.IsCancellationRequested)
+            try
             {
-                try
+                while (!token.IsCancellationRequested)
                 {
-                    short[] registers = await _modbusService.ReadHoldingRegistersAsync(startAddress, numberOfPoints);
-                    if (registers != null)
+                    try
                     {
-                        
-                        //判断数组中是否有1
-                        if (registers.Any(r => r == 1))
-                        {
-                            
-                            if (registers != null && registers.Length >= numberOfPoints)
-                            {
-                               
-                            }
-                        }
-                        ProcessButtonState(JoystickStatus.Front, registers[0]);
-                        ProcessButtonState(JoystickStatus.Back, registers[1]);
-                        ProcessButtonState(JoystickStatus.Left, registers[2]);
-                        ProcessButtonState(JoystickStatus.Right, registers[3]);
-                        ProcessButtonState(JoystickStatus.Confirm, registers[4]);
-                        ProcessButtonState(JoystickStatus.Trigger, registers[5]);
+                        short[] registers = await _modbusService.ReadHoldingRegistersAsync(
+                            startAddress, numberOfPoints);
 
+                        if (registers?.Length >= numberOfPoints)
+                        {
+                            if (registers.Any(r => r == 1))
+                            {
+                                // 处理逻辑
+                            }
+
+                            ProcessButtonState(JoystickStatus.Front, registers[0]);
+                            ProcessButtonState(JoystickStatus.Back, registers[1]);
+                            ProcessButtonState(JoystickStatus.Left, registers[2]);
+                            ProcessButtonState(JoystickStatus.Right, registers[3]);
+                            ProcessButtonState(JoystickStatus.Confirm, registers[4]);
+                            ProcessButtonState(JoystickStatus.Trigger, registers[5]);
+                        }
+                        else
+                        {
+                            logger.LogDebug("读取摇杆状态失败");
+                        }
+
+                        await Task.Delay(5, token);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        logger.LogDebug("读取摇杆状态失败,registers为null");
+                        logger.LogError($"读取摇杆状态出错: {ex.Message}", ex);
                     }
-                    
                 }
-                catch (OperationCanceledException) { /* 正常退出 */ }
-                catch (Exception ex)
-                {
-                    logger.LogError("读取摇杆状态出错", ex);
-                    // 这里建议增加日志记录
-                    Debug.WriteLine($"Joystick Error: {ex.Message}");
-                }
-                await Task.Delay(5, token);
+            }
+            catch (OperationCanceledException)
+            {
+                logger.LogInformation("摇杆监听任务已停止");
             }
         }
 

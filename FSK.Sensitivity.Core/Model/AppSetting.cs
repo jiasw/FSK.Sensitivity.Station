@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FSK.Sensitivity.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.RightsManagement;
@@ -32,6 +33,8 @@ namespace FSK.Sensitivity.Core.Model
         /// 后台接口
         /// </summary>
         public string RegisterDomain { get; set; }
+
+        public DeviceRunMode DeviceRunMode { get; set; }
 
         /// <summary>
         /// 设备信息

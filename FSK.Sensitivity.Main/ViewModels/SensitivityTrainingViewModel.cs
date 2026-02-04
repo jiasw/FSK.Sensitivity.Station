@@ -167,6 +167,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IEventAggregator eventAggregator;
         private readonly CheckResultRepository checkResultRepository;
         private readonly IMotor motor;
+        private readonly ISpeechService speechService;
         private readonly IRegionNavigationJournal journal;
         private readonly SecondaryChangeEvent secondaryChangeEvent;
         private readonly SensitivitySignChangeEvent sensitivitySignChangeEvent;
@@ -184,12 +185,14 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref _signSelectIndex, value); }
         }
 
-        public SensitivityTrainingViewModel(IRegionManager regionManager,IEventAggregator eventAggregator, CheckResultRepository checkResultRepository, IMotor motor)
+        public SensitivityTrainingViewModel(IRegionManager regionManager,IEventAggregator eventAggregator
+            , CheckResultRepository checkResultRepository, IMotor motor, ISpeechService speechService)
         {
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
             this.checkResultRepository = checkResultRepository;
             this.motor = motor;
+            this.speechService = speechService;
             this.journal = regionManager.Regions[AppConst.MainRegion].NavigationService.Journal;
             secondaryChangeEvent = eventAggregator.GetEvent<SecondaryChangeEvent>();
             sensitivitySignChangeEvent= eventAggregator.GetEvent<SensitivitySignChangeEvent>();
@@ -646,11 +649,26 @@ namespace FSK.Sensitivity.Main.ViewModels
             secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Idle });
             eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
             await motor.StopAllMotor();
+            _isProcessing = false;
             if (TrainModelsQueue.Count <= 0)
             {
-                MessageBoxService.Instance.Show("检查结束");
+                _ = speechService.SpeakAsync("检查结束");
+                if (AppData.Instance.DeviceRunMode== DeviceRunMode.NETWORKED)
+                {
+                    MessageBoxResult messageBoxResult= MessageBoxService.Instance.ShowInfoWithCountDown("检查结束",10,"提示");
+                    if (messageBoxResult == MessageBoxResult.OK) {
+                        regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
+                    }
+                    
+                }
+                else
+                {
+                    MessageBoxService.Instance.ShowFinishWindow();
+                }
+
+                
             }
-            _isProcessing = false;
+            
         }
 
         

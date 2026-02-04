@@ -40,11 +40,14 @@ namespace FSK.Sensitivity.Main
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SystemSetting));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SensitivityConfig));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SensitivityTraining));
+            regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(ContrastConfig));
+            regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(ContrastTraining));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(CheckHistory));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SystemSetting));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(PrintReport));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(SerialPortConfig));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(Store));
+            regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(Patients));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(NetWork));
             regionManager.RegisterViewWithRegion(AppConst.TrainRegion, typeof(UserInfo));
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondaryInit));
@@ -61,9 +64,9 @@ namespace FSK.Sensitivity.Main
            
 
             // 默认情况下，每次都创建新实例
-            containerRegistry.RegisterForNavigation<Patients, PatientsViewModel>();
-            containerRegistry.RegisterForNavigation<ContrastTraining, ContrastTrainingViewModel>();
-            containerRegistry.RegisterForNavigation<ContrastConfig, ContrastConfigViewModel>();
+            //containerRegistry.RegisterForNavigation<Patients, PatientsViewModel>();
+            
+            //containerRegistry.RegisterForNavigation<ContrastConfig, ContrastConfigViewModel>();
             var container = containerRegistry.GetContainer();
             var appSettingService = container.Resolve<IConfigurationService>();
             var appConfig =  appSettingService.LoadSetting();

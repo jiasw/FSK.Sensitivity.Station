@@ -123,6 +123,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private async Task Loaded()
         {
+            AppData.Instance.DeviceRunMode = appSetting.DeviceRunMode;
             await CheckDeviceStatus();
         }
 
@@ -229,7 +230,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     }
                     else
                     {
-                        if (appSetting.DeviceInfo.DeviceNo != registResult.DeviceNum)
+                        if (string.IsNullOrWhiteSpace(appSetting.DeviceInfo.DeviceNo) )
                         {
                             appSetting.DeviceInfo.DeviceNo=registResult.DeviceNum;
                             configurationService.SaveSetting(appSetting);

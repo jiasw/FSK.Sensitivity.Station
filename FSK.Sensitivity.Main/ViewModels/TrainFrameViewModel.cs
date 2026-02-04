@@ -33,6 +33,12 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void Back()
         {
+            string name = NavigationHelper.GetCurrentViewName(regionManager, AppConst.TrainRegion);
+            if (name == AppConst.ResultWindowsName)
+            {
+                regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
+                return;
+            }
 
             if (regionManager.Regions[AppConst.TrainRegion].NavigationService.Journal.CanGoBack)
             {
@@ -42,6 +48,8 @@ namespace FSK.Sensitivity.Main.ViewModels
             {
                 regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
             }
+
+
         }
 
         public DelegateCommand ListResultCommand => new DelegateCommand(ListResult);
