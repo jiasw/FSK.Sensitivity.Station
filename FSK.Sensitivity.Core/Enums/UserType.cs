@@ -18,7 +18,7 @@ namespace FSK.Sensitivity.Core.Enums
     public enum Gender
     {
         [Description("女 ")]
-        Female=0,
+        Female=2,
         [Description("男 ")]
         Male = 1
     }
@@ -64,4 +64,6 @@ namespace FSK.Sensitivity.Core.Enums
         FromList,//根据训练列表进入
 
     }
+
+
 }

@@ -1,4 +1,6 @@
 ﻿using FSK.Sensitivity.Core.HardWare.Peripherals;
+using FSK.Sensitivity.Core.Model;
+using FSK.Sensitivity.Core.Utility;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -29,6 +31,9 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         void StopListening();
         bool IsListening { get; }
         bool IsEnabled { get; }  // 区分"监听中"和"已启用"
+
+        //处理扫描结果
+        CloudSolutionDataItem ProcessCode(string barcode);
     }
 
     public class BarcodeScannedEventArgs : EventArgs
@@ -130,6 +135,19 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
 
             Debug.WriteLine("扫码器停止监听");
             Log.Information("扫码器停止监听");
+        }
+
+        public CloudSolutionDataItem ProcessCode(string barcode)
+        {
+            if (string.IsNullOrEmpty(barcode)) return null;
+
+            List<CloudSolutionDataItem> result = AdvancedDataParser.ProcessData(barcode);
+            if (result.Count > 0)
+            {
+                return result.First();
+            }
+            return null;
+
         }
 
         /// <summary>

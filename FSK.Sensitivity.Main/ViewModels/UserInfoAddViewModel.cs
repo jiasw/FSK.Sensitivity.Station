@@ -74,11 +74,11 @@ namespace FSK.Sensitivity.Main.ViewModels
             {
                 Manger manger = new Manger()
                 {
-                    name = Name,
-                    gender = Gender.ToString(),
-                    age = age,
-                    phone = Phone,
-                    type = UserType.ToString(),
+                    Name = Name,
+                    Gender = Gender.ToString(),
+                    Age = age,
+                    Phone = Phone,
+                    Type = UserType.ToString(),
                 };
                 if (id == 0)
                 {
@@ -139,11 +139,11 @@ namespace FSK.Sensitivity.Main.ViewModels
                 {
                     return;
                 }
-                Name = manger.name;
-                Gender = int.Parse(manger.gender);
-                Age = manger.age;
-                Phone = manger.phone;
-                UserType = int.Parse(manger.type);
+                Name = manger.Name;
+                Gender = int.Parse(manger.Gender);
+                Age = manger.Age;
+                Phone = manger.Phone;
+                UserType = int.Parse(manger.Type);
             }
         }
     }

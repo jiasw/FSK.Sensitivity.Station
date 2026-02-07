@@ -1,6 +1,9 @@
-﻿using FSK.Sensitivity.Core.HardWare.Drivers;
+﻿using FSK.Sensitivity.Core.Entity;
+using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
+using FSK.Sensitivity.Core.Model;
+using FSK.Sensitivity.Core.Repositories;
 using Microsoft.Extensions.Logging;
 using NetTaste;
 using Serilog;
@@ -21,6 +24,9 @@ namespace FSK.Sensitivity.Main.ViewModels
         private string title="扫描登录";
         private readonly IBarcodeScannerService _scannerService;
         private readonly ILogger<ScanViewModel> logger;
+        private readonly ICloudSyncService cloudSyncService;
+        private readonly IConfigurationService configurationService;
+       
         private ObservableCollection<string> _scanHistory;
         private string _scannedBarcode;
         public string ScannedBarcode
@@ -47,10 +53,15 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
         
         public ICommand ClearCommand { get; }
-        public ScanViewModel(IBarcodeScannerService scanner,ILogger<ScanViewModel> logger)
+        public ScanViewModel(IBarcodeScannerService scanner,ILogger<ScanViewModel> logger
+            , ICloudSyncService cloudSyncService, IConfigurationService configurationService
+            )
         {
             this._scannerService = scanner;
             this.logger = logger;
+            this.cloudSyncService = cloudSyncService;
+            this.configurationService = configurationService;
+          
             _scanHistory = new ObservableCollection<string>();
             
             ClearCommand = new DelegateCommand(() => ScannedBarcode = "");
@@ -73,26 +84,30 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
         private void OnBarcodeScanned(object sender, BarcodeScannedEventArgs e)
         {
-            logger.LogDebug("============================");
-
-            logger.LogDebug($"扫描时间:{e.ScanTime:HH:mm:ss.fff}, 条码:{e.Barcode}");
-            logger.LogDebug("============================");
-            ScannedBarcode = e.Barcode;
-            //LogHelper.Instance.LogDebug($"扫描结果:{ScannedBarcode}");
-            _scannerService.StopListening();
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                Close();
-            });
+            CloudSolutionDataItem cloudSolution = _scannerService.ProcessCode(e.Barcode);
+            if (cloudSolution == null) { return; }
+            logger.LogDebug("*************************");
+            logger.LogDebug($"解析到信息,guid:{cloudSolution.Guid},type:{cloudSolution.Type}");
+            logger.LogDebug("*************************");
             
-            //// 添加到历史记录
-            //Application.Current.Dispatcher.Invoke(() =>
-            //{
-            //    ScanHistory.Insert(0, $"{e.ScanTime:HH:mm:ss.fff} - {e.Barcode}");
-            //    if (ScanHistory.Count > 100) // 只保留最近100条
-            //        ScanHistory.RemoveAt(ScanHistory.Count - 1);
-            //});
+            _scannerService.StopListening();
+            if (!string.IsNullOrEmpty(cloudSolution.Guid))
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var result = new DialogResult(ButtonResult.OK);
+                    result.Parameters.Add("scanResult", cloudSolution.Guid);
+                    RequestClose.Invoke(result);
+                });
+            }
+
+           
+            
+            
         }
+
+        
+
         private void UpdateStatus()
         {
             IsScannerActive = _scannerService.IsListening;
@@ -135,7 +150,8 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void Close()
         {
             StopScanning();
-            RequestClose.Invoke();
+            var result = new DialogResult(ButtonResult.Cancel);
+            RequestClose.Invoke(result);
         }
 
 

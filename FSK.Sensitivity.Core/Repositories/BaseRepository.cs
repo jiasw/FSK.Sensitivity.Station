@@ -19,6 +19,27 @@ namespace FSK.Sensitivity.Core.Repositories
         }
 
 
+       public ISqlSugarClient DBClient {  get { return sqlSugarClient; } }
+
+
+        /// <summary>
+        /// 功能描述:获取所有数据条数
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> CountAsync()
+        {
+            return await sqlSugarClient.Queryable<TEntity>().CountAsync();
+        }
+        /// <summary>
+        /// 功能描述：根据条件获取数据条数
+        /// </summary>
+        /// <param name="whereExpression"></param>
+        /// <returns></returns>
+        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> whereExpression)
+        {
+            return await sqlSugarClient.Queryable<TEntity>().Where(whereExpression).CountAsync();
+        }
+
         public async Task<TEntity> QueryById(object objId)
         {
             //return await Task.Run(() => sqlSugarClient.Queryable<TEntity>().InSingle(objId));

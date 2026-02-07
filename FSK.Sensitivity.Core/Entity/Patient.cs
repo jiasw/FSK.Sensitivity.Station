@@ -20,10 +20,10 @@ namespace FSK.Sensitivity.Core.Entity
         ///// 联系人姓名
         ///// </summary>
         //public string ContactName { get; set; }
-        ///// <summary>
-        ///// 患者编号
-        ///// </summary>
-        //public string PatientIdNumber { get; set; }
+        /// <summary>
+        /// 患者编号
+        /// </summary>
+        public string PatientIdNumber { get; set; }
 
         /// <summary>
         /// 登录名

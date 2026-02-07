@@ -14,7 +14,9 @@ using Prism.Ioc;
 using Prism.Navigation.Regions;
 
 using SqlSugar;
+using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace FSK.Sensitivity.Main
@@ -123,8 +125,30 @@ namespace FSK.Sensitivity.Main
             #endregion
 
             #region 注册工具类
+            // 创建 ServiceCollection 并添加 HttpClient 支持
+            var services = new ServiceCollection();
+            services.AddHttpClient();
+
+            // 获取 IHttpClientFactory
+            var httpClientFactory = services
+                .BuildServiceProvider()
+                .GetRequiredService<IHttpClientFactory>();
+
+            containerRegistry.RegisterInstance(httpClientFactory);
+            
+
+            // 注册 远程 客户端
+            containerRegistry.RegisterInstance<HttpClient>(
+                new HttpClient { BaseAddress = new Uri(appConfig.RemoteServer) }, "RemoteClient");
+
+            // 注册 本地 客户端
+            containerRegistry.RegisterInstance<HttpClient>(
+                new HttpClient { BaseAddress = new Uri(appConfig.LocalServer) }, "LocalClient");
+            
             containerRegistry.RegisterSingleton<ISecureRegistrationService, SecureRegistrationService>();
             containerRegistry.RegisterSingleton<ICloudSyncService, CloudSyncService>();
+            containerRegistry.RegisterSingleton<ITrainingAndCheckService, TrainingAndCheckService>();
+
             #endregion
 
             #region 注册硬件操作类

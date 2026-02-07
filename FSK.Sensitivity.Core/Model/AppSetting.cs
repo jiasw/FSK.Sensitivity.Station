@@ -30,9 +30,14 @@ namespace FSK.Sensitivity.Core.Model
         public string ComfirmPassword { get; set; }
 
         /// <summary>
-        /// 后台接口
+        /// 远程后台接口
         /// </summary>
-        public string RegisterDomain { get; set; }
+        public string RemoteServer { get; set; }
+
+        /// <summary>
+        /// 本地后台接口
+        /// </summary>
+        public string LocalServer { get; set; }
 
         public DeviceRunMode DeviceRunMode { get; set; }
 

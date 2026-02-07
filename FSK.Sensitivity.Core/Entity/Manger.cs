@@ -12,52 +12,58 @@ namespace FSK.Sensitivity.Core.Entity
     /// </summary>
     public class Manger:RootEntity
     {
-        public string name { get; set; }
+        public string Name { get; set; }
 
-        public string gender { get; set; }
+        public string Gender { get; set; }
         [SqlSugar.SugarColumn(IsIgnore = true)]
         public string gender_desc
         {
             get
             {
 
-                if (string.IsNullOrWhiteSpace(gender))
+                if (string.IsNullOrWhiteSpace(Gender))
                 {
                     return "";
                 }
                 else
                 {
-                    int typecode = int.Parse(gender);
+                    int typecode = int.Parse(Gender);
                     var enumModel = EnumExtensions.ToEnumModelList<Gender>().FirstOrDefault(t => t.Value == typecode);
                     return enumModel?.Description ?? "";
                 }
             }
         }
 
-        public string age { get; set; }
+        public string Age { get; set; }
 
-        public string phone { get; set; }
+        public string Phone { get; set; }
 
-        public string password { get; set; } = "112233";
+        public string Password { get; set; } = "112233";
 
-        public string type { get; set; }
+        public string Type { get; set; }
         [SqlSugar.SugarColumn(IsIgnore = true)]
         public string type_desc
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(type))
+                if (string.IsNullOrWhiteSpace(Type))
                 {
                     return "";
                 }
                 else
                 {
-                    int typecode = int.Parse(type);
+                    int typecode = int.Parse(Type);
                     var enumModel = EnumExtensions.ToEnumModelList<UserType>().FirstOrDefault(t => t.Value == typecode);
                     return enumModel?.Description ?? "";
                 }
             }
         }
+
+        public string Email { get; set; }
+
+        public string DoctorID { get; set; }
+
+        public string DoctorName { get; set; }
 
     }
 }

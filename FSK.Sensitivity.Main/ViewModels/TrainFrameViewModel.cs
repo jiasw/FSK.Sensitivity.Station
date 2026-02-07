@@ -61,12 +61,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //判断当前页面跟上一页面是否一致，如果一致，则不显示返回按钮
-            //if (regionManager.Regions[AppConst.TrainRegion].NavigationService.Journal.NavigationTarget. == navigationContext.Uri.ToString())
-            //{
-            //    ShowLogButton = Visibility.Collapsed;
-            //}
-
+            
             var s = regionManager.Regions[AppConst.TrainRegion].NavigationService.Journal;
             s.Clear();
             ShowLogButton = Visibility.Visible;

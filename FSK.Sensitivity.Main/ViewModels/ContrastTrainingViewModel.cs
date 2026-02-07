@@ -363,6 +363,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 MessageBoxResult messageBoxResult = MessageBoxService.Instance.ShowInfoWithCountDown("检查结束", 10, "提示");
                 if (messageBoxResult == MessageBoxResult.OK)
                 {
+                    AppData.Instance.Logout();
                     regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
                 }
             }

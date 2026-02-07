@@ -70,6 +70,15 @@ namespace FSK.Sensitivity.Core.Model
             webData.Content = obj.ToJson().AESEncrypt();
             return webData;
         }
+
+        public static WebData GetAESEncrypt(WebAction action, object obj, string deviceNum,string activeKey)
+        {
+            WebData webData = new WebData();
+            webData.Action = action;
+            webData.DeviceNum = deviceNum;
+            webData.Content = obj.ToJson().AESEncrypt(activeKey.DesDecrypt());
+            return webData;
+        }
         public static WebData GetAESEncrypt(WebAction action, object obj)
         {
             WebData webData = new WebData();

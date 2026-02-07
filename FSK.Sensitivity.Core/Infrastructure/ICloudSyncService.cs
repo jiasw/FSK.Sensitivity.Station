@@ -2,6 +2,7 @@
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Utility;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices.Protocols;
@@ -14,6 +15,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace FSK.Sensitivity.Core.Infrastructure
 {
@@ -36,33 +38,106 @@ namespace FSK.Sensitivity.Core.Infrastructure
 
         Task<DeviceActiveResult> GetActiveResultAsync(string devicenum);
 
-        Task HeartBeatAsync();
+        Task HeartBeatAsync(string devicenum);
+
+        /// <summary>
+        /// 根据治疗方案id 获取检查、用户、医生信息
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        Task <PrescribeInfo> GetPrescribeInfoAsync(CloudSolutionDataItem item, string devicenum, string activeKey);
+
+        
+        Task<bool> ItemStart(DeviceData deviceData, ItemInfoDto itemInfoDto, string key);
+        /// <summary>
+        /// 项目结束
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="devicenum"></param>
+        /// <returns></returns>
+        Task<bool> ItemEnd(DeviceData deviceData, ItemInfoDto itemInfoDto, string key);
+
+    }
+    class PrescriptionInfo
+    {
+        public String PrescribeId { get; set; }
+
+        public int
+             PrescribeType
+        { get; set; }
+    }
+
+    public class ItemInfo
+    {
+        public string ItemId { get; set; }
+        public string ItemCate { get; set; }
+        public string ItemName { get; set; }
+        /// <summary>
+        /// 项目类型检查项目0，训练项目1
+        /// </summary>
+        public int ItemType { get; set; }
+        public int PatientId { get; set; }
+        public string ParientIdCard { get; set; }
+        public string PatientName { get; set; }
+        public int DoctorId { get; set; }
+        public string DoctorName { get; set; }
+        public string PrescribeId { get; set; }
+    }
+
+    public class DeviceData
+    {
+        public string DeviceNum { get; set; }
+        public WebAction Action { get; set; }
+        public string Content { get; set; }
+
+        
+    }
+
+    public class ItemInfoDto
+    {
+        public string PrescribeId { get; set; }
+        public string ItemId { get; set; }
+        public string ItemCate { get; set; }
+        public string ItemName { get; set; }
+        public int ItemType { get; set; }
+        public string PatientId { get; set; }
+        public string ItemRecordId { get; set; }
+        public string ParientIdCard { get; set; }
+        public string PatientName { get; set; }
+        public int DoctorId { get; set; }
+        public string DoctorName { get; set; }
+        public DateTime StartTime { get; set; }
+        public string RunParam { get; set; }
+        public string Eye { get; set; }
     }
 
     public class CloudSyncService : ICloudSyncService
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient _remotehttpClient;
+        private readonly HttpClient _localhttpClient;
+
         private readonly HttpClientConfig _config;
         private readonly ILogger<CloudSyncService> _logger;
         private readonly JsonSerializerOptions _jsonOptions;
         private readonly AppSetting _appSetting;
-        public CloudSyncService(HttpClient httpClient ,IConfigurationService configurationService,ILogger<CloudSyncService> logger)
+        public CloudSyncService(IContainerExtension containerExtension, IConfigurationService configurationService,ILogger<CloudSyncService> logger)
         {
+            
             _logger = logger;
             _appSetting = configurationService.LoadSetting();
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            _remotehttpClient = containerExtension.Resolve<HttpClient>("RemoteClient");
+            _localhttpClient = containerExtension.Resolve<HttpClient>("LocalClient");
             _config = new HttpClientConfig()
             {
                 TimeoutSeconds = 3000,
                 RetryDelayMilliseconds = 1000,
                 MaxRetryCount = 3,
-                BaseAddress= _appSetting.RegisterDomain
-
             };
             // 配置HttpClient
-            _httpClient.BaseAddress = new Uri(_config.BaseAddress);
-            _httpClient.Timeout = TimeSpan.FromSeconds(_config.TimeoutSeconds);
             
+            _remotehttpClient.Timeout = TimeSpan.FromSeconds(_config.TimeoutSeconds);
+            _localhttpClient.Timeout = TimeSpan.FromSeconds(_config.TimeoutSeconds);
+
             // JSON序列化选项
             _jsonOptions = new JsonSerializerOptions
             {
@@ -75,7 +150,7 @@ namespace FSK.Sensitivity.Core.Infrastructure
         public async Task<bool> IsCanConnect()
         {
             bool flag = false;
-            string url = _appSetting.RegisterDomain;
+            string url = _appSetting.RemoteServer;
             if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
             {
                 string ip = uri.Host;
@@ -121,12 +196,12 @@ namespace FSK.Sensitivity.Core.Infrastructure
                     {"code",code}
                 };
                 HttpContent httpcontent = new FormUrlEncodedContent(dict);
-                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                _remotehttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
                 var request = new HttpRequestMessage(HttpMethod.Post, url)
                 {
                     Content = httpcontent
                 };
-                var response = await SendWithRetryAsync(request);
+                var response = await SendWithRetryAsync(_remotehttpClient, request);
                 var content = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
@@ -180,12 +255,12 @@ namespace FSK.Sensitivity.Core.Infrastructure
                     {"code",code}
                 };
                 HttpContent httpcontent = new FormUrlEncodedContent(dict);
-                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                _remotehttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
                 var request = new HttpRequestMessage(HttpMethod.Post, url)
                 {
                     Content = httpcontent
                 };
-                var response = await SendWithRetryAsync(request);
+                var response = await SendWithRetryAsync(_remotehttpClient,request);
                 var content = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
@@ -235,7 +310,7 @@ namespace FSK.Sensitivity.Core.Infrastructure
         /// 心跳
         /// </summary>
         /// <returns></returns>
-        public async Task HeartBeatAsync()
+        public async Task HeartBeatAsync(string devicenum)
         {
             try
             {
@@ -243,18 +318,18 @@ namespace FSK.Sensitivity.Core.Infrastructure
                 string code = WebData.GetAESEncrypt(WebAction.CheckActive, new
                 {
                     
-                }).ToString();
+                },devicenum).ToString();
                 Dictionary<string, string> dict = new Dictionary<string, string>()
                 {
                     {"code",code}
                 };
                 HttpContent httpcontent = new FormUrlEncodedContent(dict);
-                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                _localhttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
                 var request = new HttpRequestMessage(HttpMethod.Post, url)
                 {
                     Content = httpcontent
                 };
-                var response = await SendWithRetryAsync(request);
+                var response = await SendWithRetryAsync(_localhttpClient,request);
                 var content = await response.Content.ReadAsStringAsync();
                 
             }
@@ -265,19 +340,153 @@ namespace FSK.Sensitivity.Core.Infrastructure
             
         }
 
+        
 
+        /// <summary>
+        /// 根据治疗方案id 获取检查、用户、医生信息
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task<PrescribeInfo> GetPrescribeInfoAsync(CloudSolutionDataItem item,string devicenum,string activeKey) {
+            PrescribeInfo result = null;
+            try
+            {
+                string url = $"/api/v1/DeviceReport/PostData";
+                var prescriptionInfo = new PrescriptionInfo()
+                {
+                    PrescribeId=item.Guid,
+                    PrescribeType=item.Type
+                };
+                string code = WebData.GetAESEncrypt(WebAction.QueryPrescribe, prescriptionInfo, devicenum,activeKey).ToString();
+                Dictionary<string, string> dict = new Dictionary<string, string>()
+                {
+                    {"code",code}
+                };
+                HttpContent httpcontent = new FormUrlEncodedContent(dict);
+                _localhttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                var request = new HttpRequestMessage(HttpMethod.Post, url)
+                {
+                    Content = httpcontent
+                };
+                var response = await SendWithRetryAsync(_localhttpClient,request);
+                var content = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    HttpResult<PrescribeInfo> httpResult = JsonSerializer.Deserialize<HttpResult<PrescribeInfo>>(content, _jsonOptions);
+                    if (httpResult != null) {
+                        result = httpResult.Data;
+                        }
+                    return result;
+                }
+                else
+                {
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"POST请求失败: 错误: {ex.Message}");
+            }
+            return result;
+
+        }
+        
+        public async Task<bool> ItemStart(DeviceData deviceData, ItemInfoDto itemInfoDto,string key)
+        {
+            try
+            {
+                string url = $"/api/v1/DeviceReport/PostData";
+                deviceData.Content = itemInfoDto.ToJson().AESEncrypt(key);
+                string code = deviceData.ToJson().DesEncrypt();
+                Dictionary<string, string> dict = new Dictionary<string, string>()
+                {
+                    {"code",code}
+                };
+                HttpContent httpcontent = new FormUrlEncodedContent(dict);
+                _localhttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                var request = new HttpRequestMessage(HttpMethod.Post, url)
+                {
+                    Content = httpcontent
+                };
+                var response = await SendWithRetryAsync(_localhttpClient, request);
+                var content = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    HttpResult<ReportResult<bool>> httpResult = JsonSerializer.Deserialize<HttpResult<ReportResult<bool>>>(content, _jsonOptions);
+                    if (httpResult != null)
+                    {
+                        return httpResult.Data.Result;
+                    }
+                    return false;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"项目开始失败: 项目名称: {itemInfoDto.ItemName},编码：{itemInfoDto.ItemId}: 错误: {ex.Message}");
+                return false;
+            }
+        }
+        /// <summary>
+        /// 项目结束
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="devicenum"></param>
+        /// <returns></returns>
+        public async Task<bool> ItemEnd(DeviceData deviceData, ItemInfoDto itemInfoDto, string key)
+        {
+            try
+            {
+                string url = $"/api/v1/DeviceReport/PostData";
+                deviceData.Content = itemInfoDto.ToJson().AESEncrypt(key);
+                string code = deviceData.ToJson().DesEncrypt();
+                Dictionary<string, string> dict = new Dictionary<string, string>()
+                {
+                    {"code",code}
+                };
+                HttpContent httpcontent = new FormUrlEncodedContent(dict);
+                _localhttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                var request = new HttpRequestMessage(HttpMethod.Post, url)
+                {
+                    Content = httpcontent
+                };
+                var response = await SendWithRetryAsync(_localhttpClient, request);
+                var content = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    HttpResult<ReportResult<bool>> httpResult = JsonSerializer.Deserialize<HttpResult<ReportResult<bool>>>(content, _jsonOptions);
+                    if (httpResult != null)
+                    {
+                        return httpResult.Data.Result;
+                    }
+                    return false;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"项目结束失败: 项目名称: {itemInfoDto.ItemName},编码：{itemInfoDto.ItemId}: 错误: {ex.Message}");
+                return false;
+            }
+        }
 
         /// <summary>
         /// 带重试的发送请求
         /// </summary>
-        private async Task<HttpResponseMessage> SendWithRetryAsync(HttpRequestMessage request)
+        private async Task<HttpResponseMessage> SendWithRetryAsync(HttpClient httpClient, HttpRequestMessage request)
         {
             int retryCount = 0;
             while (true)
             {
                 try
                 {
-                    var response = await _httpClient.SendAsync(request);
+                    var response = await httpClient.SendAsync(request);
                     return response;
                 }
                 catch (Model.HttpRequestException ex) when (retryCount < _config.MaxRetryCount)

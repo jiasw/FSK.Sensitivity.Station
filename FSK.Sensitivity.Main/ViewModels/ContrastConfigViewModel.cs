@@ -4,6 +4,7 @@ using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.EventBus;
 using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
+using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
 using Prism.Dialogs;
 using System;
@@ -15,7 +16,7 @@ using System.Windows.Threading;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
-    [RegionMemberLifetime(KeepAlive = false)]
+   
     public class ContrastConfigViewModel : BaseViewModel, INavigationAware
     {
         private readonly IRegionManager regionManager;
@@ -23,15 +24,17 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IDialogService dialogService;
         private readonly IMotor motor;
         private readonly ISpeechService speechService;
+        private readonly ITrainingAndCheckService trainingAndCheckService;
 
         public ContrastConfigViewModel(IRegionManager regionManager, IEventAggregator eventAggregator
-            , IDialogService dialogService, IMotor motor, ISpeechService speechService)
+            , IDialogService dialogService, IMotor motor, ISpeechService speechService, ITrainingAndCheckService trainingAndCheckService)
         {
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
             this.dialogService = dialogService;
             this.motor = motor;
             this.speechService = speechService;
+            this.trainingAndCheckService = trainingAndCheckService;
         }
 
         private ContrastConfigParam contrastConfigParam;
@@ -150,6 +153,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            
             ContrastConfigParam = new ContrastConfigParam()
             {
                 CheckDuration = DCKTime.T05,
@@ -170,7 +174,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            //判断设备是否初始化完成
+           
         }
 
         private async Task<bool> IsMotionFinished()

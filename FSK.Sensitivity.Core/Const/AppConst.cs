@@ -71,6 +71,21 @@ namespace FSK.Sensitivity.Core.Const
 
         public const string Sign_Page_Sensitivity = "SecondarySensitivity";
 
+        /// <summary>
+        /// 暗环境检查编码
+        /// </summary>
+        public const string CheckItemCode_Contrast = "277ebce5-cb73-4dc2-913d-aa60840e2904";
+
+        /// <summary>
+        /// 对比敏感度检查编码
+        /// </summary>
+        public const string CheckItemCode_Sensitivity = "2f83768f-0b37-43b4-a3df-357ae9ca1166";
+
+        /// <summary>
+        /// 训练完成标识
+        /// </summary>
+        public const string FinishItemKey= nameof(FinishItemKey);
+
 
         //等待硬件运动完成最长时间，单位：秒
         public const int WaitHardwareMotionTimeout = 12;

@@ -192,17 +192,48 @@ namespace FSK.Sensitivity.Core.Utility
         public static string AESEncrypt(this string source, string key = aesKey)
         {
 
-            using (var aes = Aes.Create())
+            if (string.IsNullOrEmpty(source))
             {
-                aes.Key = Encoding.UTF8.GetBytes(key);
-                aes.IV = Encoding.UTF8.GetBytes(aesIv.PadRight(16));
-                aes.Mode = CipherMode.CBC;
-                aes.Padding = PaddingMode.PKCS7;
-                ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-                byte[] plainBytes = Encoding.UTF8.GetBytes(source);
-                byte[] encryptedBytes = encryptor.TransformFinalBlock(plainBytes, 0, plainBytes.Length);
-                return Convert.ToBase64String(encryptedBytes);
+                return source;
             }
+            //使用32位密钥
+            byte[] key32 = new byte[32];
+            //如果我们的密钥不是32为，则自动补全到32位
+            byte[] byteKey = Encoding.UTF8.GetBytes(key.PadRight(key32.Length));
+            //复制密钥
+            Array.Copy(byteKey, key32, key32.Length);
+
+            //使用16位向量
+            byte[] iv16 = new byte[16];
+            //如果我们的向量不是16为，则自动补全到16位
+            byte[] byteIv = Encoding.UTF8.GetBytes(aesIv.PadRight(iv16.Length));
+            //复制向量
+            Array.Copy(byteIv, iv16, iv16.Length);
+
+            // 创建加密对象,Rijndael 算法
+            //Rijndael RijndaelAes = Rijndael.Create();
+            RijndaelManaged RijndaelAes = new RijndaelManaged();
+            RijndaelAes.Mode = CipherMode.CBC;
+            RijndaelAes.Padding = PaddingMode.PKCS7;
+            RijndaelAes.Key = key32;
+            RijndaelAes.IV = iv16;
+            byte[] result = null;
+            try
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (CryptoStream EncryptStream = new CryptoStream(ms, RijndaelAes.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        var data = Encoding.UTF8.GetBytes(source);
+                        EncryptStream.Write(data, 0, data.Length);
+                        EncryptStream.FlushFinalBlock();
+                        result = ms.ToArray();
+                    }
+                }
+                return Convert.ToBase64String(result);
+            }
+            catch { }
+            return string.Empty;
         }
 
 

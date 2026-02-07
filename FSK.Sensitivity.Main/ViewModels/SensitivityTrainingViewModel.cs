@@ -656,6 +656,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 if (AppData.Instance.DeviceRunMode== DeviceRunMode.NETWORKED)
                 {
                     MessageBoxResult messageBoxResult= MessageBoxService.Instance.ShowInfoWithCountDown("检查结束",10,"提示");
+                    AppData.Instance.Logout();
                     if (messageBoxResult == MessageBoxResult.OK) {
                         regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
                     }

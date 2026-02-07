@@ -3,6 +3,7 @@ using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Main.Controls;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,15 @@ namespace FSK.Sensitivity.Main
             {
                 return _instance;
             }
+        }
+
+        /// <summary>
+        /// 退出登录
+        /// </summary>
+        public void Logout()
+        {
+            this.CurrentManger = null;
+            this.IsLogin = false;
         }
 
         /// <summary>
@@ -66,25 +76,27 @@ namespace FSK.Sensitivity.Main
 
 
         /// <summary>
-        /// 弹窗服务
-        /// </summary>
-        public IDialogService DialogService { get; set; }
-
-
-        /// <summary>
         /// 设备激活信息
         /// </summary>
         public DeviceActiveResult DeviceActiveResult { get; set; }
 
 
-        public Window MainWindow { get; set; }
 
         /// <summary>
         /// 当前设备运行模式
         /// </summary>
         public DeviceRunMode DeviceRunMode { get; set; }=DeviceRunMode.NETWORKED;
 
-        
+        /// <summary>
+        /// 设备编码
+        /// </summary>
+        public string DeviceNo { get; set; }
+
+        /// <summary>
+        /// 处方信息
+        /// </summary>
+        public PrescribeInfo PrescribeInfo { get; set; }
+
 
     }
 }

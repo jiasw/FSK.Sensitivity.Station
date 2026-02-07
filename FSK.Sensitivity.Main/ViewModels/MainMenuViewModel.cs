@@ -1,9 +1,11 @@
 ﻿using FSK.Sensitivity.Core.Const;
+using FSK.Sensitivity.Core.Entity;
 using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
+using FSK.Sensitivity.Core.Repositories;
 using FSK.Sensitivity.Core.Utility;
 using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
@@ -22,7 +24,7 @@ using System.Windows.Navigation;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
-    public class MainMenuViewModel : BaseViewModel,IActiveAware
+    public class MainMenuViewModel : BaseViewModel,IActiveAware, INavigationAware
     {
         private readonly IRegionManager regionManager;
         private readonly IDialogService dialogService;
@@ -31,12 +33,17 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly ISecureRegistrationService secureRegistrationService;
         private readonly ICloudSyncService cloudSyncService;
         private readonly ILogger<MainMenuViewModel> logger;
-        private readonly AppSetting appSetting;
+        private readonly PatientRepository patientRepository;
+        private readonly MangerRepository mangerRepository;
+        private readonly ITrainingAndCheckService trainingAndCheckService;
+        private AppSetting appSetting;
         private System.Timers.Timer checkNetWorkTimer;
 
         public MainMenuViewModel(IRegionManager regionManager, IDialogService dialogService
             , IModbusService modbusService, IConfigurationService configurationService
-            , ISecureRegistrationService secureRegistrationService, ICloudSyncService cloudSyncService,ILogger<MainMenuViewModel> logger)
+            , ISecureRegistrationService secureRegistrationService, ICloudSyncService cloudSyncService
+            ,ILogger<MainMenuViewModel> logger, PatientRepository patientRepository, MangerRepository mangerRepository
+            , ITrainingAndCheckService trainingAndCheckService)
         {
             this.regionManager = regionManager;
             this.dialogService = dialogService;
@@ -45,12 +52,22 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.secureRegistrationService = secureRegistrationService;
             this.cloudSyncService = cloudSyncService;
             this.logger = logger;
-            this.appSetting = configurationService.LoadSetting();
-            AppData.Instance.DialogService = dialogService;
+            this.patientRepository = patientRepository;
+            this.mangerRepository = mangerRepository;
+            this.trainingAndCheckService = trainingAndCheckService;
+
+            trainingAndCheckService.TrainingItemStarted += TrainingAndCheckService_TrainingItemStarted;
+            trainingAndCheckService.TrainingItemCompleted += TrainingAndCheckService_TrainingItemCompleted;
+            trainingAndCheckService.TrainingFinished += TrainingAndCheckService_TrainingFinished;
+
             checkNetWorkTimer = new System.Timers.Timer(10000); // 设置定时器间隔为5秒
             checkNetWorkTimer.Elapsed += new ElapsedEventHandler(CheckNetWork);
             checkNetWorkTimer.Start();
+
+            
         }
+
+       
 
         private void CheckNetWork(object? sender, ElapsedEventArgs e)
         {
@@ -123,9 +140,12 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private async Task Loaded()
         {
+            this.appSetting = configurationService.LoadSetting();
             AppData.Instance.DeviceRunMode = appSetting.DeviceRunMode;
             await CheckDeviceStatus();
+
         }
+
 
         // 检查设备状态
         private async Task<bool> CheckDeviceStatus()
@@ -247,6 +267,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     {
                         appSetting.DeviceInfo.DeviceNo = deviceRegisterModel.DeviceNo;
                         configurationService.SaveSetting(appSetting);
+                        this.appSetting = configurationService.LoadSetting();
                     }
                     AppData.Instance.IsRegister = true;
                 }
@@ -312,19 +333,136 @@ namespace FSK.Sensitivity.Main.ViewModels
             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", MenuType.Setting } });
         }
 
-        public DelegateCommand ScanCommand => new DelegateCommand(Scan);
+        public DelegateCommand ScanCommand => new DelegateCommand(async () => await Scan());
 
-        private void Scan()
+        private async Task Scan()
         {
-            dialogService.ShowDialog(AppConst.Main_Dialog_Scan, new DialogParameters(), result =>
+            if (!AppData.Instance.IsConnectCloud)
+            {
+                MessageBoxService.Instance.Show("请先连接服务器！");
+                return;
+            }
+            if (!AppData.Instance.IsRegister)
+            {
+                MessageBoxService.Instance.Show("请先注册设备！");
+                return;
+            }
+            if (!AppData.Instance.IsActivate)
+            {
+                MessageBoxService.Instance.Show("请先激活设备！");
+                return;
+            }
+
+            dialogService.ShowDialog(AppConst.Main_Dialog_Scan, new DialogParameters(), async result =>
             {
                 if (result.Result == ButtonResult.OK)
                 {
-                    AppData.Instance.IsLogin = true;
-                    UserName = AppData.Instance.CurrentPatient.PatientName;
+                    string checkid = result.Parameters.GetValue<string>("scanResult");
+
+                    try
+                    {
+                        IsLoading= true;
+                        LoadingMessageText = "正在查询检查方案信息...";
+                        await GetSolutionInfo(new CloudSolutionDataItem() { Guid=checkid ,Type=0});
+                    }
+                    finally
+                    {
+                        IsLoading = false;
+                    }
+
+                    
                 }
             });
         }
+
+        //根据解决方案编码获取解决方案信息
+        private async Task GetSolutionInfo(CloudSolutionDataItem item)
+        {
+            AppData.Instance.PrescribeInfo = null;
+            AppSetting appSetting = configurationService.LoadSetting();
+            PrescribeInfo prescribeInfo = await cloudSyncService.GetPrescribeInfoAsync(item, appSetting.DeviceInfo.DeviceNo, "");
+            if (prescribeInfo != null)
+            {
+                AppData.Instance.PrescribeInfo = prescribeInfo;
+                logger.LogInformation("获取到处方信息，开始执行");
+                LoadingMessageText = "正在保存患者信息";
+                await SavePatientInfo(prescribeInfo.Patient);
+                LoadingMessageText = "正在保存医护信息";
+                await SaveMangerInfo(prescribeInfo.Doctor);
+                
+            }
+        }
+
+        private void TrainingAndCheckService_TrainingItemStarted(object? sender, TrainingItemEventArgs e)
+        {
+            
+        }
+
+        private void TrainingAndCheckService_TrainingItemCompleted(object? sender, TrainingItemEventArgs e)
+        {
+            
+        }
+        /// <summary>
+        /// 训练结束
+        /// 全部结束之后，退出登录
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TrainingAndCheckService_TrainingFinished(object? sender, EventArgs e)
+        {
+            
+        }
+
+        private async Task SavePatientInfo(PatientInfoModel savePatientInfo)
+        {
+            int count = await patientRepository.CountAsync(n => n.PatientIdNumber == savePatientInfo.PatientIdNumber);
+            if (count <= 0)
+            {
+                //执行保存操作
+                await patientRepository.Add(new Patient()
+                {
+                    PatientIdNumber = savePatientInfo.PatientIdNumber,
+                    IsDeleted = false,
+                    Address = savePatientInfo.Address,
+                    Age = savePatientInfo.Age,
+                    Sex = savePatientInfo.Sex,
+                    Grade = savePatientInfo.Grade,
+                    IdCard = savePatientInfo.IdCard,
+                    Class = savePatientInfo.Clas,
+                    LoginName = savePatientInfo.PatientName,
+                    CreateTime = DateTime.Now,
+                    Phone = savePatientInfo.Phone,
+                    School = savePatientInfo.School,
+                    PatientName = savePatientInfo.PatientName,
+                });
+            }
+        }
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="saveUserModel"></param>
+        /// <returns></returns>
+        private async Task SaveMangerInfo(UserModel saveUserModel)
+        {
+            int count = await mangerRepository.CountAsync(n => n.DoctorID == saveUserModel.DoctorId);
+            if (count <= 0)
+            {
+                await mangerRepository.Add(new Manger()
+                {
+
+                    DoctorID = saveUserModel.DoctorId,
+                    DoctorName = saveUserModel.DoctorName,
+                    IsDeleted = false,
+                    Gender = saveUserModel.Sex.ToString(),
+                    Email = saveUserModel.Email,
+                    Phone = saveUserModel.Phone,
+                    Password = saveUserModel.Pwd,
+                    Name = saveUserModel.Name,
+                });
+
+            }
+        }
+
 
 
         public DelegateCommand LoginCommand => new DelegateCommand(Login);
@@ -333,7 +471,21 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void Login()
         {
-            //dialogService.ShowDialog("HardWareTest");
+            if (!AppData.Instance.IsConnectCloud)
+            {
+                MessageBoxService.Instance.Show("请先连接服务器！");
+                return;
+            }
+            if (!AppData.Instance.IsRegister)
+            {
+                MessageBoxService.Instance.Show("请先注册设备！");
+                return;
+            }
+            if (!AppData.Instance.IsActivate)
+            {
+                MessageBoxService.Instance.Show("请先激活设备！");
+                return;
+            }
             //登录
             dialogService.ShowDialog(AppConst.Main_Page_Login, new DialogParameters(), result =>
             {
@@ -342,6 +494,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     AppData.Instance.IsLogin = true;
                     UserName = AppData.Instance.CurrentPatient.PatientName;
                     UserVisibility = Visibility.Visible;
+                    
                 }
 
             });
@@ -352,6 +505,21 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void Register()
         {
+            if (!AppData.Instance.IsConnectCloud)
+            {
+                MessageBoxService.Instance.Show("请先连接服务器！");
+                return;
+            }
+            if (!AppData.Instance.IsRegister)
+            {
+                MessageBoxService.Instance.Show("请先注册设备！");
+                return;
+            }
+            if (!AppData.Instance.IsActivate)
+            {
+                MessageBoxService.Instance.Show("请先激活设备！");
+                return;
+            }
             dialogService.ShowDialog(AppConst.Main_Dialog_Register, new DialogParameters(), result =>
             {
                 if (result.Result == ButtonResult.OK)
@@ -415,6 +583,24 @@ namespace FSK.Sensitivity.Main.ViewModels
                 , new NavigationParameters() { { nameof(SensitivityConfigParam), sensitivityConfigParam } });
         }
 
-        
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            // 获取单个参数
+            if (navigationContext.Parameters.ContainsKey(AppConst.FinishItemKey))
+            {
+                MenuType MenuType = navigationContext.Parameters.GetValue<MenuType>(AppConst.FinishItemKey);
+                trainingAndCheckService.CompleteCurrentItem();
+            }
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            
+        }
     }
 }

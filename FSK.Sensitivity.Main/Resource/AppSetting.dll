@@ -4,7 +4,8 @@
   "RemoteSupportPath": "C:\\Program Files\\Oray\\SunLogin\\SunloginClient\\SunloginClient.exe",
   "ModbusPortName": "COM2",
   "ComfirmPassword": "19450902",
-  "RegisterDomain": "http://139.155.181.9:10057",
+  "RemoteServer": "http://192.168.1.118:8002",
+  "LocalServer": "http://192.168.1.118:8001",
   "DeviceRunMode": "NETWORKED",
   "DeviceInfo": {
     "ProductName": "对比敏感度",
