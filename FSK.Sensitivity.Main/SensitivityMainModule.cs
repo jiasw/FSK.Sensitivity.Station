@@ -55,6 +55,7 @@ namespace FSK.Sensitivity.Main
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondaryInit));
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondaryContrast));
             regionManager.RegisterViewWithRegion(AppConst.SignRegion, typeof(SecondarySensitivity));
+            
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
@@ -148,6 +149,7 @@ namespace FSK.Sensitivity.Main
             containerRegistry.RegisterSingleton<ISecureRegistrationService, SecureRegistrationService>();
             containerRegistry.RegisterSingleton<ICloudSyncService, CloudSyncService>();
             containerRegistry.RegisterSingleton<ITrainingAndCheckService, TrainingAndCheckService>();
+            containerRegistry.RegisterSingleton<IHeartbeatService, HeartbeatService>();
 
             #endregion
 

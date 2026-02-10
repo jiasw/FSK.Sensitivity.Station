@@ -1,6 +1,7 @@
 ﻿using FSK.Sensitivity.Main;
 using FSK.Sensitivity.Main.Views;
 using HandyControl.Tools;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -57,7 +58,7 @@ namespace FSK.Sensitivity.Station
 
             return Container.Resolve<MainWindow>();
         }
-
+       
         protected override void OnExit(ExitEventArgs e)
         {
             if (_mutex != null)

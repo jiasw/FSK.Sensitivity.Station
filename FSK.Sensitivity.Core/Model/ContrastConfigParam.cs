@@ -21,7 +21,7 @@ namespace FSK.Sensitivity.Core.Model
             set { SetProperty(ref _checkDuration, value); }
         }
 
-        private int _pd;
+        private int _pd=50;
         /// <summary>
         /// 瞳距
         /// </summary>

@@ -43,15 +43,46 @@ namespace FSK.Sensitivity.Core.Model
     public class ItemOrder
     {
         public string ItemGuid { get; set; }
+
+        public string ItemName { get; set; }
         public int Sort { get; set; }
         public bool State { get; set; }
 
+        /// <summary>
+        /// 检查结论
+        /// </summary>
+        public string Result { get; set; }
+
+
+
+        public DateTime StartTime { get; set; }
+
+        public DateTime EndTime { get; set; }
+
+        /// <summary>
+        /// 检查参数模型
+        /// </summary>
         public ItemParamBase ItemParam { get; set; }
+
+        /// <summary>
+        /// 检查参数字符串
+        /// </summary>
+        public string ItemParamJson { get; set; }
+
+        /// <summary>
+        /// 检查结果数据
+        /// </summary>
+        public string ItemData { get; set; }
+
+
     }
 
     public class ItemParamBase
     {
-        // 基类可以为空，或者包含通用属性
+        /// <summary>
+        /// 瞳距
+        /// </summary>
+        public int Pupillary { get; set; } = 50;
     }
     public class CheckTimesParam : ItemParamBase
     {
@@ -59,10 +90,12 @@ namespace FSK.Sensitivity.Core.Model
     }
     public class EyeTestParam : ItemParamBase
     {
-        public int Pupillary { get; set; }
+       
         public int EyeType { get; set; }
         public int DazzleLight { get; set; }
         public int TimeSlot { get; set; }
+
+        public int Distance { get; set; }
     }
 
     public class UserModel

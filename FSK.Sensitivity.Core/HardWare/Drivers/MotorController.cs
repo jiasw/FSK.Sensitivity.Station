@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.HardWare.Peripherals;
+using FSK.Sensitivity.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,7 +62,11 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         /// <returns></returns>
         public async Task<bool> SetSlideBlock(short position)
         {
-            
+            if (position < 50 || position > 80)
+            {
+                return true;
+            }
+            short pd = (short)(position - 50);
             return await modbusService.WriteSingleRegisterAsync(8, position);
 
         }

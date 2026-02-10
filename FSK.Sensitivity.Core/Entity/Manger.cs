@@ -33,13 +33,13 @@ namespace FSK.Sensitivity.Core.Entity
                 }
             }
         }
-
+        [SqlSugar.SugarColumn(IsNullable = true)]
         public string Age { get; set; }
-
+        [SqlSugar.SugarColumn(IsNullable = true)]
         public string Phone { get; set; }
-
+        [SqlSugar.SugarColumn(IsNullable = true)]
         public string Password { get; set; } = "112233";
-
+        [SqlSugar.SugarColumn(IsNullable = true)]
         public string Type { get; set; }
         [SqlSugar.SugarColumn(IsIgnore = true)]
         public string type_desc
@@ -58,11 +58,11 @@ namespace FSK.Sensitivity.Core.Entity
                 }
             }
         }
-
+        [SqlSugar.SugarColumn(IsNullable = true)]
         public string Email { get; set; }
-
+        [SqlSugar.SugarColumn(IsNullable = true)]
         public string DoctorID { get; set; }
-
+        [SqlSugar.SugarColumn(IsNullable = true)]
         public string DoctorName { get; set; }
 
     }

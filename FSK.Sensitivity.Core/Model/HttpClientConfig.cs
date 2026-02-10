@@ -129,6 +129,13 @@ namespace FSK.Sensitivity.Core.Model
         public T Data { get; set; }
     }
 
+    public class PrescribeResult
+    {
+        public bool Result { get; set; }
+
+        public PrescribeInfo Data {  get; set; }
+    }
+
     /// <summary>
     /// HTTP请求异常
     /// </summary>

@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.Entity;
+using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Utility;
 using Microsoft.Extensions.Logging;
@@ -55,7 +56,7 @@ namespace FSK.Sensitivity.Core.Infrastructure
         /// <param name="item"></param>
         /// <param name="devicenum"></param>
         /// <returns></returns>
-        Task<bool> ItemEnd(DeviceData deviceData, ItemInfoDto itemInfoDto, string key);
+        Task<bool> ItemEnd(DeviceData deviceData, ItemStopDto<List<CheckResultDto>> itemStopDto, string key);
 
     }
     class PrescriptionInfo
@@ -110,6 +111,90 @@ namespace FSK.Sensitivity.Core.Infrastructure
         public string RunParam { get; set; }
         public string Eye { get; set; }
     }
+
+
+    public class ItemStopDto<T>
+    {
+        public string PrescribeId { get; set; }
+        public int PrescribeType { get; set; }
+        public string IdCard { get; set; }
+        public string PatientId { get; set; }
+        public string ItemID { get; set; }
+        public string ItemRecordId { get; set; }
+        public bool State { get; set; }
+        public T Data { get; set; }
+        public DateTime EndTime { get; set; }
+        public string Eye { get; set; }
+    }
+
+    public class CheckResultDto
+    {
+
+        public string ItemID { get; set; }
+
+        public int DoctorId { get; set; }
+        /// <summary>
+        /// 检查项目名
+        /// </summary>
+        public string ItemName { get; set; }
+        public string EyeName { get; set; }
+        /// <summary>
+        /// 检查结果
+        /// </summary>
+        public string CheckResult { get; set; }
+        
+
+        /// <summary>
+        /// 检查项目数据
+        /// </summary>
+        public string ItemData { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+
+    }
+
+
+    /// <summary>
+    /// 云端提交的暗环境结果
+    /// </summary>
+    public class CloudContrastResult
+    {
+        public DCKTime Time { get; set; }
+
+        public DCKValue Value { get; set; }
+
+    }
+
+    public class CloudSensitivityResult
+    {
+        public Eye Eye { get; set; }
+
+        public DayOrNight DayOrNight { get; set; }
+
+        public CheckDistance  CheckDistance { get; set; }
+
+        /// <summary>
+        /// VA06
+        /// </summary>
+        public int VA06 { get; set; }
+        /// <summary>
+        /// VA10
+        /// </summary>
+        public int VA10 { get; set; }
+        /// <summary>
+        /// VA20
+        /// </summary>
+        public int VA20 { get; set; }
+
+        public int VA40 { get; set; }
+        public int VA60 { get; set; }
+
+        public int VA80 { get; set; }
+    }
+
+
+
+
 
     public class CloudSyncService : ICloudSyncService
     {
@@ -372,9 +457,9 @@ namespace FSK.Sensitivity.Core.Infrastructure
                 var content = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    HttpResult<PrescribeInfo> httpResult = JsonSerializer.Deserialize<HttpResult<PrescribeInfo>>(content, _jsonOptions);
-                    if (httpResult != null) {
-                        result = httpResult.Data;
+                    HttpResult<PrescribeResult> httpResult = JsonSerializer.Deserialize<HttpResult<PrescribeResult>>(content, _jsonOptions);
+                    if (httpResult != null&&httpResult.Code==200&&httpResult.Data.Result) {
+                        result = httpResult.Data.Data;
                         }
                     return result;
                 }
@@ -436,12 +521,12 @@ namespace FSK.Sensitivity.Core.Infrastructure
         /// <param name="item"></param>
         /// <param name="devicenum"></param>
         /// <returns></returns>
-        public async Task<bool> ItemEnd(DeviceData deviceData, ItemInfoDto itemInfoDto, string key)
+        public async Task<bool> ItemEnd(DeviceData deviceData, ItemStopDto<List<CheckResultDto>> itemStopDto, string key)
         {
             try
             {
                 string url = $"/api/v1/DeviceReport/PostData";
-                deviceData.Content = itemInfoDto.ToJson().AESEncrypt(key);
+                deviceData.Content = itemStopDto.ToJson().AESEncrypt(key);
                 string code = deviceData.ToJson().DesEncrypt();
                 Dictionary<string, string> dict = new Dictionary<string, string>()
                 {

@@ -1,6 +1,8 @@
-﻿using FSK.Sensitivity.Core.Const;
+﻿using FSK.Sensitivity.Core;
+using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Entity;
 using FSK.Sensitivity.Core.Enums;
+using FSK.Sensitivity.Core.EventBus;
 using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
@@ -11,7 +13,9 @@ using FSK.Sensitivity.Main.Controls;
 using HandyControl.Controls;
 using Microsoft.Extensions.Logging;
 using Prism.Dialogs;
+using Prism.Events;
 using Prism.Navigation.Regions;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +40,9 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly PatientRepository patientRepository;
         private readonly MangerRepository mangerRepository;
         private readonly ITrainingAndCheckService trainingAndCheckService;
+        private readonly ISpeechService speechService;
+        private readonly IHeartbeatService heartbeatService;
+        private readonly IMotor motor;
         private AppSetting appSetting;
         private System.Timers.Timer checkNetWorkTimer;
 
@@ -43,7 +50,8 @@ namespace FSK.Sensitivity.Main.ViewModels
             , IModbusService modbusService, IConfigurationService configurationService
             , ISecureRegistrationService secureRegistrationService, ICloudSyncService cloudSyncService
             ,ILogger<MainMenuViewModel> logger, PatientRepository patientRepository, MangerRepository mangerRepository
-            , ITrainingAndCheckService trainingAndCheckService)
+            , ITrainingAndCheckService trainingAndCheckService,IEventAggregator eventAggregator
+            , ISpeechService speechService, IHeartbeatService heartbeatService, IMotor motor)
         {
             this.regionManager = regionManager;
             this.dialogService = dialogService;
@@ -55,7 +63,9 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.patientRepository = patientRepository;
             this.mangerRepository = mangerRepository;
             this.trainingAndCheckService = trainingAndCheckService;
-
+            this.speechService = speechService;
+            this.heartbeatService = heartbeatService;
+            this.motor = motor;
             trainingAndCheckService.TrainingItemStarted += TrainingAndCheckService_TrainingItemStarted;
             trainingAndCheckService.TrainingItemCompleted += TrainingAndCheckService_TrainingItemCompleted;
             trainingAndCheckService.TrainingFinished += TrainingAndCheckService_TrainingFinished;
@@ -67,7 +77,10 @@ namespace FSK.Sensitivity.Main.ViewModels
             
         }
 
-       
+        private void OnCloudTrainAndCheck(TrainAndCheckOptions trainAndCheckOptions)
+        {
+
+        }
 
         private void CheckNetWork(object? sender, ElapsedEventArgs e)
         {
@@ -255,6 +268,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                             appSetting.DeviceInfo.DeviceNo=registResult.DeviceNum;
                             configurationService.SaveSetting(appSetting);
                         }
+                        AppData.Instance.DeviceNo = registResult.DeviceNum;
                         secureRegistrationService.SaveRegistration(new DeviceRegisterModel() { 
                             DeviceNo=registResult.DeviceNum,
                         });
@@ -269,8 +283,13 @@ namespace FSK.Sensitivity.Main.ViewModels
                         configurationService.SaveSetting(appSetting);
                         this.appSetting = configurationService.LoadSetting();
                     }
+                    AppData.Instance.DeviceNo = deviceRegisterModel.DeviceNo;
                     AppData.Instance.IsRegister = true;
                 }
+            }
+            if (!string.IsNullOrWhiteSpace(AppData.Instance.DeviceNo))
+            {
+                heartbeatService.Start(AppData.Instance.DeviceNo);
             }
 
             if (!AppData.Instance.IsActivate)
@@ -363,7 +382,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     {
                         IsLoading= true;
                         LoadingMessageText = "正在查询检查方案信息...";
-                        await GetSolutionInfo(new CloudSolutionDataItem() { Guid=checkid ,Type=0});
+                        await GetSolutionInfo(new CloudSolutionDataItem() { Guid = checkid, Type = 0 });
                     }
                     finally
                     {
@@ -379,8 +398,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private async Task GetSolutionInfo(CloudSolutionDataItem item)
         {
             AppData.Instance.PrescribeInfo = null;
-            AppSetting appSetting = configurationService.LoadSetting();
-            PrescribeInfo prescribeInfo = await cloudSyncService.GetPrescribeInfoAsync(item, appSetting.DeviceInfo.DeviceNo, "");
+            PrescribeInfo prescribeInfo = await cloudSyncService.GetPrescribeInfoAsync(item, AppData.Instance.DeviceNo, AppData.Instance.DeviceActiveResult.DataSecretKey);
             if (prescribeInfo != null)
             {
                 AppData.Instance.PrescribeInfo = prescribeInfo;
@@ -389,18 +407,185 @@ namespace FSK.Sensitivity.Main.ViewModels
                 await SavePatientInfo(prescribeInfo.Patient);
                 LoadingMessageText = "正在保存医护信息";
                 await SaveMangerInfo(prescribeInfo.Doctor);
-                
+                trainingAndCheckService.Initialize(prescribeInfo.ItemList);
+                speechService.Speak("检查开始");
+                trainingAndCheckService.StartTraining();
             }
+            IsLoading = false;
         }
 
-        private void TrainingAndCheckService_TrainingItemStarted(object? sender, TrainingItemEventArgs e)
+        private ItemInfoDto BuildStartItem(ItemOrder order)
         {
+            ItemInfoDto item = new ItemInfoDto()
+            {
+                ItemId=order.ItemGuid,
+                ParientIdCard = AppData.Instance.CurrentPatient.IdCard,
+                PatientId = AppData.Instance.CurrentPatient.PatientIdNumber,
+                RunParam = order.ItemParam.ToJson(),
+                PatientName=AppData.Instance.CurrentPatient.PatientName,
+                StartTime = DateTime.Now,
+                PrescribeId= AppData.Instance.PrescribeInfo.PrescribeId,
+                ItemType=0,
+            };
+            if (order.ItemGuid == AppConst.CheckItemCode_Contrast)//暗环境适应
+            {
+                item.Eye = Eye.OU.GetDescription();
+                item.ItemName = "暗环境适应";
+            }
+            else if (order.ItemGuid == AppConst.CheckItemCode_Sensitivity)//对比敏感度
+            {
+                EyeTestParam eyeTestParam = (EyeTestParam)order.ItemParam;
+                item.Eye = GetEyeText(eyeTestParam.EyeType);
+                item.ItemName = "对比敏感度";
+              
+
+            }
+            return item;
+        }
+
+        private string GetEyeText(int eyestype)
+        {
+            string[] arr = ["", "左眼", "右眼", "双眼"];
+            if (eyestype > 0 && eyestype < 4)
+            {
+                return arr[eyestype];
+            }
+            else
+            {
+                return arr[3];
+            }
+
+        }
+
+
+        private ItemStopDto<List<CheckResultDto>> BuildEndItem(ItemOrder order)
+        {
+            CheckResultDto checkResultDto = new CheckResultDto()
+            {
+                EndTime = order.EndTime,
+                StartTime = order.StartTime,
+                DoctorId = AppData.Instance.PrescribeInfo.Doctor.Id,
+                CheckResult = order.Result,
+                ItemID = order.ItemGuid,
+                ItemName = order.ItemName,
+            };
+            if (order.ItemGuid == AppConst.CheckItemCode_Contrast)//暗环境适应
+            {
+                checkResultDto.EyeName = Eye.OU.GetDescription();
+                checkResultDto.ItemName = "暗环境适应";
+            }
+            else if (order.ItemGuid == AppConst.CheckItemCode_Sensitivity)//对比敏感度
+            {
+                EyeTestParam eyeTestParam = (EyeTestParam)order.ItemParam;
+                checkResultDto.EyeName = GetEyeText(eyeTestParam.EyeType);
+                checkResultDto.ItemName = "对比敏感度";
+            }
+            ItemStopDto<List<CheckResultDto>> item = new ItemStopDto<List<CheckResultDto>>()
+            {
+                Data=new List<CheckResultDto>()
+                {
+                    checkResultDto
+                },
+                ItemID = order.ItemGuid,
+                EndTime=order.EndTime,
+                Eye=checkResultDto.EyeName,
+                IdCard=AppData.Instance.CurrentPatient.IdCard,
+                PrescribeId=AppData.Instance.PrescribeInfo.PrescribeId,
+                PrescribeType=0,
+                State=true,
+                PatientId=AppData.Instance.CurrentPatient.PatientIdNumber,
+            };
+            return item;
+        }
+
+        private async void TrainingAndCheckService_TrainingItemStarted(object? sender, TrainingItemEventArgs e)
+        {
+            logger.LogInformation($"开始检查,{e.Item.ItemGuid},参数：{e.Item.ItemParam}");
+            await speechService.SpeakAsync($"开始执行{e.Item.ItemName}检查");
             
+            await cloudSyncService.ItemStart(new DeviceData()
+            {
+                DeviceNum=AppData.Instance.DeviceNo,
+                Action=WebAction.ItemStart,
+
+            }, BuildStartItem(e.Item)
+            , AppData.Instance.DeviceActiveResult.DataSecretKey.DesEncrypt());
+            #region 跳转到相应界面
+            NavigationParameters navigationParameters = new NavigationParameters();
+            navigationParameters.Add(nameof(TrainEnterMode), TrainEnterMode.FromList);
+            if (e.Item.ItemGuid == AppConst.CheckItemCode_Contrast)
+            {
+                CheckTimesParam checkTimesParam = e.Item.ItemParamJson.ToObject<CheckTimesParam>();
+                ContrastConfigParam contrastConfigParam = new ContrastConfigParam()
+                {
+                    PD = checkTimesParam.Pupillary,
+                    CheckDuration = (DCKTime)checkTimesParam.CheckTimes
+                };
+               
+                #region 初始化硬件
+                await motor.Initialize();
+                await motor.SetLeftDisk(3);
+                await motor.SetRightDisk(3);
+                await motor.SetSlideBlock((short)contrastConfigParam.PD);
+                #endregion
+                #region 硬件准备好，开始执行检查
+                await Utils.WaitForConditionAsync(motor.IsAllStop, () =>
+                {
+                    speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
+                    NavigationParameters paramer=new NavigationParameters();
+                    paramer.Add(nameof(ContrastConfigParam), contrastConfigParam);
+                    paramer.Add(nameof(TrainEnterMode), TrainEnterMode.FromList);
+                    regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastTraining, paramer);
+                }, AppConst.WaitHardwareMotionTimeout);
+
+                #endregion
+            }
+            else if(e.Item.ItemGuid== AppConst.CheckItemCode_Sensitivity)
+            {
+                EyeTestParam checkTimesParam = e.Item.ItemParamJson.ToObject<EyeTestParam>();
+                SensitivityConfigParam contrastConfigParam = new SensitivityConfigParam()
+                {
+                    PD = checkTimesParam.Pupillary,
+                    Eyes= (Eye)checkTimesParam.EyeType,
+                    DayNight= (DayOrNight) checkTimesParam.TimeSlot,
+                    IsLightOn= (LightStatus)checkTimesParam.DazzleLight,
+                    CheckDistance=(CheckDistance)checkTimesParam.Distance
+
+                };
+                contrastConfigParam.CheckDuration = contrastConfigParam.Eyes == Eye.OU ? 60 : 30;
+                #region 初始化硬件
+                await motor.Initialize();
+                await motor.SetLeftDisk(3);
+                await motor.SetRightDisk(3);
+                await motor.SetSlideBlock((short)contrastConfigParam.PD);
+                #endregion
+                #region 硬件准备好，开始执行检查
+                await Utils.WaitForConditionAsync(motor.IsAllStop, () =>
+                {
+                    speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
+                    NavigationParameters paramer = new NavigationParameters();
+                    paramer.Add(nameof(SensitivityConfigParam), contrastConfigParam);
+                    paramer.Add(nameof(TrainEnterMode), TrainEnterMode.FromList);
+                    regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastTraining, paramer);
+                }, AppConst.WaitHardwareMotionTimeout);
+
+                #endregion
+            }
+
+            #endregion
+
         }
 
         private void TrainingAndCheckService_TrainingItemCompleted(object? sender, TrainingItemEventArgs e)
         {
-            
+            logger.LogInformation($"结束检查,{e.Item.ItemGuid},参数：{e.Item.ItemParam}");
+            cloudSyncService.ItemEnd(new DeviceData()
+            {
+                Action = WebAction.ItemEnd,
+                DeviceNum = AppData.Instance.DeviceNo,
+                
+            },BuildEndItem(e.Item), AppData.Instance.DeviceActiveResult.DataSecretKey.DesEncrypt());
+
         }
         /// <summary>
         /// 训练结束

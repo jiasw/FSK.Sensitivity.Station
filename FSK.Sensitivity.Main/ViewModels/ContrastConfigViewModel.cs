@@ -6,6 +6,7 @@ using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
+using FSK.Sensitivity.Core.Utility;
 using Prism.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -58,36 +59,8 @@ namespace FSK.Sensitivity.Main.ViewModels
             IsLoading = true;
             LoadingMessageText = "硬件初始化中，请稍后...";
 
-            using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(AppConst.WaitHardwareMotionTimeout)))
-            {
-                try
-                {
-                    // 3. 后台轮询任务
-                    await Task.Run(async () =>
-                    {
-                        while (!cts.Token.IsCancellationRequested)
-                        {
-                            if (await IsMotionFinished())
-                            {
-                                break; // 下位机运动结束，跳出循环
-                            }
-                            // 轮询间隔，防止占用 CPU 过高
-                            await Task.Delay(100, cts.Token);
-                        }
-                    }, cts.Token);
-                }
-                catch (OperationCanceledException)
-                {
-
-                    Console.WriteLine("等待超时，强制跳转");
-                }
-                finally
-                {
-                    IsLoading = false;
-                    NavigateToNextPage();
-                }
-            }
-
+            await Utils.WaitForConditionAsync(IsMotionFinished, NavigateToNextPage, AppConst.WaitHardwareMotionTimeout);
+            IsLoading = false;
         }
 
         public DelegateCommand BackCommand => new DelegateCommand(Back);
@@ -141,12 +114,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         /// </summary>
         private void SetHardWarePD()
         {
-            if (ContrastConfigParam.PD < 50 || ContrastConfigParam.PD > 80)
-            {
-                return;
-            }
-            short pd = (short)(ContrastConfigParam.PD - 50);
-            motor?.SetSlideBlock(pd);
+            motor?.SetSlideBlock((short)ContrastConfigParam.PD);
         }
 
         
@@ -186,7 +154,10 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void NavigateToNextPage()
         {
             speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
-            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastTraining, new NavigationParameters() { { nameof(ContrastConfigParam), ContrastConfigParam } });
+            NavigationParameters parameters = new NavigationParameters() ;
+            parameters.Add(nameof(ContrastConfigParam), ContrastConfigParam);
+            parameters.Add(nameof(TrainEnterMode), TrainEnterMode.Normal);
+            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastTraining, parameters);
         }
     }
 }

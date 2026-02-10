@@ -4,6 +4,7 @@ using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.EventBus;
 using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
+using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Repositories;
 using FSK.Sensitivity.Core.Utility;
@@ -168,6 +169,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly CheckResultRepository checkResultRepository;
         private readonly IMotor motor;
         private readonly ISpeechService speechService;
+        private readonly ITrainingAndCheckService trainingAndCheckService;
         private readonly IRegionNavigationJournal journal;
         private readonly SecondaryChangeEvent secondaryChangeEvent;
         private readonly SensitivitySignChangeEvent sensitivitySignChangeEvent;
@@ -177,6 +179,12 @@ namespace FSK.Sensitivity.Main.ViewModels
         private CSFTrainModel currentCSFTrainModel = null;
         private long checkid = -1;//当前检查的ID，
         private CancellationTokenSource _cts;
+
+        /// <summary>
+        /// 向服务器提交的结果
+        /// </summary>
+        List<CloudSensitivityResult> listresult = new List<CloudSensitivityResult>();
+
         //选择视标的索引
         private int _signSelectIndex = 0;
         public int SignSelectIndex
@@ -185,14 +193,20 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref _signSelectIndex, value); }
         }
 
+        /// <summary>
+        /// 训练模式
+        /// </summary>
+        private TrainEnterMode CurrentTrainEnterMode = TrainEnterMode.Normal;
+
         public SensitivityTrainingViewModel(IRegionManager regionManager,IEventAggregator eventAggregator
-            , CheckResultRepository checkResultRepository, IMotor motor, ISpeechService speechService)
+            , CheckResultRepository checkResultRepository, IMotor motor, ISpeechService speechService, ITrainingAndCheckService trainingAndCheckService)
         {
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
             this.checkResultRepository = checkResultRepository;
             this.motor = motor;
             this.speechService = speechService;
+            this.trainingAndCheckService = trainingAndCheckService;
             this.journal = regionManager.Regions[AppConst.MainRegion].NavigationService.Journal;
             secondaryChangeEvent = eventAggregator.GetEvent<SecondaryChangeEvent>();
             sensitivitySignChangeEvent= eventAggregator.GetEvent<SensitivitySignChangeEvent>();
@@ -463,6 +477,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 Age = AppData.Instance.CurrentPatient.Age.ToString(),
                
             };
+            listresult.Clear();
             currentCSFTrainModel = null;
             checkid=Utils.GenerateSnowID();
             TrainModelsQueue.Clear();
@@ -563,6 +578,18 @@ namespace FSK.Sensitivity.Main.ViewModels
                     VA60 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA60),
                     VA80 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA80),
                 });
+                listresult.Add(new CloudSensitivityResult()
+                {
+                    DayOrNight = CheckUserModel.DayNight,
+                    CheckDistance = CheckUserModel.checkDistance,
+                    Eye=Eye.OS,
+                    VA06=GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA06),
+                    VA10=GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA10),
+                    VA20=GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA20),
+                    VA40=GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA40),
+                    VA60=GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA60),
+                    VA80=GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA80),
+                });
             }
             if (RightCSFTrainModel.TrainStatus==TrainStatus.Trained)
             {
@@ -583,6 +610,18 @@ namespace FSK.Sensitivity.Main.ViewModels
                     VA40 = GetVaResult(RightCSFTrainModel.DictResult, CSFVA.VA40),
                     VA60 = GetVaResult(RightCSFTrainModel.DictResult, CSFVA.VA60),
                     VA80 = GetVaResult(RightCSFTrainModel.DictResult, CSFVA.VA80),
+                });
+                listresult.Add(new CloudSensitivityResult()
+                {
+                    DayOrNight = CheckUserModel.DayNight,
+                    CheckDistance = CheckUserModel.checkDistance,
+                    Eye = Eye.OD,
+                    VA06 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA06),
+                    VA10 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA10),
+                    VA20 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA20),
+                    VA40 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA40),
+                    VA60 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA60),
+                    VA80 = GetVaResult(LeftCSFTrainModel.DictResult, CSFVA.VA80),
                 });
             }
 
@@ -652,22 +691,31 @@ namespace FSK.Sensitivity.Main.ViewModels
             _isProcessing = false;
             if (TrainModelsQueue.Count <= 0)
             {
-                _ = speechService.SpeakAsync("检查结束");
-                if (AppData.Instance.DeviceRunMode== DeviceRunMode.NETWORKED)
+                _ = speechService.SpeakAsync("当前检查已经结束");
+                if (CurrentTrainEnterMode == TrainEnterMode.Normal)
                 {
-                    MessageBoxResult messageBoxResult= MessageBoxService.Instance.ShowInfoWithCountDown("检查结束",10,"提示");
-                    AppData.Instance.Logout();
-                    if (messageBoxResult == MessageBoxResult.OK) {
-                        regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
+                    if (AppData.Instance.DeviceRunMode == DeviceRunMode.NETWORKED)
+                    {
+                        MessageBoxResult messageBoxResult = MessageBoxService.Instance.ShowInfoWithCountDown("检查结束", 10, "提示");
+                        AppData.Instance.Logout();
+                        if (messageBoxResult == MessageBoxResult.OK)
+                        {
+                            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
+                        }
                     }
-                    
+                    else
+                    {
+                        MessageBoxService.Instance.ShowFinishWindow();
+                    }
                 }
                 else
                 {
-                    MessageBoxService.Instance.ShowFinishWindow();
+                    ItemOrder itemOrder = trainingAndCheckService.GetCurrentItem();
+                    itemOrder.Result = "结果：稳中向好";
+                    itemOrder.ItemData = listresult.ToJson();
+                    trainingAndCheckService.CompleteCurrentItem();
+                    MessageBoxResult messageBoxResult = MessageBoxService.Instance.ShowInfoWithCountDown("当前检查已经结束！", 3, "提示");
                 }
-
-                
             }
             
         }
@@ -685,7 +733,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             currentCSFTrainModel?.StopTrain();
             secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Idle });
             eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
-             motor.StopAllMotor();
+            motor.StopAllMotor();
         }
 
         public DelegateCommand ListResultCommand => new DelegateCommand(ListResult);

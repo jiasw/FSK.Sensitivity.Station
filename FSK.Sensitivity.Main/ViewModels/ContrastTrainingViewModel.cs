@@ -5,6 +5,7 @@ using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.EventBus;
 using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
+using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Utility;
 using FSK.Sensitivity.Main.Controls;
@@ -43,11 +44,18 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IEventAggregator eventAggregator;
         private readonly ILight light;
         private readonly ISpeechService speechService;
+        private readonly ITrainingAndCheckService trainingAndCheckService;
         private CheckUserModel _checkUserModel = new CheckUserModel();
 
         ContrastConfigParam contrastConfigParam;
         //选择视标的索引
         private int _signSelectIndex = 0;
+
+        /// <summary>
+        /// 训练模式
+        /// </summary>
+        private TrainEnterMode CurrentTrainEnterMode=TrainEnterMode.Normal;
+
         public int SignSelectIndex
         {
             get { return _signSelectIndex; }
@@ -218,19 +226,16 @@ namespace FSK.Sensitivity.Main.ViewModels
         public Dictionary<DCKTime, int> dictResult = new Dictionary<DCKTime, int>();
         
 
-        public ContrastTrainingViewModel(IRegionManager regionManager, IEventAggregator eventAggregator,ILight light, ISpeechService speechService)
+        public ContrastTrainingViewModel(IRegionManager regionManager, IEventAggregator eventAggregator,ILight light
+            , ISpeechService speechService, ITrainingAndCheckService trainingAndCheckService)
         {
             secondaryChangeEvent = eventAggregator.GetEvent<SecondaryChangeEvent>();
             contrastSignChangeEvent = eventAggregator.GetEvent<SensitivitySignChangeEvent>();
-            
-            _waittimer = new System.Timers.Timer(1000);
-            _waittimer.Elapsed += WaitTimer_Tick;
-            _checktimer = new System.Timers.Timer(1000);
-            _checktimer.Elapsed += CheckTimer_Tick;
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
             this.light = light;
             this.speechService = speechService;
+            this.trainingAndCheckService = trainingAndCheckService;
         }
 
         private void JoystickAction(ActionArgs actionArgs)
@@ -340,7 +345,6 @@ namespace FSK.Sensitivity.Main.ViewModels
             resetWaitTimer();
         }
 
-
         //重置timer
         void resetWaitTimer()
         {
@@ -355,22 +359,40 @@ namespace FSK.Sensitivity.Main.ViewModels
             eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
             _waittimer?.Stop();
             _waittimer?.Dispose();
+            
             _checktimer?.Stop();
             _checktimer?.Dispose();
             _ = speechService.SpeakAsync("检查结束");
-            if (AppData.Instance.DeviceRunMode == DeviceRunMode.NETWORKED)
+
+            if(CurrentTrainEnterMode== TrainEnterMode.Normal)
             {
-                MessageBoxResult messageBoxResult = MessageBoxService.Instance.ShowInfoWithCountDown("检查结束", 10, "提示");
-                if (messageBoxResult == MessageBoxResult.OK)
+                if (AppData.Instance.DeviceRunMode == DeviceRunMode.NETWORKED)
                 {
-                    AppData.Instance.Logout();
-                    regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
+                    MessageBoxResult messageBoxResult = MessageBoxService.Instance.ShowInfoWithCountDown("检查结束", 10, "提示");
+                    if (messageBoxResult == MessageBoxResult.OK)
+                    {
+                        AppData.Instance.Logout();
+                        regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
+                    }
+                }
+                else
+                {
+                    MessageBoxService.Instance.ShowFinishWindow();
                 }
             }
             else
             {
-                MessageBoxService.Instance.ShowFinishWindow();
+                _ = speechService.SpeakAsync("当前检查已经结束");
+                ItemOrder itemOrder = trainingAndCheckService.GetCurrentItem();
+                CloudContrastResult cloudContrastResult = new CloudContrastResult();
+                itemOrder.Result = "检查合格";
+                itemOrder.ItemData= cloudContrastResult.ToJson();
+                trainingAndCheckService.CompleteCurrentItem();
+                MessageBoxResult messageBoxResult = MessageBoxService.Instance.ShowInfoWithCountDown("当前检查已经结束！", 3, "提示");
+                
             }
+
+            
         }
 
 
@@ -424,11 +446,13 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            _waittimer = new System.Timers.Timer(1000);
+            _waittimer.Elapsed += WaitTimer_Tick;
+            _checktimer = new System.Timers.Timer(1000);
+            _checktimer.Elapsed += CheckTimer_Tick;
             contrastConfigParam = navigationContext.Parameters.GetValue<ContrastConfigParam>(nameof(ContrastConfigParam));
-           
             DckTime = contrastConfigParam.CheckDuration;
             CheckTotalDuration = CheckDuration = int.Parse(DckTime.GetDescription());
-            
             secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Contrast });
             CheckUserModel = new CheckUserModel()
             {

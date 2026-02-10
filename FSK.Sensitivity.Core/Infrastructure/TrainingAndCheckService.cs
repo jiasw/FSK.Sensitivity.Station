@@ -34,7 +34,7 @@ namespace FSK.Sensitivity.Core.Infrastructure
         event EventHandler<TrainingItemEventArgs> TrainingItemCompleted;
         event EventHandler TrainingFinished;
 
-        void Initialize(List<ItemOrder> items);
+        void Initialize(List<ItemOrder> items);// 初始化
         void StartTraining();                   // 开始训练
         ItemOrder GetCurrentItem();            // 获取当前训练项目
         void CompleteCurrentItem();            // 完成当前训练项
@@ -98,6 +98,7 @@ namespace FSK.Sensitivity.Core.Infrastructure
             if (_currentItemIndex >= 0 && _currentItemIndex < _trainingItems.Count)
             {
                 var currentItem = _trainingItems[_currentItemIndex];
+                currentItem.EndTime = DateTime.Now;
                 OnTrainingItemCompleted(new TrainingItemEventArgs(currentItem, _currentItemIndex, TotalItems));
 
                 if (_currentItemIndex == _trainingItems.Count - 1)
@@ -133,6 +134,7 @@ namespace FSK.Sensitivity.Core.Infrastructure
                 return;
 
             var nextItem = _trainingItems[_currentItemIndex];
+            nextItem.StartTime = DateTime.Now;
             OnTrainingItemStarted(new TrainingItemEventArgs(nextItem, _currentItemIndex, TotalItems));
         }
 

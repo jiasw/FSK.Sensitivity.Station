@@ -141,5 +141,53 @@ namespace FSK.Sensitivity.Core.Utility
             return YitIdHelper.NextId();
         }
 
+        /// <summary>
+        /// 通用异步轮询等待方法
+        /// </summary>
+        /// <param name="conditionAsync">轮询条件（返回true时停止等待）</param>
+        /// <param name="timeoutSeconds">超时时间（秒）</param>
+        /// <param name="intervalMs">轮询间隔（毫秒）</param>
+        /// <param name="onTimeout">超时回调</param>
+        /// <param name="onCompleted">完成时执行的方法（包括正常完成和超时）</param>
+        /// <returns></returns>
+        public static async Task WaitForConditionAsync(
+            Func<Task<bool>> conditionAsync,
+            Action onCompleted = null,
+            int timeoutSeconds = 30,
+            int intervalMs = 100,
+            Action<string>? onTimeout = null)
+        {
+            using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutSeconds)))
+            {
+                try
+                {
+                    await Task.Run(async () =>
+                    {
+                        while (!cts.Token.IsCancellationRequested)
+                        {
+                            if (await conditionAsync())
+                            {
+                                break;
+                            }
+                            await Task.Delay(intervalMs, cts.Token);
+                        }
+                    }, cts.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    onTimeout?.Invoke($"等待超时（{timeoutSeconds}秒），强制继续");
+                }
+                finally
+                {
+                    // 无论正常完成还是超时，都执行此方法
+                    if (onCompleted != null)
+                    {
+                         onCompleted();
+                    }
+                }
+            }
+        }
+
+
     }
 }

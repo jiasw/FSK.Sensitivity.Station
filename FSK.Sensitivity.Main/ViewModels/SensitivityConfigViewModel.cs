@@ -1,4 +1,5 @@
-﻿using FSK.Sensitivity.Core.Const;
+﻿using DryIoc;
+using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
@@ -181,8 +182,11 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void NavigateToNextPage()
         {
             speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
-            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_SensitivityTraining
-                , new NavigationParameters() { { nameof(SensitivityConfigParam), SensitivityConfigParam } });
+
+            NavigationParameters parameters = new NavigationParameters();
+            parameters.Add(nameof(SensitivityConfigParam), SensitivityConfigParam);
+            parameters.Add(nameof(TrainEnterMode), TrainEnterMode.Normal);
+            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_SensitivityTraining, parameters);
         }
 
         public DelegateCommand BackCommand => new DelegateCommand(Back);
