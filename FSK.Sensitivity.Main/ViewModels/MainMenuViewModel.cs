@@ -21,10 +21,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
@@ -75,11 +77,6 @@ namespace FSK.Sensitivity.Main.ViewModels
             checkNetWorkTimer.Start();
 
             
-        }
-
-        private void OnCloudTrainAndCheck(TrainAndCheckOptions trainAndCheckOptions)
-        {
-
         }
 
         private void CheckNetWork(object? sender, ElapsedEventArgs e)
@@ -343,13 +340,13 @@ namespace FSK.Sensitivity.Main.ViewModels
                 return;
             }
             
-            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", MenuType.DEA } });
+            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { nameof(MenuType), MenuType.DEA } });
         }
 
         public DelegateCommand ConfigCommand => new DelegateCommand(Config);
         private void Config()
         {
-            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", MenuType.Setting } });
+            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { nameof(MenuType), MenuType.Setting } });
         }
 
         public DelegateCommand ScanCommand => new DelegateCommand(async () => await Scan());
@@ -374,10 +371,11 @@ namespace FSK.Sensitivity.Main.ViewModels
 
             dialogService.ShowDialog(AppConst.Main_Dialog_Scan, new DialogParameters(), async result =>
             {
-                if (result.Result == ButtonResult.OK)
+                if(true)
+                //if (result.Result == ButtonResult.OK)
                 {
                     string checkid = result.Parameters.GetValue<string>("scanResult");
-
+                    checkid = "74270c62-4bb0-41f9-a4a3-6810afe73986";
                     try
                     {
                         IsLoading= true;
@@ -405,10 +403,23 @@ namespace FSK.Sensitivity.Main.ViewModels
                 logger.LogInformation("获取到处方信息，开始执行");
                 LoadingMessageText = "正在保存患者信息";
                 await SavePatientInfo(prescribeInfo.Patient);
+                //查询患者信息
+                var query= await patientRepository.Query(n=>n.PatientIdNumber== prescribeInfo.Patient.PatientIdNumber);
+                if(query != null&&query.Count>0)
+                {
+                    AppData.Instance.CurrentPatient = query.First();
+                    AppData.Instance.IsLogin = true;
+                }
+                else
+                {
+                    MessageBoxService.Instance.Show("未查询到患者信息，请联系医生！", "查询患者信息", MessageBoxButton.OK);
+                    logger.LogWarning($"未查询到患者信息，患者ID：{prescribeInfo.Patient.PatientIdNumber}");
+                }
+
                 LoadingMessageText = "正在保存医护信息";
                 await SaveMangerInfo(prescribeInfo.Doctor);
                 trainingAndCheckService.Initialize(prescribeInfo.ItemList);
-                speechService.Speak("检查开始");
+                _= speechService.SpeakAsync("检查开始");
                 trainingAndCheckService.StartTraining();
             }
             IsLoading = false;
@@ -434,7 +445,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
             else if (order.ItemGuid == AppConst.CheckItemCode_Sensitivity)//对比敏感度
             {
-                EyeTestParam eyeTestParam = (EyeTestParam)order.ItemParam;
+                EyeTestParam eyeTestParam = order.ItemParam.Deserialize<EyeTestParam>();
                 item.Eye = GetEyeText(eyeTestParam.EyeType);
                 item.ItemName = "对比敏感度";
               
@@ -476,7 +487,8 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
             else if (order.ItemGuid == AppConst.CheckItemCode_Sensitivity)//对比敏感度
             {
-                EyeTestParam eyeTestParam = (EyeTestParam)order.ItemParam;
+                EyeTestParam eyeTestParam = order.ItemParam.Deserialize<EyeTestParam>();
+
                 checkResultDto.EyeName = GetEyeText(eyeTestParam.EyeType);
                 checkResultDto.ItemName = "对比敏感度";
             }
@@ -500,8 +512,9 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private async void TrainingAndCheckService_TrainingItemStarted(object? sender, TrainingItemEventArgs e)
         {
+            
             logger.LogInformation($"开始检查,{e.Item.ItemGuid},参数：{e.Item.ItemParam}");
-            await speechService.SpeakAsync($"开始执行{e.Item.ItemName}检查");
+            _= speechService.SpeakAsync($"开始执行{e.Item.ItemName}检查");
             
             await cloudSyncService.ItemStart(new DeviceData()
             {
@@ -515,7 +528,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             navigationParameters.Add(nameof(TrainEnterMode), TrainEnterMode.FromList);
             if (e.Item.ItemGuid == AppConst.CheckItemCode_Contrast)
             {
-                CheckTimesParam checkTimesParam = e.Item.ItemParamJson.ToObject<CheckTimesParam>();
+                CheckTimesParam checkTimesParam = e.Item.ItemParam.Deserialize<CheckTimesParam>();
                 ContrastConfigParam contrastConfigParam = new ContrastConfigParam()
                 {
                     PD = checkTimesParam.Pupillary,
@@ -535,14 +548,19 @@ namespace FSK.Sensitivity.Main.ViewModels
                     NavigationParameters paramer=new NavigationParameters();
                     paramer.Add(nameof(ContrastConfigParam), contrastConfigParam);
                     paramer.Add(nameof(TrainEnterMode), TrainEnterMode.FromList);
-                    regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastTraining, paramer);
+                    paramer.Add(nameof(MenuType), MenuType.DEA_Train);
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, paramer);
+                    });
+                        
                 }, AppConst.WaitHardwareMotionTimeout);
 
                 #endregion
             }
             else if(e.Item.ItemGuid== AppConst.CheckItemCode_Sensitivity)
             {
-                EyeTestParam checkTimesParam = e.Item.ItemParamJson.ToObject<EyeTestParam>();
+                EyeTestParam checkTimesParam = e.Item.ItemParam.Deserialize<EyeTestParam>();
                 SensitivityConfigParam contrastConfigParam = new SensitivityConfigParam()
                 {
                     PD = checkTimesParam.Pupillary,

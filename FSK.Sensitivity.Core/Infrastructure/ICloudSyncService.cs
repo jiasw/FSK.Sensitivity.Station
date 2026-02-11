@@ -63,9 +63,7 @@ namespace FSK.Sensitivity.Core.Infrastructure
     {
         public String PrescribeId { get; set; }
 
-        public int
-             PrescribeType
-        { get; set; }
+        public int  PrescribeType { get; set; }
     }
 
     public class ItemInfo
@@ -556,7 +554,7 @@ namespace FSK.Sensitivity.Core.Infrastructure
             }
             catch (Exception ex)
             {
-                _logger.LogError($"项目结束失败: 项目名称: {itemInfoDto.ItemName},编码：{itemInfoDto.ItemId}: 错误: {ex.Message}");
+                _logger.LogError($"项目结束失败: 项目名称: {itemStopDto.Data.First().ItemName},编码：{itemStopDto.Data.First().ItemID}: 错误: {ex.Message}");
                 return false;
             }
         }

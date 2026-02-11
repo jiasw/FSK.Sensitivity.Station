@@ -1,7 +1,9 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace FSK.Sensitivity.Core.Model
@@ -62,12 +64,9 @@ namespace FSK.Sensitivity.Core.Model
         /// <summary>
         /// 检查参数模型
         /// </summary>
-        public ItemParamBase ItemParam { get; set; }
+        
+        public JsonElement ItemParam { get; set; }
 
-        /// <summary>
-        /// 检查参数字符串
-        /// </summary>
-        public string ItemParamJson { get; set; }
 
         /// <summary>
         /// 检查结果数据
@@ -76,8 +75,10 @@ namespace FSK.Sensitivity.Core.Model
 
 
     }
+    
 
-    public class ItemParamBase
+   
+    public abstract class ItemParamBase
     {
         /// <summary>
         /// 瞳距

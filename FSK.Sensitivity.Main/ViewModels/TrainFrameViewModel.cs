@@ -1,6 +1,8 @@
 ﻿using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.Utility;
+using Prism.Common;
+using Prism.Navigation;
 using Prism.Navigation.Regions;
 using System;
 using System.Collections.Generic;
@@ -14,10 +16,16 @@ namespace FSK.Sensitivity.Main.ViewModels
     public class TrainFrameViewModel : BaseViewModel, INavigationAware
     {
         private readonly IRegionManager regionManager;
-
+        Dictionary<MenuType, string> dictMenuType = new Dictionary<MenuType, string>();
         public TrainFrameViewModel(IRegionManager regionManager)
         {
             this.regionManager = regionManager;
+            dictMenuType.Add(MenuType.CSF, AppConst.Main_Page_SensitivitySetting);
+            dictMenuType.Add(MenuType.DEA, AppConst.Main_Page_ContrastSetting);
+            dictMenuType.Add(MenuType.Setting, AppConst.Main_Page_Setting);
+            dictMenuType.Add(MenuType.CSF_Train, AppConst.Main_Page_SensitivityTraining);
+            dictMenuType.Add(MenuType.DEA_Train, AppConst.Main_Page_ContrastTraining);
+
         }
 
 
@@ -59,32 +67,20 @@ namespace FSK.Sensitivity.Main.ViewModels
             RegionManagerExtensions.SafeRequestNavigate(regionManager, AppConst.TrainRegion, AppConst.Main_Page_CheckHistory);
         }
 
+
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            
+            var navigationParameters = navigationContext.Parameters;
             var s = regionManager.Regions[AppConst.TrainRegion].NavigationService.Journal;
             s.Clear();
             ShowLogButton = Visibility.Visible;
             // 通过Parameters属性访问
-            if (navigationContext.Parameters.TryGetValue("type", out object? value))
+            
+            if (navigationContext.Parameters.TryGetValue(nameof(MenuType), out object? value))
             {
                 MenuType menu = (MenuType)value;
-                if (menu != null)
-                {
-                    if (menu == MenuType.CSF)
-                    {
-                        regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_SensitivitySetting);
-                    }
-                    else if (menu == MenuType.DEA)
-                    {
-                        regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastSetting);
-                    }else if (menu == MenuType.Setting)
-                    {
-                        ShowLogButton=Visibility.Collapsed;
-                        regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_Setting);
-                    }
-                }
-
+                regionManager.RequestNavigate(AppConst.TrainRegion, dictMenuType[menu], navigationParameters);
             }
         }
 

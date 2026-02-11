@@ -43,7 +43,11 @@ namespace FSK.Sensitivity.Core.Enums
         [Description("暗环境适应")]
         DEA,
         [Description("设置")]
-        Setting
+        Setting,
+        [Description("对比敏感度训练")]
+        CSF_Train,
+        [Description("暗环境适应训练")]
+        DEA_Train,
 
     }
 
