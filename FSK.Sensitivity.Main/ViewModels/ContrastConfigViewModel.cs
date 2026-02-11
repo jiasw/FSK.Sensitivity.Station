@@ -153,7 +153,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         // 界面跳转逻辑
         private void NavigateToNextPage()
         {
-            speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
+            
             NavigationParameters parameters = new NavigationParameters() ;
             parameters.Add(nameof(ContrastConfigParam), ContrastConfigParam);
             parameters.Add(nameof(TrainEnterMode), TrainEnterMode.Normal);

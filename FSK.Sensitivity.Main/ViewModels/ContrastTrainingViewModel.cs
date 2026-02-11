@@ -446,6 +446,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
             _waittimer = new System.Timers.Timer(1000);
             _waittimer.Elapsed += WaitTimer_Tick;
             _checktimer = new System.Timers.Timer(1000);

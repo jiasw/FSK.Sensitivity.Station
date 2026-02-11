@@ -371,11 +371,11 @@ namespace FSK.Sensitivity.Main.ViewModels
 
             dialogService.ShowDialog(AppConst.Main_Dialog_Scan, new DialogParameters(), async result =>
             {
-                if(true)
-                //if (result.Result == ButtonResult.OK)
+                //if(true)
+                if (result.Result == ButtonResult.OK)
                 {
                     string checkid = result.Parameters.GetValue<string>("scanResult");
-                    checkid = "74270c62-4bb0-41f9-a4a3-6810afe73986";
+                    //checkid = "74270c62-4bb0-41f9-a4a3-6810afe73986";
                     try
                     {
                         IsLoading= true;
@@ -544,7 +544,6 @@ namespace FSK.Sensitivity.Main.ViewModels
                 #region 硬件准备好，开始执行检查
                 await Utils.WaitForConditionAsync(motor.IsAllStop, () =>
                 {
-                    speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
                     NavigationParameters paramer=new NavigationParameters();
                     paramer.Add(nameof(ContrastConfigParam), contrastConfigParam);
                     paramer.Add(nameof(TrainEnterMode), TrainEnterMode.FromList);
@@ -580,7 +579,6 @@ namespace FSK.Sensitivity.Main.ViewModels
                 #region 硬件准备好，开始执行检查
                 await Utils.WaitForConditionAsync(motor.IsAllStop, () =>
                 {
-                    speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
                     NavigationParameters paramer = new NavigationParameters();
                     paramer.Add(nameof(SensitivityConfigParam), contrastConfigParam);
                     paramer.Add(nameof(TrainEnterMode), TrainEnterMode.FromList);

@@ -469,6 +469,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
             CheckUserModel model = new CheckUserModel()
             {
                 Id = AppData.Instance.CurrentPatient.Id,
