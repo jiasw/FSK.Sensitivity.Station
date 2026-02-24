@@ -22,7 +22,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.dialogService = dialogService;
         }
 
-        public DialogCloseListener RequestClose => throw new NotImplementedException();
+        public DialogCloseListener RequestClose { get; }
 
         public bool CanCloseDialog()
         {
@@ -43,13 +43,14 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void Result()
         {
-            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_CheckHistory);
+            RequestClose.Invoke(new DialogResult(ButtonResult.OK));
         }
 
         public DelegateCommand BackCommand => new DelegateCommand(Back);
         private void Back()
         {
-            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
+            RequestClose.Invoke(new DialogResult(ButtonResult.No));
+            
         }
 
     }

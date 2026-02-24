@@ -1,7 +1,8 @@
-﻿using System;
+﻿using FSK.Sensitivity.Main.Views.Dialogs;
+using Prism.Dialogs;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
-using FSK.Sensitivity.Main.Views.Dialogs;
 
 namespace FSK.Sensitivity.Main.Controls
 {
@@ -256,9 +257,9 @@ namespace FSK.Sensitivity.Main.Controls
 
         public MessageBoxResult ShowFinishWindow()
         {
-            var window = new Finish();
-            var result = window.ShowDialog();
-            return result.HasValue && result.Value ? MessageBoxResult.OK : MessageBoxResult.Cancel;
+            
+            
+            return  MessageBoxResult.Cancel;
         }
 
         #endregion

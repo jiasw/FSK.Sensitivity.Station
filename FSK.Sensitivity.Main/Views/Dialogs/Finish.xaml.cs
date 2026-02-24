@@ -17,7 +17,7 @@ namespace FSK.Sensitivity.Main.Views.Dialogs
     /// <summary>
     /// Finish.xaml 的交互逻辑
     /// </summary>
-    public partial class Finish : Window
+    public partial class Finish : UserControl
     {
         public Finish()
         {
@@ -30,40 +30,35 @@ namespace FSK.Sensitivity.Main.Views.Dialogs
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResultEvent?.Invoke(this, MessageBoxResult.OK);
-            this.DialogResult = true;
-            this.Close();
+            
         }
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResultEvent?.Invoke(this, MessageBoxResult.Cancel);
-            this.DialogResult = false;
-            this.Close();
+            
         }
         private void YesButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResultEvent?.Invoke(this, MessageBoxResult.Yes);
-            this.DialogResult = true;
-            this.Close();
+            
         }
         private void NoButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResultEvent?.Invoke(this, MessageBoxResult.No);
-            this.DialogResult = false;
-            this.Close();
+            
         }
         // 窗口拖拽
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                this.DragMove();
+                
             }
         }
         // 关闭按钮
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
-            this.Close();
+            DialogResultEvent?.Invoke(this, MessageBoxResult.None);
         }
     }
 }

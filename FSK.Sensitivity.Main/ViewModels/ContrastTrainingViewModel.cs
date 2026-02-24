@@ -7,9 +7,11 @@ using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
+using FSK.Sensitivity.Core.Repositories;
 using FSK.Sensitivity.Core.Utility;
 using FSK.Sensitivity.Main.Controls;
 using NetTaste;
+using Prism.Dialogs;
 using Prism.Events;
 using Prism.Navigation.Regions;
 using System;
@@ -45,6 +47,8 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly ILight light;
         private readonly ISpeechService speechService;
         private readonly ITrainingAndCheckService trainingAndCheckService;
+        private readonly FitLogRepository fitLogRepository;
+        private readonly IDialogService dialogService;
         private CheckUserModel _checkUserModel = new CheckUserModel();
 
         ContrastConfigParam contrastConfigParam;
@@ -226,7 +230,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         public Dictionary<DCKTime, int> dictResult = new Dictionary<DCKTime, int>();
 
         public ContrastTrainingViewModel(IRegionManager regionManager, IEventAggregator eventAggregator,ILight light
-            , ISpeechService speechService, ITrainingAndCheckService trainingAndCheckService)
+            , ISpeechService speechService, ITrainingAndCheckService trainingAndCheckService, FitLogRepository fitLogRepository, IDialogService dialogService)
         {
             secondaryChangeEvent = eventAggregator.GetEvent<SecondaryChangeEvent>();
             contrastSignChangeEvent = eventAggregator.GetEvent<SensitivitySignChangeEvent>();
@@ -235,6 +239,8 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.light = light;
             this.speechService = speechService;
             this.trainingAndCheckService = trainingAndCheckService;
+            this.fitLogRepository = fitLogRepository;
+            this.dialogService = dialogService;
         }
 
         private void JoystickAction(ActionArgs actionArgs)
@@ -246,7 +252,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
                 dictResult.Add(DckTime, actionArgs.Index);
                 StopTrain();
-
+                SaveResult();
             }
 
         }
@@ -371,11 +377,24 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void StopTrain()
         {
+
             _ = speechService.SpeakAsync("检查结束");
             if (CurrentTrainEnterMode == TrainEnterMode.Normal)
             {
-                MessageBoxService.Instance.ShowFinishWindow();
-                
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    dialogService.ShowDialog(AppConst.Main_Dialog_Finish, (result) =>
+                    {
+                        if (result.Result == ButtonResult.OK)//查看结果
+                        {
+                            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_CheckHistory);
+                        }
+                        else//返回
+                        {
+                            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
+                        }
+                    });
+                });
             }
             else
             {
@@ -391,13 +410,42 @@ namespace FSK.Sensitivity.Main.ViewModels
             
         }
 
+        //将结果保存到数据库中
+        private void SaveResult()
+        {
+            if (dictResult.Count > 0)
+            {
+                _ = fitLogRepository.Add(new Core.Entity.FitLog()
+                {
+                    FitDrution = WaitTotalDuration,
+                    CreateTime = DateTime.Now,
+                    FitResult = dictResult.First().Value,
+                    FitTime = DateTime.Now,
+                    UserId = AppData.Instance.CurrentPatient.Id,
+                    IsDeleted = false,
+                });
+            }
+        }
+
 
         private void CheckTimer_Tick(object? sender, EventArgs e)
         {
-            CheckDuration--;
-            if (CheckDuration == 0)
+            if (CheckDuration > 0)
+            {
+                CheckDuration--;
+            }
+            else
             {
                 _checktimer.Stop();
+                //如果用户一直没有执行选择，默认给用户一个选项
+                if (dictResult.Count == 0)
+                {
+                    dictResult.Add(DckTime, 1);
+                }
+                StopTrain();
+                
+                SaveResult();
+                
                 System.Windows.Application.Current.Dispatcher.Invoke(() => {
                     BackgroundSource = Brushes.Black;
                     SignPath = "";

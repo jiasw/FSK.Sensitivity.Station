@@ -10,6 +10,7 @@ using FSK.Sensitivity.Core.Repositories;
 using FSK.Sensitivity.Core.Utility;
 using FSK.Sensitivity.Main.Controls;
 using Newtonsoft.Json.Linq;
+using Prism.Dialogs;
 using Prism.Navigation.Regions;
 using SqlSugar;
 using System;
@@ -143,6 +144,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         public void StopTrain()
         {
             timer.Stop();
+            TrainStatus = TrainStatus.Trained;
             TrainFinish?.Invoke(this, new EventArgs());
 
         }
@@ -172,6 +174,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IMotor motor;
         private readonly ISpeechService speechService;
         private readonly ITrainingAndCheckService trainingAndCheckService;
+        private readonly IDialogService dialogService;
         private readonly IRegionNavigationJournal journal;
         private readonly SecondaryChangeEvent secondaryChangeEvent;
         private readonly SensitivitySignChangeEvent sensitivitySignChangeEvent;
@@ -201,7 +204,8 @@ namespace FSK.Sensitivity.Main.ViewModels
         private TrainEnterMode CurrentTrainEnterMode = TrainEnterMode.Normal;
 
         public SensitivityTrainingViewModel(IRegionManager regionManager,IEventAggregator eventAggregator
-            , CheckResultRepository checkResultRepository, IMotor motor, ISpeechService speechService, ITrainingAndCheckService trainingAndCheckService)
+            , CheckResultRepository checkResultRepository, IMotor motor, ISpeechService speechService
+            , ITrainingAndCheckService trainingAndCheckService, IDialogService dialogService)
         {
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
@@ -209,6 +213,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.motor = motor;
             this.speechService = speechService;
             this.trainingAndCheckService = trainingAndCheckService;
+            this.dialogService = dialogService;
             this.journal = regionManager.Regions[AppConst.MainRegion].NavigationService.Journal;
             secondaryChangeEvent = eventAggregator.GetEvent<SecondaryChangeEvent>();
             sensitivitySignChangeEvent= eventAggregator.GetEvent<SensitivitySignChangeEvent>();
@@ -695,19 +700,20 @@ namespace FSK.Sensitivity.Main.ViewModels
                 _ = speechService.SpeakAsync("当前检查已经结束");
                 if (CurrentTrainEnterMode == TrainEnterMode.Normal)
                 {
-                    if (AppData.Instance.DeviceRunMode == DeviceRunMode.NETWORKED)
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        MessageBoxResult messageBoxResult = MessageBoxService.Instance.ShowInfoWithCountDown("检查结束", 10, "提示");
-                        AppData.Instance.Logout();
-                        if (messageBoxResult == MessageBoxResult.OK)
+                        dialogService.ShowDialog(AppConst.Main_Dialog_Finish, (result) =>
                         {
-                            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
-                        }
-                    }
-                    else
-                    {
-                        MessageBoxService.Instance.ShowFinishWindow();
-                    }
+                            if (result.Result == ButtonResult.OK)//查看结果
+                            {
+                                regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_CheckHistory);
+                            }
+                            else//返回
+                            {
+                                regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
+                            }
+                        });
+                    });
                 }
                 else
                 {

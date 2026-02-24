@@ -53,7 +53,7 @@ namespace FSK.Sensitivity.Core.Const
         public const string Main_Dialog_Register = "Register";
         public const string Main_Dialog_Setting_UserInfo_Add = "UserInfoAdd";
         public const string Main_Dialog_AlertMsg = "AlertMsg";
-
+        public const string Main_Dialog_Finish = "Finish";
 
         public const string ResultWindowsName = "CheckResult";
 

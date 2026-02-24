@@ -160,6 +160,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         // 检查设备状态
         private async Task<bool> CheckDeviceStatus()
         {
+            
             IsLoading = true;
             //检查设备硬件状态
             if (!modbusService.IsConnected)
@@ -186,6 +187,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
             IsLoading = false;
             return true;
+            
         }
 
         public DelegateCommand ExitCommand=> new DelegateCommand(ExitLogin);
