@@ -68,6 +68,14 @@ namespace FSK.Sensitivity.Core.Enums
         FromList,//根据训练列表进入
 
     }
+    /// <summary>
+    /// 完成模式
+    /// </summary>
+    public enum ComplateMode { 
+        Auto,  // 自动完成
+        Manual,//手动完成
+    
+    }
 
 
 }

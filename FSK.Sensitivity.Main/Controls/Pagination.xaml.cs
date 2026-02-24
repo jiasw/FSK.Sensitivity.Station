@@ -24,6 +24,7 @@ namespace FSK.Sensitivity.Main.Controls
         public Pagination()
         {
             InitializeComponent();
+            
         }
         #region 依赖属性
         /// <summary>
@@ -90,6 +91,7 @@ namespace FSK.Sensitivity.Main.Controls
         }
         private void UpdateButtonStates()
         {
+            
             // 如果总页数小于等于1，不显示控件
             if (TotalPages <= 1)
             {

@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
-    public class UserInfoViewModel : BaseViewModel
+    public class UserInfoViewModel : BaseViewModel, INavigationAware
     {
         private readonly MangerRepository mangerRepository;
         private readonly IDialogService dialogService;
         private ObservableCollection<Manger> mangers = new ObservableCollection<Manger>();
         private int pageIndex = 1;
-        private int pageSize = 10;
+        private int pageSize = 14;
 
 
         public ObservableCollection<Manger> Mangers
@@ -34,7 +34,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
        
 
-        private int totalPage;
+        private int totalPage=-1;
         public int TotalPage
         {
             get { return totalPage; }
@@ -76,6 +76,22 @@ namespace FSK.Sensitivity.Main.ViewModels
             Mangers = new ObservableCollection<Manger>(pageModel.data);
             return pageModel;
         }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            _= LoadData();
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            
+        }
+
         public DelegateCommand<Manger> DeleteMangerCommand => new DelegateCommand<Manger>(async (n) =>
         {
             await mangerRepository.DeleteById(n.Id);

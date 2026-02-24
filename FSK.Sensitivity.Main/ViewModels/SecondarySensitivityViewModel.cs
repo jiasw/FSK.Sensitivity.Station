@@ -108,21 +108,24 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
             else
             {
-                if (e.Command == JoystickStatus.Front)
-                {
-                    if (SelectedIndex > 5)
-                    {
-                        SelectedIndex -= 5;
-                    }
-                }
-                else if (e.Command == JoystickStatus.Back)
-                {
-                    if (SelectedIndex < 5)
-                    {
-                        SelectedIndex += 5;
-                    }
-                }
-                else if (e.Command == JoystickStatus.Left)
+                //if (e.Command == JoystickStatus.Front)
+                //{
+                //    if (SelectedIndex > 5)
+                //    {
+                //        SelectedIndex -= 5;
+                //    }
+                //}
+                //else if (e.Command == JoystickStatus.Back)
+                //{
+                //    if (SelectedIndex < 5)
+                //    {
+                //        SelectedIndex += 5;
+                //    }
+                //}
+                //else 
+                
+                
+                if (e.Command == JoystickStatus.Left)
                 {
                     if (SelectedIndex > 1)
                     {

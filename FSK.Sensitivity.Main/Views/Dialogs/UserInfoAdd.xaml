@@ -18,7 +18,7 @@
             <Setter Property="Margin" Value="10,15,20,15"></Setter>
         </Style>
         <Style x:Key="textboxStyle" TargetType="TextBox" BasedOn="{StaticResource TextBoxExtend}">
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="24" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="{StaticResource MainBrush}" />
@@ -27,7 +27,7 @@
             <Setter Property="Height" Value="40"></Setter>
         </Style>
         <Style x:Key="comboboxStyle" TargetType="ComboBox" BasedOn="{StaticResource ComboBoxBaseStyle}">
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="24" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="{StaticResource MainBrush}" />
@@ -67,7 +67,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="2*" />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.ColumnSpan="2" Text="人员信息" Foreground="{StaticResource MainBrush}" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.ColumnSpan="2" Text="人员信息" Foreground="{StaticResource MainBrush}" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="姓名" Style="{StaticResource textblockTitleStyle}"></TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Name, Mode=TwoWay}" Style="{StaticResource textboxStyle}"></TextBox>
                 <TextBlock Grid.Column="0" Grid.Row="3" Text="性别" Style="{StaticResource textblockTitleStyle}"></TextBlock>

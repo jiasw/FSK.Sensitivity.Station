@@ -8,16 +8,16 @@
                   xmlns:prism="http://prismlibrary.com/"
 prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" Name="对比度视标"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="750" d:DesignWidth="800">
     
     <Grid Background="{Binding BackColor}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.8*"/>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="4*"/>
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
-        <TextBlock  Foreground="{Binding TitleColor}" FontSize="{StaticResource subScreenhintFontSize}" Margin="80,0" TextAlignment="Center"  VerticalAlignment="Bottom" TextWrapping="Wrap" HorizontalAlignment="Center">
+        <TextBlock  Foreground="{Binding TitleColor}" FontSize="{StaticResource FontSize.ConfigTitle}" Margin="80,0" TextAlignment="Center"  VerticalAlignment="Bottom" TextWrapping="Wrap" HorizontalAlignment="Center">
             <Run>请选择您能看清的编号最大的视标</Run>
             <LineBreak></LineBreak>
             <Run>并选择下方的按钮</Run>

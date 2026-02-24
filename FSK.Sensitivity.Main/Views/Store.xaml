@@ -10,7 +10,7 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="1200">
+             d:DesignHeight="650" d:DesignWidth="1200">
     <b:Interaction.Triggers>
         <b:EventTrigger  EventName="Loaded">
             <b:InvokeCommandAction Command="{Binding LoadStoreCommand}" />
@@ -19,7 +19,7 @@
     
     <UserControl.Resources>
         <Style TargetType="TextBlock" x:Key="serialPortConfigTitle">
-            <Setter Property="FontSize" Value="36" />
+            <Setter Property="FontSize" Value="{StaticResource FontSize.Title}" />
             <Setter Property="Margin" Value="10,5" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="TextAlignment" Value="Right"></Setter>
@@ -29,7 +29,7 @@
         <Style TargetType="ComboBox" x:Key="serialPortConfigComboBox" BasedOn="{StaticResource ComboBoxBaseStyle}">
             <Setter Property="Width" Value="350" />
             <Setter Property="Height" Value="55" />
-            <Setter Property="FontSize" Value="36"></Setter>
+            <Setter Property="FontSize" Value="{StaticResource FontSize.Title}"></Setter>
         </Style>
         <Style x:Key="ImageButtonStyle" TargetType="Button">
 
@@ -59,40 +59,42 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </UserControl.Resources>
 
+    <Border HorizontalAlignment="Center">
+        <Grid  Margin="10,10,10,10" Width="680" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="100" />
+                <RowDefinition Height="100" />
+                <RowDefinition Height="180" />
+                <RowDefinition Height="80" />
+                <RowDefinition Height="2*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="1" Text="设备编号:" Style="{StaticResource serialPortConfigTitle}" />
+            <TextBox Grid.Row="1" IsReadOnly="True" Grid.Column="1" Text="{Binding Code}" Width="350" Margin="30,0,0,0" HorizontalAlignment="Left" Height="55" FontSize="30" />
+            <TextBlock Grid.Row="2" Text="门店名称:" Style="{StaticResource serialPortConfigTitle}" />
+            <TextBox  Grid.Row="2" Grid.Column="1" Text="{Binding Name}" Width="350" Margin="30,0,0,0" HorizontalAlignment="Left" Height="55" FontSize="30" />
+            <StackPanel Grid.Row="3" Orientation="Vertical" VerticalAlignment="Center">
+                <TextBlock  Text="门店logo:" Style="{StaticResource serialPortConfigTitle}" />
+                <TextBlock Text="背景透明png格式；" Style="{StaticResource serialPortConfigTitle}"  TextWrapping="WrapWithOverflow" FontSize="12"></TextBlock>
+                <TextBlock Text="建议尺寸：100*27" Style="{StaticResource serialPortConfigTitle}"  TextWrapping="WrapWithOverflow" FontSize="12"></TextBlock>
+            </StackPanel>
 
-    <Grid HorizontalAlignment="Center">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="80" />
-            <RowDefinition Height="80" />
-            <RowDefinition Height="180" />
-            <RowDefinition Height="80" />
-            <RowDefinition Height="2*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="3*" />
-         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="1" Text="设备编号:" Style="{StaticResource serialPortConfigTitle}" />
-        <TextBox Grid.Row="1" IsReadOnly="True" Grid.Column="1" Text="{Binding Code}" Width="350" Margin="30,0,0,0" HorizontalAlignment="Left" Height="55" FontSize="30" />
-        <TextBlock Grid.Row="2" Text="门店名称:" Style="{StaticResource serialPortConfigTitle}" />
-        <TextBox  Grid.Row="2" Grid.Column="1" Text="{Binding Name}" Width="350" Margin="30,0,0,0" HorizontalAlignment="Left" Height="55" FontSize="30" />
-        <StackPanel Grid.Row="3" Orientation="Vertical" VerticalAlignment="Center">
-            <TextBlock  Text="门店logo:" Style="{StaticResource serialPortConfigTitle}" />
-            <TextBlock Text="背景透明png格式；" Style="{StaticResource serialPortConfigTitle}"  TextWrapping="WrapWithOverflow" FontSize="12"></TextBlock>
-            <TextBlock Text="建议尺寸：100*27" Style="{StaticResource serialPortConfigTitle}"  TextWrapping="WrapWithOverflow" FontSize="12"></TextBlock>
-        </StackPanel>
 
-
-        <Button Grid.Row="3" Grid.Column="1" Background="{StaticResource SecondBackGroundBrush}"  HorizontalAlignment="Left"  Command="{Binding UploadLogoCommand}" Margin="30,0,0,0" Width="140" Height="140"  FontSize="30"   Style="{StaticResource ImageButtonStyle}" >
+            <Button Grid.Row="3" Grid.Column="1" Background="{StaticResource SecondBackGroundBrush}"  HorizontalAlignment="Left"  Command="{Binding UploadLogoCommand}" Margin="30,0,0,0" Width="140" Height="140"  FontSize="30"   Style="{StaticResource ImageButtonStyle}" >
                 <Image Source="/FSK.Sensitivity.Main;component/Resource/Images/btnupload.png" Stretch="Uniform"></Image>
             </Button>
-       
-       
-        <Image Grid.Row="3" Grid.Column="1" Visibility="{Binding HasImage, Converter={StaticResource BoolToVis}}" HorizontalAlignment="Left" Margin="30,0,0,0" Width="140" Height="140" Source="{Binding FullImagePath, TargetNullValue={x:Null}, FallbackValue={x:Null}}" Stretch="Uniform"/>
 
-        <Button  Grid.Row="4" Content="保存"  Width="250" Grid.ColumnSpan="2"  Style="{StaticResource NavButton}" Command="{Binding SaveCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-    </Grid>
-        
+
+            <Image Grid.Row="3" Grid.Column="1" Visibility="{Binding HasImage, Converter={StaticResource BoolToVis}}" HorizontalAlignment="Left" Margin="30,0,0,0" Width="140" Height="140" Source="{Binding FullImagePath, TargetNullValue={x:Null}, FallbackValue={x:Null}}" Stretch="Uniform"/>
+
+            <Button  Grid.Row="4" Content="保存"  Width="250" Grid.ColumnSpan="2"  Style="{StaticResource NavButton}" Command="{Binding SaveCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Grid>
+
+    </Border>
+     
 
 </UserControl>

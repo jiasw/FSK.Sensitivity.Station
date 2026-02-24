@@ -1,6 +1,8 @@
 ﻿using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
+using FSK.Sensitivity.Core.EventBus;
 using FSK.Sensitivity.Core.Utility;
+using FSK.Sensitivity.Main.Views;
 using Prism.Common;
 using Prism.Navigation;
 using Prism.Navigation.Regions;
@@ -17,7 +19,7 @@ namespace FSK.Sensitivity.Main.ViewModels
     {
         private readonly IRegionManager regionManager;
         Dictionary<MenuType, string> dictMenuType = new Dictionary<MenuType, string>();
-        public TrainFrameViewModel(IRegionManager regionManager)
+        public TrainFrameViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             this.regionManager = regionManager;
             dictMenuType.Add(MenuType.CSF, AppConst.Main_Page_SensitivitySetting);
@@ -25,11 +27,17 @@ namespace FSK.Sensitivity.Main.ViewModels
             dictMenuType.Add(MenuType.Setting, AppConst.Main_Page_Setting);
             dictMenuType.Add(MenuType.CSF_Train, AppConst.Main_Page_SensitivityTraining);
             dictMenuType.Add(MenuType.DEA_Train, AppConst.Main_Page_ContrastTraining);
+            
+            eventAggregator.GetEvent<CheckResultPageLoadRvent>().Subscribe(OnCheckResultPageLoad);
 
         }
 
+        private void OnCheckResultPageLoad()
+        {
+            ShowLogButton = Visibility.Collapsed;
+        }
 
-       private Visibility showLogButton = Visibility.Visible;
+        private Visibility showLogButton = Visibility.Visible;
         public Visibility ShowLogButton
         {
             get { return showLogButton; }
@@ -64,6 +72,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void ListResult()
         {
+            
             RegionManagerExtensions.SafeRequestNavigate(regionManager, AppConst.TrainRegion, AppConst.Main_Page_CheckHistory);
         }
 
@@ -74,9 +83,12 @@ namespace FSK.Sensitivity.Main.ViewModels
             var navigationParameters = navigationContext.Parameters;
             var s = regionManager.Regions[AppConst.TrainRegion].NavigationService.Journal;
             s.Clear();
-            ShowLogButton = Visibility.Visible;
             // 通过Parameters属性访问
-            
+            if (!AppData.Instance.IsLogin)
+            {
+                ShowLogButton = Visibility.Collapsed;
+            }
+
             if (navigationContext.Parameters.TryGetValue(nameof(MenuType), out object? value))
             {
                 MenuType menu = (MenuType)value;
@@ -91,24 +103,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            // 通过Parameters属性访问
-            if (navigationContext.Parameters.TryGetValue("type", out object? value))
-            {
-                string? data = value as string;
-                //if (data != null)
-                //{
-                //    if (data == "CSF")
-                //    {
-                //        var s = regionManager.Regions[AppConst.TrainRegion].NavigationService;
-                //        regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_SensitivitySetting);
-                //    }
-                //    else
-                //    {
-                //        regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastSetting);
-                //    }
-                //}
-
-            }
+            ShowLogButton = Visibility.Visible;
         }
     }
 }

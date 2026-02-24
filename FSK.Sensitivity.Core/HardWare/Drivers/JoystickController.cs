@@ -92,8 +92,10 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
                         {
                             logger.LogDebug("读取摇杆状态失败");
                         }
-
-                        await Task.Delay(5, token);
+                        if (!token.IsCancellationRequested) {
+                            await Task.Delay(5, token);
+                        }
+                        
                     }
                     catch (Exception ex)
                     {

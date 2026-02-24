@@ -8,25 +8,26 @@
              xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="550" d:DesignWidth="500">
+             d:DesignHeight="650" d:DesignWidth="500">
     <UserControl.Resources>
         <Style x:Key="textblockTitleStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="{StaticResource FontSizelabel}" />
+            <Setter Property="FontSize" Value="{StaticResource FontSize.Subhead}" />
             <Setter Property="Foreground" Value="{StaticResource MainBrush}" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="10,5"></Setter>
         </Style>
         <Style x:Key="textboxStyle" TargetType="TextBox" BasedOn="{StaticResource TextBoxExtend}">
-            <Setter Property="FontSize" Value="{StaticResource FontSizelabel}" />
+            <Setter Property="FontSize" Value="{StaticResource FontSize.Subhead}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="{StaticResource MainBrush}" />
             <Setter Property="Width" Value="250"></Setter>
-            <Setter Property="Margin" Value="10,5"></Setter>
+            <Setter Property="Margin" Value="10,7"></Setter>
+            <Setter Property="Height" Value="40"></Setter>
         </Style>
         <Style x:Key="comboboxStyle" TargetType="ComboBox" BasedOn="{StaticResource ComboBoxBaseStyle}">
-            <Setter Property="FontSize" Value="{StaticResource FontSizelabel}" />
+            <Setter Property="FontSize" Value="{StaticResource FontSize.Subhead}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="{StaticResource MainBrush}" />
@@ -43,7 +44,7 @@
             <Setter Property="WindowStyle" Value="None"></Setter>
             <Setter Property="AllowsTransparency" Value="True"></Setter>
             <Setter Property="Width" Value="500"></Setter>
-            <Setter Property="Height" Value="580"></Setter>
+            <Setter Property="Height" Value="680"></Setter>
             <Setter Property="Background" Value="Transparent"></Setter>
         </Style>
     </prism:Dialog.WindowStyle>
@@ -51,7 +52,7 @@
         <StackPanel >
             <Grid >
                 <Button  Width="60" Height="60"  hc:IconElement.Width="30" hc:IconElement.Height="30" Style="{StaticResource ButtonIcon}"  HorizontalAlignment="Right" hc:IconElement.Geometry="{StaticResource CloseGeometry}" Command="{Binding CloseCommand}"/>
-                <TextBlock Grid.ColumnSpan="2" Text="首次登录" Foreground="{StaticResource MainBrush}"  FontSize="{StaticResource FontSizeSecondTitle}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.ColumnSpan="2" Text="首次登录" Foreground="{StaticResource MainBrush}"  FontSize="{StaticResource FontSize.Title}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
             </Grid>
             
             <Grid  Margin="0,20,0,0">

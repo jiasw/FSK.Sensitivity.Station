@@ -62,36 +62,36 @@ if %file_count% EQU 0 (
 echo 发布文件数量: %file_count% 个
 
 :: 6. 复制到远程目录
-echo.
-echo 正在复制到远程目录...
-echo 源目录: %OUTPUT_DIR%
-echo 目标目录: %REMOTE_DIR%
+REM echo.
+REM echo 正在复制到远程目录...
+REM echo 源目录: %OUTPUT_DIR%
+REM echo 目标目录: %REMOTE_DIR%
 
-:: 检查远程目录是否可访问
-if not exist "%REMOTE_DIR%" (
-    echo [警告] 远程目录不可访问，尝试重新连接...
-    net use "%REMOTE_DIR%" >nul 2>&1
-    if not exist "%REMOTE_DIR%" (
-        echo [错误] 无法访问远程目录: %REMOTE_DIR%
-        echo 请检查网络连接和共享权限
-        goto :warning
-    )
-)
+REM :: 检查远程目录是否可访问
+REM if not exist "%REMOTE_DIR%" (
+    REM echo [警告] 远程目录不可访问，尝试重新连接...
+    REM net use "%REMOTE_DIR%" >nul 2>&1
+    REM if not exist "%REMOTE_DIR%" (
+        REM echo [错误] 无法访问远程目录: %REMOTE_DIR%
+        REM echo 请检查网络连接和共享权限
+        REM goto :warning
+    REM )
+REM )
 
-:: 使用 robocopy 进行文件复制（更可靠）
-robocopy "%OUTPUT_DIR%" "%REMOTE_DIR%" /E /IS /R:3 /W:5 /XF FSK.db
+REM :: 使用 robocopy 进行文件复制（更可靠）
+REM robocopy "%OUTPUT_DIR%" "%REMOTE_DIR%" /E /IS /R:3 /W:5 /XF FSK.db /XD Resource
 
 
-:: robocopy 的返回码含义：0-3 表示成功，大于3表示有错误
-if %ERRORLEVEL% GTR 3 (
-    echo.
-    echo [警告] 文件复制过程中出现一些问题 (错误码: %ERRORLEVEL%)
-    echo 部分文件可能未成功复制
-    goto :warning
-) else (
-    echo.
-    echo 文件复制成功！
-)
+REM :: robocopy 的返回码含义：0-3 表示成功，大于3表示有错误
+REM if %ERRORLEVEL% GTR 3 (
+    REM echo.
+    REM echo [警告] 文件复制过程中出现一些问题 (错误码: %ERRORLEVEL%)
+    REM echo 部分文件可能未成功复制
+    REM goto :warning
+REM ) else (
+    REM echo.
+    REM echo 文件复制成功！
+REM )
 
 :: 7. 成功完成
 goto :success

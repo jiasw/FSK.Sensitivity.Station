@@ -5,13 +5,25 @@
                     xmlns:lcext="clr-namespace:FSK.Sensitivity.Main.Controls.Extend"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
                     xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
-    <system:Double x:Key="FontSizeTitle">32</system:Double>
-    <system:Double x:Key="FontSizeSecondTitle">28</system:Double>
-    <system:Double x:Key="FontSizeInfo">24</system:Double>
-    <system:Double x:Key="FontSizelabel">20</system:Double>
-    <!--视标界面字体-->
-    <system:Double x:Key="subScreenTitleFontSize">90</system:Double>
-    <system:Double x:Key="subScreenhintFontSize">70</system:Double>
+
+    <!--用于首页菜单,配置页面内容-->
+    <system:Double x:Key="FontSize.Caption">45</system:Double>
+    <!--用于展示-->
+    <system:Double x:Key="FontSize.Body">24</system:Double>
+    <!--用于展示配置页面标题-->
+    <system:Double x:Key="FontSize.Subhead">28</system:Double>
+    <!--用于主要按钮等-->
+    <system:Double x:Key="FontSize.Title">32</system:Double>
+    <system:Double x:Key="FontSize.Headline">20</system:Double>
+    <system:Double x:Key="FontSize.Display1">24</system:Double>
+    <system:Double x:Key="FontSize.Display2">28</system:Double>
+    <system:Double x:Key="FontSize.Display3">32</system:Double>
+    <system:Double x:Key="FontSize.ConfigTitle">40</system:Double>
+    <system:Double x:Key="FontSize.ConfigParam">60</system:Double>
+    <system:Double x:Key="FontSize.ConfigUnit">40</system:Double>
+    <system:Double x:Key="FontSize.LargeTitle">70</system:Double>
+    <system:Double x:Key="FontSize.ExtraLarge">90</system:Double>
+
     <lclcv:EnumConverter x:Key="EnumConverter" />
     <lclcv:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
     <lclcv:LightStatusToBoolConverter x:Key="LightStatusToBoolConverter" />
@@ -80,11 +92,11 @@
         <Setter Property="FontSize" Value="18"></Setter>
     </Style>
     <Style x:Key="NormalTextStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}"></Setter>
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Subhead}"></Setter>
         <Setter Property="Foreground" Value="{StaticResource MainBrush}"></Setter>
     </Style>
     <Style x:Key="NormalBoxStyle" TargetType="TextBox">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}"></Setter>
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Subhead}"></Setter>
         <Setter Property="Foreground" Value="{StaticResource MainBrush}"></Setter>
     </Style>
     
@@ -191,24 +203,24 @@
     </Style>
 
     <Style x:Key="ArrowButton" TargetType="Button" BasedOn="{StaticResource NormalButton}">
-        <Setter Property="Width" Value="50" />
-        <Setter Property="Height" Value="50" />
+        <Setter Property="Width" Value="100" />
+        <Setter Property="Height" Value="100" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="hc:BorderElement.CornerRadius" Value="5"/>
-        <Setter Property="hc:IconElement.Width" Value="40" />
-        <Setter Property="hc:IconElement.Height" Value="40" />
+        <Setter Property="hc:IconElement.Width" Value="60" />
+        <Setter Property="hc:IconElement.Height" Value="60" />
         <Setter Property="Padding" Value="3" />
         <Setter Property="Opacity" Value="1" />
        
     </Style>
 
     <Style x:Key="ArrowButtontwinkle" TargetType="Button" BasedOn="{StaticResource NormalButton}">
-        <Setter Property="Width" Value="50" />
-        <Setter Property="Height" Value="50" />
+        <Setter Property="Width" Value="100" />
+        <Setter Property="Height" Value="100" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="hc:BorderElement.CornerRadius" Value="5"/>
-        <Setter Property="hc:IconElement.Width" Value="40" />
-        <Setter Property="hc:IconElement.Height" Value="40" />
+        <Setter Property="hc:IconElement.Width" Value="60" />
+        <Setter Property="hc:IconElement.Height" Value="60" />
         <Setter Property="Padding" Value="3" />
         <Setter Property="Opacity" Value="1" />
         <Style.Triggers>
@@ -230,16 +242,16 @@
 
     <!--一级界面的按钮样式-->
     <Style x:Key="NavButton" TargetType="Button" BasedOn="{StaticResource NormalButton}">
-        <Setter Property="Height" Value="65" />
+        <Setter Property="Height" Value="60" />
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}"></Setter>
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Title}"></Setter>
         <Setter Property="hc:BorderElement.CornerRadius" Value="6"/>
     </Style>
     <!--弹窗界面的按钮样式-->
     <Style x:Key="ConfirmButton" TargetType="Button" BasedOn="{StaticResource NormalButton}">
         <Setter Property="Height" Value="60" />
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}"></Setter>
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Title}"></Setter>
         <Setter Property="hc:BorderElement.CornerRadius" Value="6"/>
     </Style>
 
@@ -260,7 +272,7 @@
         </Setter>
 
         <Setter Property="Foreground" Value="White"></Setter>
-        <Setter Property="FontSize" Value="34"></Setter>
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Title}"></Setter>
         <Setter Property="Width" Value="220"></Setter>
         <Setter Property="Height" Value="65"></Setter>
         <Style.Triggers>
@@ -317,7 +329,7 @@
 
     <Style x:Key="ConfigParamTitleStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSize.ConfigTitle}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Foreground" Value="White" />
@@ -325,7 +337,7 @@
     </Style>
     <Style x:Key="ConfigParamValueStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontSize" Value="50" />
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Caption}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Bottom" />
         
@@ -847,14 +859,14 @@
     </Style>
 
     <Style x:Key="SignToggleButtonBaseStyle" BasedOn="{StaticResource ButtonBaseBaseStyle}" TargetType="ToggleButton">
-        <Setter Property="BorderThickness" Value="4"/>
-        <Setter Property="Width" Value="150"/>
-        <Setter Property="Height" Value="150"/>
-        <Setter Property="Margin" Value="30,0"/>
-        <Setter Property="hc:BorderElement.CornerRadius" Value="10"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="Width" Value="90"/>
+        <Setter Property="Height" Value="90"/>
+        <Setter Property="Margin" Value="10,0"/>
+        <Setter Property="hc:BorderElement.CornerRadius" Value="5"/>
         <Setter Property="Foreground" Value="{DynamicResource MainBrush}"></Setter>
         <Setter Property="BorderBrush" Value="{DynamicResource MainBrush}"></Setter>
-        <Setter Property="FontSize" Value="130"></Setter>
+        <Setter Property="FontSize" Value="{StaticResource FontSize.ConfigParam}"></Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
@@ -898,10 +910,10 @@
     </Style>
     <Style x:Key="SignToggleDisplayButtonBaseStyle" BasedOn="{StaticResource ButtonBaseBaseStyle}" TargetType="ToggleButton">
 
-        <Setter Property="Width" Value="30"/>
-        <Setter Property="Height" Value="25"/>
+        <Setter Property="Width" Value="60"/>
+        <Setter Property="Height" Value="60"/>
         <Setter Property="Margin" Value="10,1"/>
-        <Setter Property="FontSize" Value="16"></Setter>
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Title}"></Setter>
         <Setter Property="BorderThickness" Value="2"/>
 
         <Setter Property="hc:BorderElement.CornerRadius" Value="2"/>

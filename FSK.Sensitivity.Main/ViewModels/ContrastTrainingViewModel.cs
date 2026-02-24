@@ -224,7 +224,6 @@ namespace FSK.Sensitivity.Main.ViewModels
         private ArrowButtonStauts _arrowButtonStauts = new ArrowButtonStauts();
 
         public Dictionary<DCKTime, int> dictResult = new Dictionary<DCKTime, int>();
-        
 
         public ContrastTrainingViewModel(IRegionManager regionManager, IEventAggregator eventAggregator,ILight light
             , ISpeechService speechService, ITrainingAndCheckService trainingAndCheckService)
@@ -345,6 +344,9 @@ namespace FSK.Sensitivity.Main.ViewModels
             resetWaitTimer();
         }
 
+        
+
+
         //重置timer
         void resetWaitTimer()
         {
@@ -352,44 +354,38 @@ namespace FSK.Sensitivity.Main.ViewModels
             _waittimer.Start();
         }
 
-        private void StopTrain()
+        /// <summary>
+        /// 程序退出时释放资源
+        /// </summary>
+        private void Relese()
         {
-            TrainStatus = TrainStatus.Trained;
-            secondaryChangeEvent.Publish(new() { Action = ChangeAction.Idle });
+            light.TurnOffAll();
             eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
             _waittimer?.Stop();
             _waittimer?.Dispose();
-            
             _checktimer?.Stop();
             _checktimer?.Dispose();
-            _ = speechService.SpeakAsync("检查结束");
+            eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
+            secondaryChangeEvent.Publish(new() { Action = ChangeAction.Idle });
+        }
 
-            if(CurrentTrainEnterMode== TrainEnterMode.Normal)
+        private void StopTrain()
+        {
+            _ = speechService.SpeakAsync("检查结束");
+            if (CurrentTrainEnterMode == TrainEnterMode.Normal)
             {
-                if (AppData.Instance.DeviceRunMode == DeviceRunMode.NETWORKED)
-                {
-                    MessageBoxResult messageBoxResult = MessageBoxService.Instance.ShowInfoWithCountDown("检查结束", 10, "提示");
-                    if (messageBoxResult == MessageBoxResult.OK)
-                    {
-                        AppData.Instance.Logout();
-                        regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
-                    }
-                }
-                else
-                {
-                    MessageBoxService.Instance.ShowFinishWindow();
-                }
+                MessageBoxService.Instance.ShowFinishWindow();
+                
             }
             else
             {
-                _ = speechService.SpeakAsync("当前检查已经结束");
+                
                 ItemOrder itemOrder = trainingAndCheckService.GetCurrentItem();
                 CloudContrastResult cloudContrastResult = new CloudContrastResult();
                 itemOrder.Result = "检查合格";
                 itemOrder.ItemData= cloudContrastResult.ToJson();
-                trainingAndCheckService.CompleteCurrentItem();
                 MessageBoxResult messageBoxResult = MessageBoxService.Instance.ShowInfoWithCountDown("当前检查已经结束！", 3, "提示");
-                
+                trainingAndCheckService.CompleteCurrentItem();
             }
 
             
@@ -446,7 +442,8 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            speechService.SpeakAsync("开始训练,请选择能看清最大的视标编号");
+            CurrentTrainEnterMode= navigationContext.Parameters.GetValue<TrainEnterMode>(nameof(TrainEnterMode));
+            speechService.SpeakAsync("开始检查,请选择能看清最大的视标编号");
             _waittimer = new System.Timers.Timer(1000);
             _waittimer.Elapsed += WaitTimer_Tick;
             _checktimer = new System.Timers.Timer(1000);
@@ -475,9 +472,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            StopTrain();
-             light.TurnOffAll();
-            eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
+            Relese();
         }
     }
 }

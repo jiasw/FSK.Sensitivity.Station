@@ -1,8 +1,10 @@
 ﻿using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
+using FSK.Sensitivity.Core.EventBus;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Repositories;
 using HandyControl.Controls;
+using Prism.Events;
 using Prism.Navigation.Regions;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,7 @@ namespace FSK.Sensitivity.Main.ViewModels
     {
         private readonly IRegionManager regionManager;
         private readonly CheckResultRepository checkResultRepository;
+        private readonly IEventAggregator eventAggregator;
         private List<CheckInfo> _checkInfos;
 
         public List<CheckInfo> CheckInfos
@@ -108,11 +111,11 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
 
-        public CheckHistoryViewModel(IRegionManager regionManager, CheckResultRepository checkResultRepository)
+        public CheckHistoryViewModel(IRegionManager regionManager, CheckResultRepository checkResultRepository,IEventAggregator eventAggregator)
         {
             this.regionManager = regionManager;
             this.checkResultRepository = checkResultRepository;
-            
+            this.eventAggregator = eventAggregator;
         }
 
         async Task BindDateList()
@@ -188,6 +191,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            eventAggregator.GetEvent<CheckResultPageLoadRvent>().Publish();
             page = 1;
             totalpage = 1;
             Name = AppData.Instance.CurrentPatient.PatientName;

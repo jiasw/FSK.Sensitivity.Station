@@ -11,24 +11,24 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
                 xmlns:prism="http://prismlibrary.com/"
                 prism:ViewModelLocator.AutoWireViewModel="True"
-             d:DesignHeight="600" d:DesignWidth="1200">
+             d:DesignHeight="1000" d:DesignWidth="1920">
     <UserControl.Resources>
         <cvt:BackgroundConverter x:Key="BackgroundConverter"/>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <SolidColorBrush Color="#66FFFFFF" x:Key="BordelBackGround"></SolidColorBrush>
         <Style x:Key="txtTitle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize.ConfigTitle}"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="White"></Setter>
-            <Setter Property="Opacity" Value="0.8"></Setter>
+            <Setter Property="Opacity" Value="0.9"></Setter>
         </Style>
         <Style x:Key="txtValue" TargetType="TextBlock" BasedOn="{StaticResource txtTitle}">
             <Setter Property="Opacity" Value="1"></Setter>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <Style x:Key="txtParam" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize.Headline}"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="White"></Setter>
@@ -38,24 +38,24 @@
     <Grid>
         <Grid.RowDefinitions>
 
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="1.2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
 
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="1.2*"/>
+                <ColumnDefinition Width="2.5*"/>
+                <ColumnDefinition Width="1.4*"/>
+                <ColumnDefinition Width="1.1*"/>
             </Grid.ColumnDefinitions>
             <Border Style="{DynamicResource ConfigParamBorderStyle}">
 
                 <Grid Margin="10,0"  DataContext="{Binding CheckUserModel}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="2*" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.5*"/>
@@ -210,8 +210,8 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
-                    
-                        <TextBlock FontSize="28" Foreground="White" Opacity=".9" HorizontalAlignment="Center" VerticalAlignment="Center" >
+
+                    <TextBlock FontSize="{StaticResource FontSize.ConfigTitle}" Foreground="White" Opacity=".9" HorizontalAlignment="Center" VerticalAlignment="Center" >
                             <Run Text="{Binding TrainStatusText}"></Run>
                             <Run Text="："></Run>
                             <Run Text="左眼检查项目"></Run>
@@ -227,13 +227,12 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Border CornerRadius="5"  Margin="0,0,10,0" >
-
-                            <Image gif:AnimationBehavior.SourceUri="/FSK.Sensitivity.Main;component/Resource/Images/leftEye.gif"  />
-                                
+                            <hc:GifImage  Stretch="Uniform"  Uri="/FSK.Sensitivity.Main;component/Resource/Images/leftEye.gif"  />
+                            
                         </Border>
                         <Border CornerRadius="5" Grid.Row="1"  Margin="0,20,10,0" Background="{StaticResource BordelBackGround}" >
                             <UniformGrid Rows="2">
-                                <TextBlock Margin="10,0" VerticalAlignment="Bottom" Foreground="White" FontSize="16">项目执行中...</TextBlock>
+                                <TextBlock Margin="10,0" VerticalAlignment="Bottom" Foreground="White" FontSize="{StaticResource FontSize.Headline}">项目执行中...</TextBlock>
                                 <ProgressBar Margin="10,0"  Style="{StaticResource ProgressBarSuccess}"  Foreground="{StaticResource MainBrush}" IsIndeterminate="True" Value="0" Maximum="100" />
                             </UniformGrid>
                         </Border>
@@ -246,7 +245,7 @@
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Text="OS" FontSize="{StaticResource FontSizeInfo}" FontWeight="Bold" Foreground="White"></TextBlock>
+                                <TextBlock Text="OS" FontSize="{StaticResource FontSize.Body}" FontWeight="Bold" Foreground="White"></TextBlock>
                                 <TextBlock Grid.Row="1" Style="{StaticResource txtParam}"  >
                                     <Run Text="WAT:"></Run>
                                     <Run Text="{Binding WaitTotalDuration}"></Run>
@@ -281,7 +280,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock FontSize="28" Foreground="White" Opacity=".9" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                    <TextBlock FontSize="{StaticResource FontSize.ConfigTitle}" Foreground="White" Opacity=".9" HorizontalAlignment="Center" VerticalAlignment="Center" >
                         <Run Text="{Binding TrainStatusText}"></Run>
                         <Run Text="："></Run>
                         <Run Text="左眼检查项目"></Run>
@@ -296,8 +295,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Border CornerRadius="5"  Margin="0,0,10,0" ClipToBounds="True">
-                            
-                            <Image  gif:AnimationBehavior.SourceUri="/FSK.Sensitivity.Main;component/Resource/Images/rightEye.gif"  />
+                            <hc:GifImage  Stretch="Uniform"  Uri="/FSK.Sensitivity.Main;component/Resource/Images/rightEye.gif"  />
                         </Border>
                         <Border CornerRadius="5" Grid.Row="1"  Margin="0,20,10,0" Background="{StaticResource BordelBackGround}" >
                             <UniformGrid Rows="2" Visibility="{Binding IsTraining, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -314,7 +312,7 @@
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Text="OD" FontSize="{StaticResource FontSizeInfo}" FontWeight="Bold" Foreground="White"></TextBlock>
+                                <TextBlock Text="OD" FontSize="{StaticResource FontSize.Body}" FontWeight="Bold" Foreground="White"></TextBlock>
                                 <TextBlock Grid.Row="1" Style="{StaticResource txtParam}"  >
                                 <Run Text="WAT:"></Run>
                                 <Run Text="{Binding WaitTotalDuration}"></Run>

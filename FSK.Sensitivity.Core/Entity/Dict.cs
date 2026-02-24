@@ -12,18 +12,19 @@ namespace FSK.Sensitivity.Core.Entity
         /// <summary>
         /// 字典类型编码
         /// </summary>
-        [SugarColumn(Length = 5)]
+        [SugarColumn(Length = 5, IsNullable = true)]
         public string TypeCode { get; set; }
 
         /// <summary>
         /// 字典类型名称
         /// </summary>  
+        [SqlSugar.SugarColumn(IsNullable = true)]
         public string Name { get; set; }
 
         /// <summary>
         /// 字典编码
         /// </summary>
-        [SugarColumn(Length = 5)]
+        [SugarColumn(Length = 5, IsNullable = true)]
         public string Code { get; set; }
 
         [SugarColumn(IsNullable = true)]

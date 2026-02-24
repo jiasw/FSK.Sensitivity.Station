@@ -325,7 +325,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             
             
 
-            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { "type", MenuType.CSF } });
+            regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_TrainFrame, new NavigationParameters() { { nameof(MenuType), MenuType.CSF } });
         }
         public DelegateCommand DEACommand => new DelegateCommand(async () => await DEA());
         private async Task DEA()
@@ -353,6 +353,9 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private async Task Scan()
         {
+
+            //MessageBoxService.Instance.ShowInfo("此功能暂时不可用", "提示");
+            //return;
             if (!AppData.Instance.IsConnectCloud)
             {
                 MessageBoxService.Instance.Show("请先连接服务器！");
@@ -415,11 +418,11 @@ namespace FSK.Sensitivity.Main.ViewModels
                     MessageBoxService.Instance.Show("未查询到患者信息，请联系医生！", "查询患者信息", MessageBoxButton.OK);
                     logger.LogWarning($"未查询到患者信息，患者ID：{prescribeInfo.Patient.PatientIdNumber}");
                 }
-
+                _ = speechService.SpeakAsync("检查开始");
                 LoadingMessageText = "正在保存医护信息";
                 await SaveMangerInfo(prescribeInfo.Doctor);
                 trainingAndCheckService.Initialize(prescribeInfo.ItemList);
-                _= speechService.SpeakAsync("检查开始");
+                
                 trainingAndCheckService.StartTraining();
             }
             IsLoading = false;

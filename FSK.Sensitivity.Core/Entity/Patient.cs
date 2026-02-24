@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlSugar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace FSK.Sensitivity.Core.Entity
 {
     public class Patient: RootEntity
     {
-       
+
         //public string StudentGuid { get; set; }
         //public string StudentName { get; set; }
 
@@ -23,19 +24,23 @@ namespace FSK.Sensitivity.Core.Entity
         /// <summary>
         /// 患者编号
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string PatientIdNumber { get; set; }
 
         /// <summary>
         /// 登录名
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string LoginName { get; set; }
         /// <summary>
         /// 患者姓名
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string PatientName { get; set; }
         /// <summary>
         /// 患者性别
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int Sex { get; set; }
         /// <summary>
         /// 年龄
@@ -126,6 +131,7 @@ namespace FSK.Sensitivity.Core.Entity
         /// <summary>
         /// 是否同步
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public bool AsyncState { get; set; }
         public bool Checked { get; set; }
 

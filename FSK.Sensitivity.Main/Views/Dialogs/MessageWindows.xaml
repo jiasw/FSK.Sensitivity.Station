@@ -37,16 +37,16 @@
                                Margin="15,0,0,0" 
                                Foreground="White" 
                                TextWrapping="Wrap"
-                               FontSize="{StaticResource FontSizeTitle}"/>
+                               FontSize="{StaticResource FontSize.Subhead}"/>
                     <Button x:Name="CloseButton" 
-                            Content="×" 
-                            Width="30" 
-                            Height="30" 
+                            Content="X" 
+                            Width="40" 
+                            Height="40" 
                             HorizontalAlignment="Right" 
                             Margin="0,0,5,0"
                             Background="Transparent" 
                             Foreground="White" 
-                            FontSize="16" 
+                            FontSize="23" 
                             FontWeight="Bold"
                             Click="CloseButton_Click" 
                             BorderThickness="0"/>
@@ -62,7 +62,7 @@
                            TextWrapping="Wrap" 
                            Foreground="{StaticResource MainBrush}"
                            TextAlignment="Center"
-                           FontSize="{StaticResource FontSizeTitle}"
+                           FontSize="{StaticResource FontSize.Title}"
                            VerticalAlignment="Center"/>
             </ScrollViewer>
             <!-- 按钮区域 -->

@@ -162,8 +162,10 @@ namespace FSK.Sensitivity.Main.ViewModels
 
     }
     
-    public class SensitivityTrainingViewModel:BaseViewModel,INavigationAware
+    public class SensitivityTrainingViewModel:BaseViewModel,INavigationAware, IActiveAware
     {
+        public event EventHandler IsActiveChanged;
+        public bool IsActive { get; set; }
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
         private readonly CheckResultRepository checkResultRepository;
@@ -210,9 +212,16 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.journal = regionManager.Regions[AppConst.MainRegion].NavigationService.Journal;
             secondaryChangeEvent = eventAggregator.GetEvent<SecondaryChangeEvent>();
             sensitivitySignChangeEvent= eventAggregator.GetEvent<SensitivitySignChangeEvent>();
+            IsActiveChanged+= SensitivityTrainingViewModel_IsActiveChanged;
         }
 
-        
+        private void SensitivityTrainingViewModel_IsActiveChanged(object? sender, EventArgs e)
+        {
+            if (IsActive)
+            {
+
+            }
+        }
 
         public CSFTrainModel LeftCSFTrainModel
         {
@@ -480,7 +489,6 @@ namespace FSK.Sensitivity.Main.ViewModels
             };
             listresult.Clear();
             currentCSFTrainModel = null;
-            checkid=Utils.GenerateSnowID();
             TrainModelsQueue.Clear();
             
             SensitivityConfigParam? sensitivityConfigParam = navigationContext.Parameters[nameof(SensitivityConfigParam)] as SensitivityConfigParam;
@@ -641,16 +649,10 @@ namespace FSK.Sensitivity.Main.ViewModels
             }
         }
 
-
-
-        private bool _isProcessing = false;
         private async Task StartTask()
         {
-            if (_isProcessing) return;
-            _isProcessing = true;
             // 每次启动时创建一个新的 TokenSource
             _cts = new CancellationTokenSource();
-            
             var token = _cts.Token;
             while (TrainModelsQueue.Count > 0)
             {
@@ -673,8 +675,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                         try
                         {
                             currentCSFTrainModel.StartTrain();
-
-                            await tcs.Task; 
+                            await tcs.Task;
                         }
                         finally
                         {
@@ -688,8 +689,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             await SaveTrainResult();
             secondaryChangeEvent.Publish(new SecondaryChangeOptions() { Action = ChangeAction.Idle });
             eventAggregator.GetEvent<JoystickEvent>().Unsubscribe(JoystickAction);
-            await motor.StopAllMotor();
-            _isProcessing = false;
+           
             if (TrainModelsQueue.Count <= 0)
             {
                 _ = speechService.SpeakAsync("当前检查已经结束");
@@ -738,6 +738,8 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
         public DelegateCommand ListResultCommand => new DelegateCommand(ListResult);
+
+        
 
         private void ListResult()
         {

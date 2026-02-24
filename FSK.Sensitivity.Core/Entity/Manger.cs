@@ -1,4 +1,5 @@
 ﻿using FSK.Sensitivity.Core.Enums;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,9 @@ namespace FSK.Sensitivity.Core.Entity
     /// </summary>
     public class Manger:RootEntity
     {
+        [SugarColumn(IsNullable = true)]
         public string Name { get; set; }
-
+        [SugarColumn(IsNullable = true)]
         public string Gender { get; set; }
         [SqlSugar.SugarColumn(IsIgnore = true)]
         public string gender_desc

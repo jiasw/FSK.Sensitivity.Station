@@ -10,7 +10,7 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
 xmlns:prism="http://prismlibrary.com/"
 prism:ViewModelLocator.AutoWireViewModel="True"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="1000" d:DesignWidth="1920">
     <b:Interaction.Triggers>
         <b:EventTrigger  EventName="Loaded">
             <b:InvokeCommandAction Command="{Binding LoadCommand}" />
@@ -19,8 +19,8 @@ prism:ViewModelLocator.AutoWireViewModel="True"
     <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="300"/>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
         <Button Content="新增" Style="{StaticResource NavButton}" Width="120" HorizontalAlignment="Right" Margin="50,10" Command="{Binding AddMangerCommand}"></Button>
         <ListView Grid.Row="1" Style="{StaticResource MyCommonListViewStyle}" ItemsSource="{Binding Mangers}" Margin="30,0" >
@@ -28,7 +28,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
 
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="100" >
+                    <GridViewColumn Width="150" >
                         <GridViewColumn.Header>
                             <TextBlock Text="登录账号"  HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </GridViewColumn.Header>
@@ -40,7 +40,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="90" >
+                    <GridViewColumn Width="150" >
                         <GridViewColumn.Header>
                             <TextBlock Text="姓名"  HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </GridViewColumn.Header>
@@ -65,7 +65,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="100" Header="身份证号"  >
+                    <GridViewColumn Width="200" Header="身份证号"  >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock    Text="{Binding IdCard}" Style="{StaticResource ListViewTextStyle}"     />
@@ -89,7 +89,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="100" Header="学校" >
+                    <GridViewColumn Width="120" Header="学校" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock    Text="{Binding School}" Style="{StaticResource ListViewTextStyle}"    />
@@ -97,14 +97,14 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="60" Header="年级" >
+                    <GridViewColumn Width="80" Header="年级" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock   Text="{Binding Grade}" Style="{StaticResource ListViewTextStyle}"    />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="60" Header="班级" >
+                    <GridViewColumn Width="80" Header="班级" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock    Text="{Binding Class}" Style="{StaticResource ListViewTextStyle}"    />

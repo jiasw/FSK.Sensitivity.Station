@@ -2,6 +2,7 @@
 using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Utility;
+using FSK.Sensitivity.Main.Controls;
 using FSK.Sensitivity.Main.Views.Dialogs;
 using Prism.Navigation.Regions;
 using System;
@@ -20,19 +21,8 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IConfigurationService configurationService;
 
-        public List<CheckInfo> CheckInfos
-        {
-            get { return _checkInfos; }
-            set { SetProperty(ref _checkInfos, value); }
-        }
         public SystemSettingViewModel(IRegionManager regionManager,IConfigurationService configurationService)
         {
-            List < CheckInfo > lists = new List<CheckInfo>();
-            lists.Add(new CheckInfo() { Result="DDDD",Status="OK" });
-            lists.Add(new CheckInfo() { Result="EEEEE",Status="NG" });
-            lists.Add(new CheckInfo() { Result="FFFFFF",Status="OK" });
-            lists.Add(new CheckInfo() { Result="GGGGGG",Status="NG" });
-            CheckInfos  = lists;
             this.regionManager = regionManager;
             this.configurationService = configurationService;
             
@@ -49,10 +39,12 @@ namespace FSK.Sensitivity.Main.ViewModels
             string remoteSupportUrl = configurationService.LoadSetting().RemoteSupportPath;
             if (string.IsNullOrEmpty(remoteSupportUrl))
             {
+                MessageBoxService.Instance.ShowInfo("未设置远程支持地址,请联系管理员!", "提示");
                 return;
             }
             if (!File.Exists(remoteSupportUrl))
             {
+                MessageBoxService.Instance.ShowInfo("未找到远程服务,请联系管理员!", "提示");
                 return;
             }
             Utils.StartProcess(remoteSupportUrl);

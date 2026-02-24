@@ -13,14 +13,13 @@ using System.Windows;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
-    [RegionMemberLifetime(KeepAlive = false)]
-    public class PatientsViewModel : BaseViewModel
+    public class PatientsViewModel : BaseViewModel, INavigationAware
     {
         private readonly PatientRepository patientRepository;
         private readonly IDialogService dialogService;
         private ObservableCollection<Patient> mangers = new ObservableCollection<Patient>();
         private int pageIndex = 1;
-        private int pageSize = 10;
+        private int pageSize = 13;
         
 
         public ObservableCollection<Patient> Mangers
@@ -52,7 +51,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public DelegateCommand LoadCommand => new DelegateCommand(async () =>
         {
-            await LoadData(PageIndex);
+            //await LoadData(PageIndex);
         });
 
         public DelegateCommand PrevCmd => new DelegateCommand(async () =>
@@ -73,6 +72,22 @@ public DelegateCommand NextCmd => new DelegateCommand(async () =>
             Mangers = new ObservableCollection<Patient>(pageModel.data);
             return pageModel;
         }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            _ = LoadData();
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+           
+        }
+
         public DelegateCommand<Patient> DeleteMangerCommand => new DelegateCommand<Patient>(async (n) =>
         {
            if( MessageBoxService.Instance.ShowConfirm("确定删除吗？")== MessageBoxResult.Yes)

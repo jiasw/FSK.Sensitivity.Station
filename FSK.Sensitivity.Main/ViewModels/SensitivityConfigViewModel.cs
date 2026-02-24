@@ -4,6 +4,7 @@ using FSK.Sensitivity.Core.Enums;
 using FSK.Sensitivity.Core.HardWare.Drivers;
 using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Model;
+using FSK.Sensitivity.Core.Utility;
 using FSK.Sensitivity.Main.Controls;
 using Prism.Dialogs;
 using System;
@@ -50,11 +51,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         /// </summary>
         private void SetHardWarePD()
         {
-            if (sensitivityConfigParam.PD < 50 || sensitivityConfigParam.PD > 80)
-            {
-                return;
-            }
-            short pd = (short)(sensitivityConfigParam.PD - 50);
+            short pd = (short)(sensitivityConfigParam.PD);
             motor?.SetSlideBlock(pd);
         }
 
@@ -131,45 +128,11 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private async Task Save()
         {
-            // 1. 初次判断：如果已经结束，直接跳转
-            if (await IsMotionFinished())
-            {
-                NavigateToNextPage();
-                return;
-            }
             IsLoading = true;
-            LoadingMessageText="硬件初始化中，请稍后...";
+            LoadingMessageText = "硬件初始化中，请稍后...";
 
-            using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(AppConst.WaitHardwareMotionTimeout)))
-            {
-                try
-                {
-                    // 3. 后台轮询任务
-                    await Task.Run(async () =>
-                    {
-                        while (!cts.Token.IsCancellationRequested)
-                        {
-                            if (await IsMotionFinished())
-                            {
-                                break; // 下位机运动结束，跳出循环
-                            }
-                            // 轮询间隔，防止占用 CPU 过高
-                            await Task.Delay(100, cts.Token);
-                        }
-                    }, cts.Token);
-                }
-                catch (OperationCanceledException)
-                {
-                    
-                    Console.WriteLine("等待超时，强制跳转");
-                }
-                finally
-                {
-                    IsLoading= false;
-                    NavigateToNextPage();
-                }
-            }
-
+            await Utils.WaitForConditionAsync(IsMotionFinished, NavigateToNextPage, AppConst.WaitHardwareMotionTimeout);
+            IsLoading = false;
         }
 
         
@@ -181,8 +144,6 @@ namespace FSK.Sensitivity.Main.ViewModels
         // 界面跳转逻辑
         private void NavigateToNextPage()
         {
-            
-
             NavigationParameters parameters = new NavigationParameters();
             parameters.Add(nameof(SensitivityConfigParam), SensitivityConfigParam);
             parameters.Add(nameof(TrainEnterMode), TrainEnterMode.Normal);
@@ -268,6 +229,26 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
 
             InitParam();
+
+            _ = Task.Run(() =>
+            {
+                try
+                {
+                    IsLoading = true;
+                    LoadingMessageText = "硬件正在初始化,请稍候...";
+                    motor.Initialize();
+                    SetHardWarePD();
+                    motor.SetLeftDisk(3);
+                    motor.SetRightDisk(3);
+                }
+                finally
+                {
+                    LoadingMessageText = "";
+                    IsLoading = false;
+
+                }
+                
+            });
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

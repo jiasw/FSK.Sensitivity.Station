@@ -23,8 +23,8 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             <Setter Property="hc:IconElement.Width" Value="20"/>
             <Setter Property="hc:IconElement.Height" Value="20"/>
             <Setter Property="Padding" Value="2,0"></Setter>
-            <Setter Property="Height" Value="120"></Setter>
-            <Setter Property="Width" Value="240"></Setter>
+            <Setter Property="Height" Value="140"></Setter>
+            <Setter Property="Width" Value="280"></Setter>
             <Setter Property="Margin" Value="30,15"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
@@ -60,7 +60,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
         </Style>
         <Style x:Key="ItemTitle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"></Setter>
-            <Setter Property="FontSize" Value="{StaticResource FontSizeSecondTitle}"></Setter>
+            <Setter Property="FontSize" Value="{StaticResource FontSize.Title}"></Setter>
             <Setter Property="HorizontalAlignment" Value="Left"></Setter>
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
 
@@ -72,7 +72,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
     </UserControl.Resources>
 
     <Border Padding="20,20">
-        <UniformGrid Columns="3" HorizontalAlignment="Center"   >
+        <UniformGrid Columns="3"  HorizontalAlignment="Center"  >
             <Button  Style="{StaticResource SettingButton}" Command="{Binding StoreSettingCommand}" >
 
                 <Border Style="{StaticResource ItemsBoder}" Background="{DynamicResource MainBrush}" >

@@ -36,14 +36,14 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock  
-    Text="{Binding name}"  Style="{StaticResource ListViewTextStyle}"  
+    Text="{Binding Name}"  Style="{StaticResource ListViewTextStyle}"  
 />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
 
-                    <GridViewColumn Width="60" >
+                    <GridViewColumn Width="80" >
                         <GridViewColumn.Header >
                             <TextBlock Text="性别"   />
                         </GridViewColumn.Header>
@@ -54,23 +54,23 @@ prism:ViewModelLocator.AutoWireViewModel="True"
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="60" Header="年龄"  >
+                    <GridViewColumn Width="80" Header="年龄"  >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock   Text="{Binding age}" Style="{StaticResource ListViewTextStyle}"     />
+                                <TextBlock   Text="{Binding Age}" Style="{StaticResource ListViewTextStyle}"     />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="100" Header="联系电话"  >
+                    <GridViewColumn Width="180" Header="联系电话"  >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock    Text="{Binding phone}"  Style="{StaticResource ListViewTextStyle}"   />
+                                <TextBlock    Text="{Binding Phone}"  Style="{StaticResource ListViewTextStyle}"   />
 
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="90" Header="人员类别" >
+                    <GridViewColumn Width="120" Header="人员类别" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock   Text="{Binding type_desc}"  Style="{StaticResource ListViewTextStyle}"   />

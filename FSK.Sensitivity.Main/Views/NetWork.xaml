@@ -16,7 +16,7 @@
     </i:Interaction.Triggers>
     <UserControl.Resources>
         <Style TargetType="TextBlock" x:Key="serialPortConfigTitle">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
+            <Setter Property="FontSize" Value="{StaticResource FontSize.Title}" />
             <Setter Property="Margin" Value="10,5" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="TextAlignment" Value="Right"></Setter>

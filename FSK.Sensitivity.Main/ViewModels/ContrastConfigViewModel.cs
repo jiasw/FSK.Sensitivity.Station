@@ -7,9 +7,11 @@ using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Utility;
+using Microsoft.Extensions.Logging;
 using Prism.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,9 +28,12 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IMotor motor;
         private readonly ISpeechService speechService;
         private readonly ITrainingAndCheckService trainingAndCheckService;
+        private readonly ILogger<ContrastConfigViewModel> logger;
 
         public ContrastConfigViewModel(IRegionManager regionManager, IEventAggregator eventAggregator
-            , IDialogService dialogService, IMotor motor, ISpeechService speechService, ITrainingAndCheckService trainingAndCheckService)
+            , IDialogService dialogService, IMotor motor, ISpeechService speechService
+            , ITrainingAndCheckService trainingAndCheckService
+            ,ILogger<ContrastConfigViewModel> logger)
         {
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
@@ -36,6 +41,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.motor = motor;
             this.speechService = speechService;
             this.trainingAndCheckService = trainingAndCheckService;
+            this.logger = logger;
         }
 
         private ContrastConfigParam contrastConfigParam;
@@ -50,12 +56,7 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private async Task Save()
         {
-            // 1. 初次判断：如果已经结束，直接跳转
-            if (await IsMotionFinished())
-            {
-                NavigateToNextPage();
-                return;
-            }
+           
             IsLoading = true;
             LoadingMessageText = "硬件初始化中，请稍后...";
 
@@ -127,11 +128,25 @@ namespace FSK.Sensitivity.Main.ViewModels
                 CheckDuration = DCKTime.T05,
                 PD = 50
             };
-            motor.Initialize();
-            SetHardWarePD();
-            motor.SetLeftDisk(3);
-            motor.SetRightDisk(3);
-            
+            _ = Task.Run(() =>
+            {
+                try
+                {
+                    IsLoading = true;
+                    LoadingMessageText = "硬件正在初始化,请稍候...";
+                    motor.Initialize();
+                    SetHardWarePD();
+                    motor.SetLeftDisk(3);
+                    motor.SetRightDisk(3);
+                }
+                finally
+                {
+                    LoadingMessageText = "";
+                    IsLoading = false;
+
+                }
+
+            });
 
         }
 

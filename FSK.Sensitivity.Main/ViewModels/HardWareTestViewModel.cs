@@ -58,7 +58,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         public DelegateCommand MoveMotorCommand => new DelegateCommand(MoveMotor);
         private void MoveMotor()
         {
-            motor.SetSlideBlock(SlideBlockPosition);
+            //motor.SetSlideBlock(SlideBlockPosition);
         }
 
         private short leftClampPosition;
