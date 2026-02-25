@@ -42,6 +42,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             this.speechService = speechService;
             this.trainingAndCheckService = trainingAndCheckService;
             this.logger = logger;
+            InitHardWareChecker();
         }
 
         private ContrastConfigParam contrastConfigParam;
@@ -52,16 +53,54 @@ namespace FSK.Sensitivity.Main.ViewModels
             set { SetProperty(ref contrastConfigParam, value); }
         }
 
-        public DelegateCommand SaveCommand=> new DelegateCommand(async () => await Save());
+        private DispatcherTimer _statusCheckTimer;
+        private const int TIMEOUT_SECONDS = AppConst.WaitHardwareMotionTimeout;
+        private int _totalWaitTime = 0;
+        private const int CHECK_INTERVAL_MS = 300; // 每500ms查询一次
 
-        private async Task Save()
+        /// <summary>
+        /// 开始检查硬件是否准备好
+        /// </summary>
+        private void StartCheckHardWareReady()
         {
-           
             IsLoading = true;
-            LoadingMessageText = "硬件初始化中，请稍后...";
+            LoadingMessageText="硬件初始化中，请稍后...";
+            _totalWaitTime = 0;
+            _statusCheckTimer.Start();
 
-            await Utils.WaitForConditionAsync(IsMotionFinished, NavigateToNextPage, AppConst.WaitHardwareMotionTimeout);
-            IsLoading = false;
+        }
+
+        private void InitHardWareChecker()
+        {
+            _statusCheckTimer = new DispatcherTimer();
+            _statusCheckTimer.Interval = TimeSpan.FromMilliseconds(CHECK_INTERVAL_MS);
+            _statusCheckTimer.Tick += async (s, e) => await OnStatusCheckTick();
+            _statusCheckTimer.Stop();
+        }
+
+        private async Task OnStatusCheckTick()
+        {
+            bool ismoving = await motor.IsAllStop();
+            _totalWaitTime += CHECK_INTERVAL_MS;
+            if (_totalWaitTime > TIMEOUT_SECONDS * 1000)
+            {
+                _statusCheckTimer.Stop();
+                IsLoading = false;
+            }
+            if (ismoving)
+            {
+                _statusCheckTimer.Stop();
+                IsLoading = false;
+            }
+        }
+
+
+
+        public DelegateCommand SaveCommand=> new DelegateCommand( () =>  Save());
+
+        private void Save()
+        {
+             NavigateToNextPage();
         }
 
         public DelegateCommand BackCommand => new DelegateCommand(Back);
@@ -101,7 +140,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     else  
                     {
                         ContrastConfigParam.PD = int.Parse(showItemsModel.Value);
-                        SetHardWarePD();
+                        SetHardWarePD(); StartCheckHardWareReady();
                     }
 
                 }
@@ -130,21 +169,13 @@ namespace FSK.Sensitivity.Main.ViewModels
             };
             _ = Task.Run(() =>
             {
-                try
-                {
-                    IsLoading = true;
-                    LoadingMessageText = "硬件正在初始化,请稍候...";
+               
                     motor.Initialize();
                     SetHardWarePD();
                     motor.SetLeftDisk(3);
                     motor.SetRightDisk(3);
-                }
-                finally
-                {
-                    LoadingMessageText = "";
-                    IsLoading = false;
-
-                }
+                    StartCheckHardWareReady();
+                
 
             });
 
@@ -160,10 +191,7 @@ namespace FSK.Sensitivity.Main.ViewModels
            
         }
 
-        private async Task<bool> IsMotionFinished()
-        {
-            return await motor.IsAllStop();
-        }
+        
 
         // 界面跳转逻辑
         private void NavigateToNextPage()

@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace FSK.Sensitivity.Main.ViewModels
 {
@@ -43,6 +44,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 { CheckDistance.Long, 2 } ,
                 { CheckDistance.VeryLong, 1 } ,
             };
+            InitHardWareChecker();
         }
 
 
@@ -88,8 +90,47 @@ namespace FSK.Sensitivity.Main.ViewModels
                 motor.SetLeftDisk(distanceDict[sensitivityConfigParam.CheckDistance]);
             }
         }
+        private DispatcherTimer _statusCheckTimer;
+        private const int TIMEOUT_SECONDS = AppConst.WaitHardwareMotionTimeout;
+        private int _totalWaitTime = 0;
+        private const int CHECK_INTERVAL_MS = 300; // 每500ms查询一次
 
-       
+        /// <summary>
+        /// 开始检查硬件是否准备好
+        /// </summary>
+        private void StartCheckHardWareReady()
+        {
+            IsLoading = true;
+            LoadingMessageText = "硬件初始化中，请稍后...";
+            _totalWaitTime = 0;
+            _statusCheckTimer.Start();
+
+        }
+
+        private void InitHardWareChecker()
+        {
+            _statusCheckTimer = new DispatcherTimer();
+            _statusCheckTimer.Interval = TimeSpan.FromMilliseconds(CHECK_INTERVAL_MS);
+            _statusCheckTimer.Tick += async (s, e) => await OnStatusCheckTick();
+            _statusCheckTimer.Stop();
+        }
+
+        private async Task OnStatusCheckTick()
+        {
+            bool ismoving = await motor.IsAllStop();
+            _totalWaitTime += CHECK_INTERVAL_MS;
+            if (_totalWaitTime > TIMEOUT_SECONDS * 1000)
+            {
+                _statusCheckTimer.Stop();
+                IsLoading = false;
+            }
+            if (ismoving)
+            {
+                _statusCheckTimer.Stop();
+                IsLoading = false;
+            }
+        }
+
 
         /// <summary>
         /// 初始化硬件
@@ -190,7 +231,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                         {
                             SensitivityConfigParam.CheckDuration = 30;
                         }
-                        SetHardWareDistance();
+                        SetHardWareDistance(); StartCheckHardWareReady();
                     }
                     else if (resulttype==ItemsType.DayTypes)
                     {
@@ -206,7 +247,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                     else if (resulttype == ItemsType.PD)
                     {
                         SensitivityConfigParam.PD = int.Parse(showItemsModel.Value);
-                        SetHardWarePD();
+                        SetHardWarePD(); StartCheckHardWareReady();
                     }
                     
                 }
@@ -232,22 +273,11 @@ namespace FSK.Sensitivity.Main.ViewModels
 
             _ = Task.Run(() =>
             {
-                try
-                {
-                    IsLoading = true;
-                    LoadingMessageText = "硬件正在初始化,请稍候...";
-                    motor.Initialize();
-                    SetHardWarePD();
-                    motor.SetLeftDisk(3);
-                    motor.SetRightDisk(3);
-                }
-                finally
-                {
-                    LoadingMessageText = "";
-                    IsLoading = false;
-
-                }
-                
+                motor.Initialize();
+                SetHardWarePD();
+                motor.SetLeftDisk(3);
+                motor.SetRightDisk(3);
+                StartCheckHardWareReady();
             });
         }
 

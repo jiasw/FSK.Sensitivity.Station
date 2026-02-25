@@ -8,19 +8,17 @@
                   xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
 xmlns:enum = "clr-namespace:FSK.Sensitivity.Core.Enums;assembly=FSK.Sensitivity.Core"
+             
+             xmlns:controls="clr-namespace:FSK.Sensitivity.Main.Controls"
+             xmlns:cvt="clr-namespace:FSK.Sensitivity.Main.Converters"
          mc:Ignorable="d" 
          xmlns:prism="http://prismlibrary.com/"
     prism:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="900" d:DesignWidth="1200">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <Style x:Key="ContrastParamStyle" TargetType="Border" BasedOn="{StaticResource ConfigParamBorderStyle}">
-                <Setter Property="Margin" Value="20,0"/>
-                <Setter Property="Height" Value="250"></Setter>
-                <Setter Property="Width" Value="300"></Setter>
-            </Style>
-        </ResourceDictionary>
+        <cvt:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.5*"/>
@@ -114,5 +112,7 @@ CommandParameter="{x:Static enum:ItemsType.PD}"/>
             <Button Content="确认" Style="{DynamicResource btnOprateStyle}" Command="{Binding SaveCommand}" Background="{DynamicResource MainBrush}"   Margin="50,5"   ></Button>
             <Button Content="取消" Style="{DynamicResource btnOprateStyle}" Command="{Binding BackCommand}" BorderThickness="2" Background="{DynamicResource SecondBackGroundBrush}"   Margin="50,5"  ></Button>
         </UniformGrid>
+        <!-- 加载层 -->
+        <controls:LoadingOverlay Grid.RowSpan="4" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" LoadingText="{Binding LoadingMessageText}" />
     </Grid>
 </UserControl>

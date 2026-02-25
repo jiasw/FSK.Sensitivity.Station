@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:FSK.Sensitivity.Main.Views"
              xmlns:lcext="clr-namespace:FSK.Sensitivity.Main.Controls.Extend"
              xmlns:cvt="clr-namespace:FSK.Sensitivity.Main.Converters"
-            xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
+             xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
              mc:Ignorable="d" 
              xmlns:hc="https://handyorg.github.io/handycontrol"
                 xmlns:prism="http://prismlibrary.com/"
@@ -227,7 +227,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Border CornerRadius="5"  Margin="0,0,10,0" >
-                            <hc:GifImage  Stretch="Uniform"  Uri="/FSK.Sensitivity.Main;component/Resource/Images/leftEye.gif"  />
+                            <Image gif:AnimationBehavior.SourceUri="/FSK.Sensitivity.Main;component/Resource/Images/leftEye.gif"  />
                             
                         </Border>
                         <Border CornerRadius="5" Grid.Row="1"  Margin="0,20,10,0" Background="{StaticResource BordelBackGround}" >
@@ -295,7 +295,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Border CornerRadius="5"  Margin="0,0,10,0" ClipToBounds="True">
-                            <hc:GifImage  Stretch="Uniform"  Uri="/FSK.Sensitivity.Main;component/Resource/Images/rightEye.gif"  />
+                            <Image gif:AnimationBehavior.SourceUri="/FSK.Sensitivity.Main;component/Resource/Images/rightEye.gif"  />
                         </Border>
                         <Border CornerRadius="5" Grid.Row="1"  Margin="0,20,10,0" Background="{StaticResource BordelBackGround}" >
                             <UniformGrid Rows="2" Visibility="{Binding IsTraining, Converter={StaticResource BoolToVisibilityConverter}}">

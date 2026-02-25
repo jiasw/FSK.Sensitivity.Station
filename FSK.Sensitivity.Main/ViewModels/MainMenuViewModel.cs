@@ -72,7 +72,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             trainingAndCheckService.TrainingItemCompleted += TrainingAndCheckService_TrainingItemCompleted;
             trainingAndCheckService.TrainingFinished += TrainingAndCheckService_TrainingFinished;
 
-            checkNetWorkTimer = new System.Timers.Timer(10000); // 设置定时器间隔为5秒
+            checkNetWorkTimer = new System.Timers.Timer(1000); // 设置定时器间隔为5秒
             checkNetWorkTimer.Elapsed += new ElapsedEventHandler(CheckNetWork);
             checkNetWorkTimer.Start();
 
@@ -81,7 +81,16 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void CheckNetWork(object? sender, ElapsedEventArgs e)
         {
-            NetWorkActive=Utils.CheckInternalNetWorkStatus();
+            string url = appSetting.RemoteServer;
+            //移除url的http前缀和端口后缀
+            if (url.StartsWith("http://")) { 
+                url = url.Substring(7);
+            }
+            if (url.Contains(":"))
+            {
+                url = url.Substring(0, url.IndexOf(":"));
+            }
+            NetWorkActive =Utils.CheckInternalNetWorkStatus(url);
             
         }
 
