@@ -10,6 +10,11 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d" d:DesignWidth="1230">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        
+        
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"></RowDefinition>
@@ -18,7 +23,7 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="250"></ColumnDefinition>
+                <ColumnDefinition Width="350"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Foreground="White" FontSize="35" VerticalAlignment="Center" Margin="20,0">
@@ -39,39 +44,68 @@
                 </TextBlock>
 
             </StackPanel>
-            <Button Grid.Column="1" Content="打印" Style="{StaticResource NavButton}" Width="120" HorizontalAlignment="Right" Margin="50,10" ></Button>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Content="分析" Command="{Binding ResultCommand}" Style="{DynamicResource NavButton}" hc:IconElement.Geometry="{StaticResource SearchGeometry}" hc:IconElement.Width="30" Width="120" HorizontalAlignment="Right" Margin="20,10" ></Button>
+                <Button Content="打印" Style="{StaticResource NavButton}" Width="120" HorizontalAlignment="Right" Margin="10,10" ></Button>
+            </StackPanel>
+            
         </Grid>
-        <UniformGrid  Grid.Row="1" >
-            <Border Visibility="{Binding ShowCsf}" HorizontalAlignment="Center">
-                <ItemsControl ItemsSource="{Binding ChartsData}" Height="380" >
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"></StackPanel>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <ctl:ChartsCSF  ChartsTitle="{Binding Title}" MicrospurPoints="{Binding MicrospurPoints}" ShortRangePoints="{Binding ShortRangePoints}" 
+
+        <StackPanel Grid.Row="1"  Orientation="Vertical" >
+            
+                <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
+                    <TextBlock x:Name="LoadingTextBlock" 
+                   Text="加载中..." 
+                    FontSize="{StaticResource FontSize.Headline}"
+                   Foreground="{StaticResource MainBrush}"
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"
+                               ctl:LoadingAnimationBehavior.IsLoading="{Binding IsAnalysis}"
+                   Visibility="{Binding IsAnalysis, Converter={StaticResource BoolToVisibilityConverter}}"
+                               >
+                     
+                    </TextBlock>
+                    <TextBlock Text="{Binding Result}" HorizontalAlignment="Center"  Width="1000"
+VerticalAlignment="Center"  Foreground="{StaticResource MainBrush}" TextWrapping="Wrap"  FontSize="{StaticResource FontSize.Headline}" Margin="30,10">
+
+                    </TextBlock>
+                </StackPanel>
+                
+            
+            <UniformGrid  >
+                    <Border Visibility="{Binding ShowCsf}" HorizontalAlignment="Center">
+                        <ItemsControl ItemsSource="{Binding ChartsData}" Height="380" >
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ctl:ChartsCSF  ChartsTitle="{Binding Title}" MicrospurPoints="{Binding MicrospurPoints}" ShortRangePoints="{Binding ShortRangePoints}" 
 MidrangePoints="{Binding MidrangePoints}" Height="380" LongRangePoints="{Binding LongRangePoints}" Margin="60,0"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
 
-                </ItemsControl>
-            </Border>
-            <Border HorizontalAlignment="Center" Visibility="{Binding ShowDck}">
+                        </ItemsControl>
+                    </Border>
+                    <Border HorizontalAlignment="Center" Visibility="{Binding ShowDck}">
 
-                <ctl:ChartsDCK Points="{Binding Points}" Background="White"  Width="450" Height="380" Margin="7,0,0,7" Grid.Row="2"  HorizontalAlignment="Left" />
-            </Border>
+                        <ctl:ChartsDCK Points="{Binding Points}" Background="White"  Width="450" Height="380" Margin="7,0,0,7" Grid.Row="2"  HorizontalAlignment="Left" />
+                    </Border>
 
 
-        </UniformGrid>
-        
-            
-            
-             
-            
-       
-        
-        
+                </UniformGrid>
+            </StackPanel>
+    
+
+
+
+
+
+
+
+
     </Grid>
 </UserControl>

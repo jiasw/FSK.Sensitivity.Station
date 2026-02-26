@@ -391,6 +391,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                         }
                         else//返回
                         {
+                            regionManager.RequestNavigate(AppConst.TrainRegion, AppConst.Main_Page_ContrastSetting);
                             regionManager.RequestNavigate(AppConst.MainRegion, AppConst.Main_Page_Menu);
                         }
                     });

@@ -39,6 +39,11 @@ namespace FSK.Sensitivity.Core.Model
         /// </summary>
         public string LocalServer { get; set; }
 
+        /// <summary>
+        /// Web分析服务地址
+        /// </summary>
+        public string WebAnalysisServer { get; set; }
+
         public DeviceRunMode DeviceRunMode { get; set; }
 
         /// <summary>

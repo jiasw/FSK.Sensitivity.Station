@@ -7,7 +7,7 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:keyboard="clr-namespace:Hs.KeyBoard.WPF.Behavior;assembly=Hs.KeyBoard.WPF"
         xmlns:hc="https://handyorg.github.io/handycontrol"
-             xmlns:prism="http://prismlibrary.com/"
+             xmlns:prism="http://prismlibrary.com/" Loaded="UserControl_Loaded"
 prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d"
     MinWidth="550" 

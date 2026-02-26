@@ -6,6 +6,7 @@
   "ComfirmPassword": "19450902",
   "RemoteServer": "http://139.155.181.9:10057",
   "LocalServer": "http://192.168.1.118:8001",
+  "WebAnalysisServer": "http://localhost:5300",
   "DeviceRunMode": "NETWORKED",
   "DeviceInfo": {
     "ProductName": "对比敏感度",

@@ -28,6 +28,13 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             return true;
         }
+        private string title = "检查结果";
+
+        public string Title
+        {
+            get { return title; }
+            set { SetProperty(ref title, value); }
+        }
 
         public void OnDialogClosed()
         {
@@ -36,6 +43,8 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
+
+
             backMenu=parameters.GetValue<CheckItem>("BackMenu");
         }
 
@@ -49,7 +58,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         public DelegateCommand BackCommand => new DelegateCommand(Back);
         private void Back()
         {
-            RequestClose.Invoke(new DialogResult(ButtonResult.No));
+            RequestClose.Invoke(new DialogResult(ButtonResult.Yes));
             
         }
 

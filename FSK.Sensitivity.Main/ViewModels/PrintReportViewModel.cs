@@ -1,13 +1,17 @@
 ﻿using FSK.Sensitivity.Core;
 using FSK.Sensitivity.Core.Const;
 using FSK.Sensitivity.Core.Enums;
+using FSK.Sensitivity.Core.Infrastructure;
 using FSK.Sensitivity.Core.Model;
 using FSK.Sensitivity.Core.Repositories;
+using FSK.Sensitivity.Core.Utility;
 using Prism.Navigation.Regions;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,10 +27,9 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly IRegionManager regionManager;
         private readonly CheckResultRepository checkResultRepository;
         private readonly FitLogRepository fitLogRepository;
-
-
+        private readonly IConfigurationService configurationService;
         private List<ChartCSFDataModel> _chartsData = new List<ChartCSFDataModel>();
-
+        AppSetting appSetting;
         public List<ChartCSFDataModel> ChartsData
         {
             get { return _chartsData; }
@@ -85,13 +88,35 @@ namespace FSK.Sensitivity.Main.ViewModels
         }
 
 
+        private string result = "";
+        public string Result
+        {
+            get { return result; }
+            set
+            {
+                SetProperty(ref result, value);
+            }
+        }
+
+        private bool _isAnalysis = false;
+        public bool IsAnalysis
+        {
+            get { return _isAnalysis; }
+            set
+            {
+                SetProperty(ref _isAnalysis, value);
+            }
+        }
 
 
-        public PrintReportViewModel(IRegionManager regionManager, CheckResultRepository checkResultRepository, FitLogRepository fitLogRepository)
+
+        public PrintReportViewModel(IRegionManager regionManager, CheckResultRepository checkResultRepository
+            , FitLogRepository fitLogRepository, IConfigurationService configurationService)
         {
             this.regionManager = regionManager;
             this.checkResultRepository = checkResultRepository;
             this.fitLogRepository = fitLogRepository;
+            this.configurationService = configurationService;
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -105,22 +130,24 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             
         }
-
+        List<AnalysisPromt> analysisPromts = new List<AnalysisPromt>();
         private async Task BindData()
         {
             List<ChartCSFDataModel> list = new List<ChartCSFDataModel>();
+            analysisPromts.Clear();
             if (request.DataType == CheckItem.CSF)//对比敏感度
             {
                 List<Core.Entity.CheckResult> results= await checkResultRepository.Query(n => n.CheckId == request.DataID);
 
                 foreach (var result in results) {
 
-                    ChartCSFDataModel chart=new ChartCSFDataModel();
+                    #region 图表数据
+                    ChartCSFDataModel chart = new ChartCSFDataModel();
                     chart.Eye = result.Eye;
                     chart.DazzleLight = result.LightStatus;
                     chart.IsDay = result.DayOrNight;
-                    
-                    List< CSFPointModel> points=new List< CSFPointModel>();
+
+                    List<CSFPointModel> points = new List<CSFPointModel>();
 
                     points.Add(new CSFPointModel()
                     {
@@ -155,27 +182,48 @@ namespace FSK.Sensitivity.Main.ViewModels
                     });
 
 
-                    if (result.CheckDistance== CheckDistance.Short)
+                    if (result.CheckDistance == CheckDistance.Short)
                     {
                         chart.MicrospurPoints = points;
-                    }else if(result.CheckDistance== CheckDistance.Medium)
+                    }
+                    else if (result.CheckDistance == CheckDistance.Medium)
                     {
                         chart.ShortRangePoints = points;
                     }
-                    else if(result.CheckDistance== CheckDistance.Long)
+                    else if (result.CheckDistance == CheckDistance.Long)
                     {
                         chart.MidrangePoints = points;
                     }
                     else
                     {
-                        chart.LongRangePoints= points;
+                        chart.LongRangePoints = points;
                     }
-                    chart.Title = chart.Eye.GetDescription()+"-"+chart.IsDay.GetDescription();
+                    chart.Title = chart.Eye.GetDescription() + "-" + chart.IsDay.GetDescription();
                     if (chart.DazzleLight == LightStatus.Strong)
                     {
                         chart.Title += "-强光";
                     }
                     list.Add(chart);
+                    #endregion
+
+                    #region ai promt
+                    AnalysisPromt analysisPromt = new AnalysisPromt();
+                    analysisPromt.Eyes = result.Eye.GetDescription();
+                    analysisPromt.mode= result.DayOrNight.GetDescription();
+                    analysisPromt.light= result.LightStatus.GetDescription();
+                    analysisPromt.distance= result.CheckDistance.GetDescription();
+                    analysisPromt.Data = new AnalysisData()
+                    {
+                        VA1 = ((CSFValue)result.VA06).GetDescription(),
+                        VA2 = ((CSFValue)result.VA10).GetDescription(),
+                        VA3 = ((CSFValue)result.VA20).GetDescription(),
+                        VA4 = ((CSFValue)result.VA40).GetDescription(),
+                        VA5 = ((CSFValue)result.VA60).GetDescription(),
+                        VA6 = ((CSFValue)result.VA80).GetDescription(),
+
+                    };
+                    analysisPromts.Add(analysisPromt);
+                    #endregion
                 }
                 ChartsData = list;
             }
@@ -218,6 +266,48 @@ namespace FSK.Sensitivity.Main.ViewModels
             
         }
 
+
+        public DelegateCommand ResultCommand=>new DelegateCommand(async ()=> await GetResult());
+
+        private async Task GetResult()
+        {
+            if (analysisPromts.Count <= 0)
+            {
+                return;
+            }
+            Result = "";
+            IsAnalysis = true;
+
+            using HttpClient client = new();
+           string prompt = analysisPromts.ToJson();
+            
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{appSetting.WebAnalysisServer}/api/Sensitivity/stream?prompt={prompt}");
+            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            if (response.IsSuccessStatusCode)
+            {
+                IsAnalysis = false;
+                Result = "诊断分析：" + "\n";
+                using var stream = await response.Content.ReadAsStreamAsync();
+                using var reader = new StreamReader(stream);
+                while (!reader.EndOfStream)
+                {
+                    var line = await reader.ReadLineAsync();
+                    
+                    Result += line+"\n";
+                }
+            }
+            else
+            {
+                Result = "网络异常,请稍候重试！";
+            }
+            IsAnalysis = false;
+        }
+        private string BuildPrompt()
+        {
+            return "";
+        }
+
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             Name = AppData.Instance.CurrentPatient.PatientName;
@@ -229,7 +319,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             Date = request.Date;
             ShowCsf=request.DataType== CheckItem.CSF? Visibility.Visible:Visibility.Collapsed;
             ShowDck = request.DataType == CheckItem.DCK ? Visibility.Visible : Visibility.Collapsed;
-
+            appSetting = configurationService.LoadSetting();
            Task.Run( BindData);
         }
     }

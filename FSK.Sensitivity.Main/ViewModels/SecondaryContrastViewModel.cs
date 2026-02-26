@@ -173,6 +173,7 @@ namespace FSK.Sensitivity.Main.ViewModels
             joystick.StartMonitoring();
             joystick.Pressed += Joystick_Pressed;
             SignImage = null;
+            SelectedIndex = 1;
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
