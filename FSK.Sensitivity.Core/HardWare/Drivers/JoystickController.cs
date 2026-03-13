@@ -78,19 +78,29 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
                         {
                             if (registers.Any(r => r == 1))
                             {
+                                logger.LogDebug($"摇杆状态发生变化：{string.Join(',', registers.ToArray())}");
                                 // 处理逻辑
+                                ProcessButtonState(JoystickStatus.Front, registers[0]);
+                                ProcessButtonState(JoystickStatus.Back, registers[1]);
+                                ProcessButtonState(JoystickStatus.Left, registers[2]);
+                                ProcessButtonState(JoystickStatus.Right, registers[3]);
+                                ProcessButtonState(JoystickStatus.Confirm, registers[4]);
+                                ProcessButtonState(JoystickStatus.Trigger, registers[5]);
                             }
 
-                            ProcessButtonState(JoystickStatus.Front, registers[0]);
-                            ProcessButtonState(JoystickStatus.Back, registers[1]);
-                            ProcessButtonState(JoystickStatus.Left, registers[2]);
-                            ProcessButtonState(JoystickStatus.Right, registers[3]);
-                            ProcessButtonState(JoystickStatus.Confirm, registers[4]);
-                            ProcessButtonState(JoystickStatus.Trigger, registers[5]);
+                            
                         }
                         else
                         {
-                            logger.LogDebug("读取摇杆状态失败");
+                            if(registers==null || registers.Length == 0)
+                            {
+                                logger.LogDebug($"读取摇杆状态失败, 数据为空");
+                            }
+                            else
+                            {
+                                logger.LogDebug($"读取摇杆状态失败, 数据为：{string.Join(',', registers.ToArray())}");
+                            }
+                                
                         }
                         if (!token.IsCancellationRequested) {
                             await Task.Delay(5, token);

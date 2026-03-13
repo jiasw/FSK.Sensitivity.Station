@@ -8,6 +8,8 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>logo.ico</ApplicationIcon>
 	  <UseRspFile>true</UseRspFile>
+	  <ExcludeFromPublishFolders>Logs</ExcludeFromPublishFolders>
+
   </PropertyGroup>
 
   <ItemGroup>

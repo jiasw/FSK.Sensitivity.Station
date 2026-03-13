@@ -29,6 +29,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private readonly ISpeechService speechService;
         private readonly ITrainingAndCheckService trainingAndCheckService;
         private readonly ILogger<ContrastConfigViewModel> logger;
+        
 
         public ContrastConfigViewModel(IRegionManager regionManager, IEventAggregator eventAggregator
             , IDialogService dialogService, IMotor motor, ISpeechService speechService
@@ -56,7 +57,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         private DispatcherTimer _statusCheckTimer;
         private const int TIMEOUT_SECONDS = AppConst.WaitHardwareMotionTimeout;
         private int _totalWaitTime = 0;
-        private const int CHECK_INTERVAL_MS = 300; // 每500ms查询一次
+        private const int CHECK_INTERVAL_MS = 500; // 每500ms查询一次
 
         /// <summary>
         /// 开始检查硬件是否准备好
@@ -80,18 +81,20 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private async Task OnStatusCheckTick()
         {
-            bool ismoving = await motor.IsAllStop();
+            logger.LogInformation("OnStatusCheckTick====================================start");
             _totalWaitTime += CHECK_INTERVAL_MS;
             if (_totalWaitTime > TIMEOUT_SECONDS * 1000)
             {
                 _statusCheckTimer.Stop();
                 IsLoading = false;
             }
-            if (ismoving)
+            bool isallstop = await motor.IsAllStop();
+            if (isallstop)
             {
                 _statusCheckTimer.Stop();
                 IsLoading = false;
             }
+            logger.LogInformation("OnStatusCheckTick====================================end");
         }
 
 
@@ -116,7 +119,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         {
             ItemsType paramtype = itemsType ?? ItemsType.Eyes;
 
-            dialogService.ShowDialog(AppConst.Main_Dialog_ShowItems, new DialogParameters() { { "ItemsType", paramtype } }, result =>
+            dialogService.ShowDialog(AppConst.Main_Dialog_ShowItems, new DialogParameters() { { "ItemsType", paramtype } }, async result =>
             {
 
                 if (result.Result == ButtonResult.OK)
@@ -140,7 +143,8 @@ namespace FSK.Sensitivity.Main.ViewModels
                     else  
                     {
                         ContrastConfigParam.PD = int.Parse(showItemsModel.Value);
-                        SetHardWarePD(); StartCheckHardWareReady();
+                         await SetHardWarePD();
+                        StartCheckHardWareReady();
                     }
 
                 }
@@ -152,9 +156,9 @@ namespace FSK.Sensitivity.Main.ViewModels
         /// <summary>
         /// 设置硬件的瞳距
         /// </summary>
-        private void SetHardWarePD()
+        private async Task SetHardWarePD()
         {
-            motor?.SetSlideBlock((short)ContrastConfigParam.PD);
+            await motor.SetSlideBlock((short)ContrastConfigParam.PD);
         }
 
         
@@ -167,15 +171,15 @@ namespace FSK.Sensitivity.Main.ViewModels
                 CheckDuration = DCKTime.T05,
                 PD = 50
             };
-            _ = Task.Run(() =>
+            
+            _ = Task.Run(async () =>
             {
-               
-                    motor.Initialize();
-                    SetHardWarePD();
-                    motor.SetLeftDisk(3);
-                    motor.SetRightDisk(3);
-                    StartCheckHardWareReady();
-                
+
+                await SetHardWarePD();
+                await motor.SetLeftDisk(3);
+                await motor.SetRightDisk(3);
+                StartCheckHardWareReady();
+
 
             });
 

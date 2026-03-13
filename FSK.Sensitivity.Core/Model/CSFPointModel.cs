@@ -18,7 +18,7 @@ namespace FSK.Sensitivity.Core.Model
 
             get
             {
-                return (int)DCKTime - 1;
+                return GetXIndex();
             }
         }
         public int YIndex
@@ -33,6 +33,24 @@ namespace FSK.Sensitivity.Core.Model
         public DCKTime DCKTime { get; set; }
 
         public DCKValue DCKValue { get; set; }
+
+
+        private int GetXIndex()
+        {
+            if (this.DCKTime == null)
+            {
+                return 0;
+            }
+            else
+            {
+                DCKTime[] dCKTimes = DCKTime.GetValues<DCKTime>();
+                for (int i = 0; i < dCKTimes.Length; i++)
+                {
+                    if (dCKTimes[i] == this.DCKTime) { return i ; }
+                }
+                return 0;
+            }
+        }
     }
 
 

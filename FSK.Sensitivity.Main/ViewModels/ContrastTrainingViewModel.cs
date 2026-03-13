@@ -54,6 +54,7 @@ namespace FSK.Sensitivity.Main.ViewModels
         ContrastConfigParam contrastConfigParam;
         //选择视标的索引
         private int _signSelectIndex = 0;
+         
 
         /// <summary>
         /// 训练模式
@@ -245,14 +246,18 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void JoystickAction(ActionArgs actionArgs)
         {
+           
             SetBtnStyle(actionArgs);
             SignSelectIndex = actionArgs.Index;
             if (actionArgs.Action.Command == JoystickStatus.Confirm)
             {
-
+                if (TrainStatus == TrainStatus.Trained)
+                {
+                    return;
+                }
                 dictResult.Add(DckTime, actionArgs.Index);
                 StopTrain();
-                SaveResult();
+                
             }
 
         }
@@ -343,6 +348,8 @@ namespace FSK.Sensitivity.Main.ViewModels
         private void StartTrain()
         {
             TrainStatus=TrainStatus.Training;
+            dictResult.Clear();
+            light.TurnOnAll();
             contrastSignChangeEvent.Publish(new() { PicturePath = "", BackgroundBrush = SignBackGround.White });
             BackgroundSource = Brushes.White;
             SignPath = "";
@@ -377,7 +384,15 @@ namespace FSK.Sensitivity.Main.ViewModels
 
         private void StopTrain()
         {
-
+            if(TrainStatus == TrainStatus.Trained)
+            {
+                return;
+            }
+            if (TrainStatus == TrainStatus.Training)
+            {
+                TrainStatus = TrainStatus.Trained;
+            }
+            SaveResult();
             _ = speechService.SpeakAsync("检查结束");
             if (CurrentTrainEnterMode == TrainEnterMode.Normal)
             {
@@ -438,6 +453,17 @@ namespace FSK.Sensitivity.Main.ViewModels
             else
             {
                 _checktimer.Stop();
+
+                System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                    BackgroundSource = Brushes.Black;
+                    SignPath = "";
+                    //设置对比敏感度视标
+                    contrastSignChangeEvent.Publish(new SensitivityChangeSignOptions() { PicturePath = "", BackgroundBrush = SignBackGround.Black });
+                });
+                if (TrainStatus == TrainStatus.Trained)
+                {
+                    return;
+                }
                 //如果用户一直没有执行选择，默认给用户一个选项
                 if (dictResult.Count == 0)
                 {
@@ -445,14 +471,6 @@ namespace FSK.Sensitivity.Main.ViewModels
                 }
                 StopTrain();
                 
-                SaveResult();
-                
-                System.Windows.Application.Current.Dispatcher.Invoke(() => {
-                    BackgroundSource = Brushes.Black;
-                    SignPath = "";
-                //设置对比敏感度视标
-                contrastSignChangeEvent.Publish(new SensitivityChangeSignOptions() { PicturePath = "", BackgroundBrush = SignBackGround.Black });
-                });
             }
         }
         private void WaitTimer_Tick(object? sender, EventArgs e)
@@ -509,8 +527,7 @@ namespace FSK.Sensitivity.Main.ViewModels
                 Age = AppData.Instance.CurrentPatient.Age.ToString(),
                 PD= contrastConfigParam.PD,
             };
-            dictResult.Clear();
-            light.TurnOnAll();
+            
             StartTrain();
         }
 

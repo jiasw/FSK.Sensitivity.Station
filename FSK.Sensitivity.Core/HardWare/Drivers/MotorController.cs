@@ -1,5 +1,6 @@
 ﻿using FSK.Sensitivity.Core.HardWare.Peripherals;
 using FSK.Sensitivity.Core.Model;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,12 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
     public class MotorController : IMotor
     {
         private readonly IModbusService modbusService;
+        private readonly ILogger<MotorController> logger;
 
-        public MotorController(IModbusService modbusService)
+        public MotorController(IModbusService modbusService,ILogger<MotorController> logger)
         {
             this.modbusService = modbusService;
+            this.logger = logger;
         }
 
 
@@ -62,12 +65,14 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         /// <returns></returns>
         public async Task<bool> SetSlideBlock(short position)
         {
+            logger.LogInformation($"SetSlideBlock:{position}");
             if (position < 50 || position > 80)
             {
                 return true;
             }
             short pd = (short)(position - 50);
-            return await modbusService.WriteSingleRegisterAsync(8, position);
+            logger.LogInformation($"pd:{pd}");
+            return await modbusService.WriteSingleRegisterAsync(8, pd);
 
         }
         /// <summary>
@@ -76,9 +81,12 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         /// <returns></returns>
         public async Task<bool> IsSlideMove()
         {
+            logger.LogInformation($"IsSlideMove");
             short[] data = await modbusService.ReadHoldingRegistersAsync(41, 1);
             if (data != null && data.Length > 0)
             {
+                logger.LogInformation($"IsSlideMove:{data[0]}");
+                
                 return data[0] == 2;
             }
             return false;
@@ -89,9 +97,11 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         /// <returns></returns>
         public async Task<bool> IsLeftMove()
         {
+            logger.LogInformation($"IsLeftMove");
             short[] data = await modbusService.ReadHoldingRegistersAsync(21, 1);
             if (data != null && data.Length > 0)
             {
+                logger.LogInformation($"IsLeftMove:{data[0]}");
                 return data[0] == 2;
             }
             return false;
@@ -102,9 +112,12 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         /// <returns></returns>
         public async Task<bool> IsRightMove()
         {
+            logger.LogInformation($"IsRightMove");
             short[] data = await modbusService.ReadHoldingRegistersAsync(31, 1);
+            
             if (data != null && data.Length > 0)
             {
+                logger.LogInformation($"IsRightMove:{data[0]}");
                 return data[0] == 2;
             }
             return false;
@@ -130,6 +143,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             bool isLeftMove = await IsLeftMove();
             bool isRightMove = await IsRightMove();
             bool isSlideMove = await IsSlideMove();
+            logger.LogInformation($"IsLeftMove:{isLeftMove},IsRightMove:{isRightMove},IsSlideMove:{isSlideMove}");
             return !isLeftMove && !isRightMove && !isSlideMove;
         }
 

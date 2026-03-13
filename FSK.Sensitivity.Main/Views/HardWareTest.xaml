@@ -26,12 +26,12 @@ prism:ViewModelLocator.AutoWireViewModel="True"
 
 
             <StackPanel Orientation="Horizontal"  Margin="10,10,0,0">
-                <Button Content="设置左侧转盘"></Button>
+                <Button Content="设置左侧转盘" Command="{Binding MoveLeftClampCommand}"></Button>
                 <TextBlock Text="转盘角度:" VerticalAlignment="Center" ></TextBlock>
                 <TextBox Width="100" Text="{Binding LeftClampPosition}"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"  Margin="10,10,0,0">
-                <Button Content="设置右侧转盘"></Button>
+                <Button Content="设置右侧转盘" Command="{Binding MoveRightClampCommand}"></Button>
                 <TextBlock Text="转盘角度:"  VerticalAlignment="Center"></TextBlock>
                 <TextBox Width="100" Text="{Binding RightClampPosition}"></TextBox>
             </StackPanel>

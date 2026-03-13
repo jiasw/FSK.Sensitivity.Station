@@ -86,13 +86,19 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
                 if (!EnsureConnection()) return null;
 
                 var data = _client.ReadHoldingRegisters<short>(_deviceId, startAddress, count);
+                if (startAddress == 41)
+                {
+                    string result2 = string.Join(",", data.ToArray().Select(x => x.ToString()));
+                    logger.LogInformation($"读取保持寄存器：{startAddress} - {count}，结果：{result2}");
+                }
+
                 short[] result = new short[data.Length];
                 data.CopyTo(result);
                 return result;
             }
             catch (Exception ex)
             {
-                logger.LogError($"串口读取失败", ex);
+                logger.LogError($"串口读取失败: {ex.Message}, {ex.StackTrace}", ex);
                 return null;
             }
             finally
@@ -116,7 +122,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             }
             catch (Exception ex)
             {
-                logger.LogError($"串口写入失败",ex);
+                logger.LogError($"串口写入失败: {ex.Message}, {ex.StackTrace}",ex);
                 return false;
             }
             finally

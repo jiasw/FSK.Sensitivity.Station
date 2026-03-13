@@ -184,7 +184,10 @@ namespace FSK.Sensitivity.Main.ViewModels
         private CSFTrainModel currentCSFTrainModel = null;
         private long checkid = -1;//当前检查的ID，
         private CancellationTokenSource _cts;
-
+        /// <summary>
+        /// 训练的整体流程
+        /// </summary>
+        TrainStatus MainProceeStatus= TrainStatus.Pending;
         /// <summary>
         /// 向服务器提交的结果
         /// </summary>
@@ -495,7 +498,8 @@ namespace FSK.Sensitivity.Main.ViewModels
             listresult.Clear();
             currentCSFTrainModel = null;
             TrainModelsQueue.Clear();
-            
+            checkid = Utils.GenerateSnowID();
+            MainProceeStatus = TrainStatus.Training;
             SensitivityConfigParam? sensitivityConfigParam = navigationContext.Parameters[nameof(SensitivityConfigParam)] as SensitivityConfigParam;
             if (sensitivityConfigParam != null)
             {

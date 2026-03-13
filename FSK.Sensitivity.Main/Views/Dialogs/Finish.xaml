@@ -26,6 +26,7 @@ prism:ViewModelLocator.AutoWireViewModel="True"
             <Setter Property="Width" Value="550"></Setter>
             <Setter Property="SizeToContent" Value="Height"/>
             <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="Topmost" Value="True"></Setter>
         </Style>
     </prism:Dialog.WindowStyle>
         <UserControl.Resources>
