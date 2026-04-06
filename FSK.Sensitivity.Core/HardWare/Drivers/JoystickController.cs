@@ -62,7 +62,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
 
         private async Task MonitorLoopAsync(CancellationToken token)
         {
-            ushort startAddress = 0x10;
+            ushort startAddress = 0x0010;
             ushort numberOfPoints = 6;
 
             try

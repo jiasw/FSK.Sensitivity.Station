@@ -25,33 +25,33 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
 
         public async Task<bool> TurnOnLeft()
         {
-           return await modbusService.WriteSingleRegisterAsync( 4, 1);
+           return await modbusService.WriteSingleRegisterAsync(0x0004, 1);
         }
 
         public async Task<bool> TurnOnRight()
         {
-            return await modbusService.WriteSingleRegisterAsync(5, 1);
+            return await modbusService.WriteSingleRegisterAsync(0x0005, 1);
         }
 
         public async Task<bool> TurnOffLeft()
         {
-            return await modbusService.WriteSingleRegisterAsync(4, 0);
+            return await modbusService.WriteSingleRegisterAsync(0x0004, 0);
         }
 
         public async Task<bool> TurnOffRight()
         {
-            return await modbusService.WriteSingleRegisterAsync(4, 0);
+            return await modbusService.WriteSingleRegisterAsync(0x0004, 0);
         }
 
         public async Task<bool> TurnOnAll()
         {
-            return await modbusService.WriteMultipleRegistersAsync(4, new short[] { 1, 1 });
+            return await modbusService.WriteMultipleRegistersAsync(0x0004, new short[] { 1, 1 });
             
         }
 
         public async Task<bool> TurnOffAll()
         {
-            return await modbusService.WriteMultipleRegistersAsync(4, new short[] { 0, 0 });
+            return await modbusService.WriteMultipleRegistersAsync(0x0004, new short[] { 0, 0 });
         }
 
         

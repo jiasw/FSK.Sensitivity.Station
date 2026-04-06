@@ -30,7 +30,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         /// <returns></returns>
         public async Task<bool> Initialize()
         {
-           return await modbusService.WriteSingleRegisterAsync(3, 1);
+           return await modbusService.WriteSingleRegisterAsync(0x0003, 1);
         }
         /// <summary>
         /// 设置左转盘位置
@@ -43,7 +43,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             {
                 return false;
             }
-            return await modbusService.WriteSingleRegisterAsync(6, position);
+            return await modbusService.WriteSingleRegisterAsync(0x0006, position);
         }
         /// <summary>
         /// 设置右转盘位置
@@ -56,7 +56,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             {
                 return false;
             }
-            return await modbusService.WriteSingleRegisterAsync(7, position);
+            return await modbusService.WriteSingleRegisterAsync(0x0007, position);
         }
         /// <summary>
         /// 设置丝杆位置
@@ -72,7 +72,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
             }
             short pd = (short)(position - 50);
             logger.LogInformation($"pd:{pd}");
-            return await modbusService.WriteSingleRegisterAsync(8, pd);
+            return await modbusService.WriteSingleRegisterAsync(0x0008, pd);
 
         }
         /// <summary>
@@ -82,7 +82,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         public async Task<bool> IsSlideMove()
         {
             logger.LogInformation($"IsSlideMove");
-            short[] data = await modbusService.ReadHoldingRegistersAsync(41, 1);
+            short[] data = await modbusService.ReadHoldingRegistersAsync(0x0041, 1);
             if (data != null && data.Length > 0)
             {
                 logger.LogInformation($"IsSlideMove:{data[0]}");
@@ -98,7 +98,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         public async Task<bool> IsLeftMove()
         {
             logger.LogInformation($"IsLeftMove");
-            short[] data = await modbusService.ReadHoldingRegistersAsync(21, 1);
+            short[] data = await modbusService.ReadHoldingRegistersAsync(0x0021, 1);
             if (data != null && data.Length > 0)
             {
                 logger.LogInformation($"IsLeftMove:{data[0]}");
@@ -113,7 +113,7 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         public async Task<bool> IsRightMove()
         {
             logger.LogInformation($"IsRightMove");
-            short[] data = await modbusService.ReadHoldingRegistersAsync(31, 1);
+            short[] data = await modbusService.ReadHoldingRegistersAsync(0x0031, 1);
             
             if (data != null && data.Length > 0)
             {
@@ -128,9 +128,9 @@ namespace FSK.Sensitivity.Core.HardWare.Drivers
         /// <returns></returns>
         public async Task<bool> StopAllMotor()
         {
-            bool leftStop = await modbusService.WriteSingleRegisterAsync(21, 0);//设置左侧电机停止
-            bool rightStop = await modbusService.WriteSingleRegisterAsync(31, 1);//设置右侧电机停止
-            bool slideStop = await modbusService.WriteSingleRegisterAsync(41, 1);//设置丝杆电机停止
+            bool leftStop = await modbusService.WriteSingleRegisterAsync(0x0021, 0);//设置左侧电机停止
+            bool rightStop = await modbusService.WriteSingleRegisterAsync(0x0031, 1);//设置右侧电机停止
+            bool slideStop = await modbusService.WriteSingleRegisterAsync(0x0041, 1);//设置丝杆电机停止
             return leftStop && rightStop && slideStop;
         }
 
